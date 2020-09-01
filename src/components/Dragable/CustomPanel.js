@@ -80,7 +80,7 @@ class CustomPanel extends Component {
 					<Card.Body>
 						<Form inline='true' style={{marginLeft: '10px'}}>
 							<Form.Group>
-								<Form.Control placeholder={this.props.draggable.scale} style={{width: '50px'}} onChange={(text) => {(text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempScale: text.target.value}) : this.setState({...this.state, tempScale: this.props.draggable.scale})}} />
+								<Form.Control placeholder={this.props.draggable.scale} style={{width: '50px'}} onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempScale: text.target.value}) : this.setState({...this.state, tempScale: this.props.draggable.scale})}} />
 							</Form.Group>
 							<Button variant="outline-primary" style={{marginLeft: '30px'}} onClick={() => {(this.state.tempScale !== '' & !isNaN(Number(this.state.tempScale))) ? this.props.handleChangeScale(this.state.tempScale, this.props.envOptions.current) : this.setState({...this.state, scaleError: true})}}>Change Scale</Button>
 						</Form>
@@ -115,7 +115,7 @@ class CustomPanel extends Component {
 							</Col>
 							<Col style={{marginLeft: '150px'}}>
 						<Form.Group>
-						<Form.Control placeholder={this.state.tempTokenScale.creature} style={{width: '50px'}} custom onChange={(text) => {(text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, creature: text.target.value}}) : this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, creature: '1'}})}}/>
+						<Form.Control placeholder={this.state.tempTokenScale.creature} style={{width: '50px'}} custom onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, creature: text.target.value}}) : this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, creature: '1'}})}}/>
 						</Form.Group>
 							</Col>
 							</Row>
@@ -149,7 +149,7 @@ class CustomPanel extends Component {
 							</Col>
 							<Col style={{marginLeft: '150px'}}>
 						<Form.Group>
-						<Form.Control placeholder={this.state.tempTokenScale.background} style={{width: '50px'}} custom onChange={(text) => {(text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, background: text.target.value}}) : this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, background: '1'}})}}/>
+						<Form.Control placeholder={this.state.tempTokenScale.background} style={{width: '50px'}} custom onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, background: text.target.value}}) : this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, background: '1'}})}}/>
 						</Form.Group>
 							</Col>
 							</Row>
@@ -183,7 +183,7 @@ class CustomPanel extends Component {
 							</Col>
 							<Col style={{marginLeft: '150px'}}>
 						<Form.Group>
-						<Form.Control placeholder={this.state.tempTokenScale.scene} style={{float: 'left', width: '50px'}} custom onChange={(text) => {(text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, scene: text.target.value}}) : this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, scene: '1'}})}}/>
+						<Form.Control placeholder={this.state.tempTokenScale.scene} style={{float: 'left', width: '50px'}} custom onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, scene: text.target.value}}) : this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, scene: '1'}})}}/>
 						</Form.Group>
 							</Col>
 							</Row>
