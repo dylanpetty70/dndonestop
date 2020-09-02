@@ -50,7 +50,7 @@ class Router extends Component {
         let temp = [<></>];
         if(!(Object.keys(this.props.envOptions).length > 0)){
             this.props.handleGrabOptions(this.props.user.username);
-            setTimeout(() => {this.props.handleGrabDraggable(this.props.envOptions.all[0], this.props.user.username);}, 1000)
+            setTimeout(() => {if(this.props.envOptions.all !== undefined){this.props.handleGrabDraggable(this.props.envOptions.all[0], this.props.user.username)}}, 1000)
 		} else if(!(Object.keys(this.props.draggable).length > 0)){
             this.props.handleGrabDraggable(this.props.envOptions.all[0], this.props.user.username);  
 		} else {

@@ -13,9 +13,9 @@ class Scanners extends Component {
 			<div className="App">
 				<Jumbotron fluid>
 				  <Container>
-					<h1>Website Currently in Progress</h1>
+					<h1>Webpage Currently in Progress</h1>
 					<p>
-					  Check back for more updates!
+					  It may bug out. Check back for updates!
 					</p>
 				  </Container>
 				</Jumbotron>

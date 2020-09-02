@@ -120,7 +120,7 @@ class Notepad extends Component {
 			  position: 'relative',
 			  left: '195px',
 			  margin: '5px',
-			  top: '66px'
+			  top: '-34px'
 			}
 		)
 	}

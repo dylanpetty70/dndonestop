@@ -135,7 +135,7 @@ class CustomPanel extends Component {
 				<Button variant="outline-primary" style={{float: 'right', width: '100px'}} onClick={() => {this.addToken('players')}}>Add Item</Button>
 
 				<br/>
-			<Card.Title style={{fontSize: '16px'}}>Creatures/Humanoids</Card.Title>
+			<Card.Title style={{fontSize: '16px', marginTop: '30px'}}>Creatures/Humanoids</Card.Title>
 				<Form inline='true'>
 				<Container>
 					<Row>
@@ -327,7 +327,7 @@ class CustomPanel extends Component {
 			:
 			<></>}
 		</div>
-			<div style={{width: '22vw', position: 'absolute', right: '10px', top: '155px', zIndex: '20000'}}>
+			<div style={{width: '22vw', position: 'absolute', right: '10px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto'}}>
 				{(this.state.showEnvChange) ? this.envChange() : <></>}
 				{(this.state.showEnvVar) ? this.envVariables() : <></>}
 				{(this.state.showPlaceTok) ? this.placeToken() : <></>}

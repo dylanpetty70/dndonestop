@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 
 class Spells extends Component {
@@ -137,7 +140,7 @@ class Spells extends Component {
 	components(){
 		let temp = [];
 		if(this.state.data.components){
-			temp.push(<h6 key={'c'}>Range</h6>)
+			temp.push(<h6 key={'c'}>Components</h6>)
 			temp.push(<p key={'cp'}>{this.state.data.components.join(', ')}<br/></p>)
 		}
 		return temp;
@@ -246,24 +249,60 @@ class Spells extends Component {
 				{(Object.keys(this.props.dndInfo.generalInfo.specifics.spells).includes(this.props.item) & this.state.data !== undefined) ?
 				<div>
 
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.level()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.school()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.castingTime()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.attackType()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.areaOfAttack()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.areaOfEffect()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.range()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.duration()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.concentration()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.components()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.materials()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.classes()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.damage()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.heal()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.ritual()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.dc()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.description()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.higherLevel()}
+				</div>
 
 				</div>
 				:

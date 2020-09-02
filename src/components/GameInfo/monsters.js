@@ -372,22 +372,55 @@ class Monsters extends Component {
 				<div>
 				
 				{this.abilities()}
+				
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.ac()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.hp()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.challenge()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.alignment()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.damage_immunities()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.damage_vulnerabilities()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.condition_immunities()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.hitDice()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.languages()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.speed()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px', maxWidth: '400px'}}>
 				{this.proficiencies()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.senses()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.size()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.specialAbilities()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.actions()}
+				</div>
+				<div style={{float: 'left', marginLeft: '25px', marginRight: '24px', marginBottom: '15px', minHeight: '100px'}}>
 				{this.legendary_action()}
+				</div>
 
 				</div>
 				:
