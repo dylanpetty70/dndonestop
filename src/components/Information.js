@@ -12,7 +12,7 @@ export default function BaseInformation(name, info){
                 if(Array.isArray(info[key])){
                     for(let i = 0; i < info[key].length; i++){
                         temp1.push(
-                            <p key={key+'1'}>{info[key][i].toString()}<br/></p>
+                            <p key={key+'i'}>{info[key][i].toString()}<br/></p>
 					    )
 					}
 				} else {
@@ -59,7 +59,7 @@ export default function BaseInformation(name, info){
                 let temp2 = '';
                 for(let i = 0; i < info[key].length; i++){
                     temp2 = info[key][i].name.toString() + ': +' + info[key][i].bonus.toString();
-                    temp1.push(<p key={key+'1'}>{temp2}</p>);
+                    temp1.push(<p key={key+'i'}>{temp2}</p>);
 				}
             } else if(key === 'ability_bonus_options'){
                 temp1.push(<div key={key}><strong>Ability Bonus Options</strong><br/></div>);
@@ -125,7 +125,7 @@ export default function BaseInformation(name, info){
                 temp1.push(<p key={key+'1'}>{temp2}</p>);
             } else if(key === 'ability_score'){
                 temp1.push(<div key={key}><strong>Ability Score</strong><br/></div>);
-                temp1.push(<p>{info[key].name}</p>)
+                temp1.push(<p key={key + '1'}>{info[key].name}</p>)
             } else if(key === 'races'){
                 temp1.push(<div key={key}><strong>Races</strong><br/></div>);
                 let temp2 = '';
@@ -166,7 +166,7 @@ export default function BaseInformation(name, info){
                 if(Array.isArray(info[key])){
                     for(let i = 0; i < info[key].length; i++){
                         temp1.push(
-                            <p key={key+'1'}>{info[key][i].toString()}<br/></p>
+                            <p key={key+'i'}>{info[key][i].toString()}<br/></p>
 					    )
 					}
 				} else {

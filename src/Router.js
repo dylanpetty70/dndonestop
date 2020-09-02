@@ -15,6 +15,7 @@ import {handleGrabDraggable,
         handleNewEnvironment} from './actions/draggable';
 import {handleGrabCampaigns, 
         handleChangeCampaign} from './actions/notes';
+import {handleGrabNames} from './actions/user';
 
 
 class Router extends Component {
@@ -24,6 +25,10 @@ class Router extends Component {
         this.state = {};
 		this.noDraggable = this.noDraggable.bind(this);
         this.noCharacter = this.noCharacter.bind(this);
+	}
+
+	componentDidMount(){
+		this.props.handleGrabNames()
 	}
 
     noGameInfo(){
@@ -44,10 +49,10 @@ class Router extends Component {
     noDraggable(){
         let temp = [<></>];
         if(!(Object.keys(this.props.envOptions).length > 0)){
-            this.props.handleGrabOptions();
-            setTimeout(() => {this.props.handleGrabDraggable(this.props.envOptions.all[0]);}, 1000)
+            this.props.handleGrabOptions(this.props.user.username);
+            setTimeout(() => {this.props.handleGrabDraggable(this.props.envOptions.all[0], this.props.user.username);}, 1000)
 		} else if(!(Object.keys(this.props.draggable).length > 0)){
-            this.props.handleGrabDraggable(this.props.envOptions.all[0]);  
+            this.props.handleGrabDraggable(this.props.envOptions.all[0], this.props.user.username);  
 		} else {
             temp.push(<div><h1>Something is messing up </h1></div>)
 		}
@@ -57,7 +62,7 @@ class Router extends Component {
     noCharacter(){
         let temp = [<></>];
         if(!(Object.keys(this.props.characters).length > 0)){
-            this.props.handleGrabCharacters();
+            this.props.handleGrabCharacters(this.props.user.username);
 		} else {
             temp.push(<div><h1>Something is messing up </h1></div>)
 		}
@@ -136,7 +141,8 @@ const mapStateToProps = state => {
         notepads: state.notepads,
         notesOptions: state.notesOptions,
         userStatus: state.userStatus,
-        characters: state.characters
+        characters: state.characters,
+        user: state.user
 	}
 }
 
@@ -146,4 +152,5 @@ export default connect(mapStateToProps, {handleGrab5e,
                                         handleGrabOptions, 
                                         handleGrabCampaigns, 
                                         handleChangeCampaign,
-                                        handleNewEnvironment})(Router);
+                                        handleNewEnvironment,
+                                        handleGrabNames})(Router);

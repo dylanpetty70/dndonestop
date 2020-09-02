@@ -1,14 +1,15 @@
 {
   "ExpandedNodes": [
     "",
-    "\\public",
     "\\src",
     "\\src\\actions",
     "\\src\\components",
-    "\\src\\components\\Models",
+    "\\src\\components\\drag",
+    "\\src\\components\\Dragable",
+    "\\src\\components\\Notes",
+    "\\src\\Header",
     "\\src\\middleware",
     "\\src\\reducers"
   ],
-  "SelectedNode": "\\src\\components\\Models.js",
   "PreviewInSolutionExplorer": false
 }

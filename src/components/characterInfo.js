@@ -13,17 +13,18 @@ class CharacterInfo extends Component {
         this.state = {character: '',
                         showNew: false,
                         characterName: '',
+                        showDelete: false
                         };
         this.characterOptions = this.characterOptions.bind(this);
 	}
 
     componentDidMount(){
-        this.props.handleGrabCharacters();
+        this.props.handleGrabCharacters(this.props.user.username);
     }
 
     characterOptions(){
         let temp = [];
-        for(var key in this.props.dndInfo.characters){
+        for(var key in this.props.characters){
               temp.push(<option value={key} key={key}>{key}</option>)
 		}
         return temp;
@@ -49,8 +50,8 @@ class CharacterInfo extends Component {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={() => {this.setState({showNew: false}); this.props.handleUpdateNewCharacter(this.state.characterName);}}>
-                        Create New User
+                    <Button variant="primary" onClick={() => {this.setState({showNew: false}); this.props.handleUpdateNewCharacter(this.state.characterName, this.props.user.username);}}>
+                        Create
                     </Button>
                     <Button variant="secondary" onClick={() => {this.setState({showNew: false})}}>
                     Cancel
@@ -59,6 +60,7 @@ class CharacterInfo extends Component {
                 </Modal>     
 	     )
 	}
+
 
 	render(){
 		return(
@@ -79,7 +81,7 @@ class CharacterInfo extends Component {
                         New Character
                     </Button>
                 </Form>
-				{(this.state.character !== '') ? <CharacterSheet name={this.state.character} character={this.props.dndInfo.characters[this.state.character]}/> : <></>}
+				{(this.state.character !== '') ? <CharacterSheet name={this.state.character} character={this.props.characters[this.state.character]}/> : <></>}
             </div>
 		)
 	}
@@ -88,10 +90,12 @@ class CharacterInfo extends Component {
 const mapStateToProps = state => {
 	return{
         dndInfo: state.dndInfo,
+        characters: state.characters,
+        user: state.user
 	}
 }
 
 export default connect(mapStateToProps, {
 	handleUpdateNewCharacter,
-    handleGrabCharacters,
+    handleGrabCharacters
 })(CharacterInfo);

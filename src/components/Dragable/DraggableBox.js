@@ -33,7 +33,7 @@ const DraggableBox = (props) => {
         return (
         <div ref={drag} style={getStyles(left, top, isDragging)}>
           {ReactHtmlParser(props.draggable.items[object].title.replace(/32/g, String(props.draggable.scale * props.scale)))}
-	      <MdDelete  onClick={() => {props.handleUpdateCurrent(props.envOptions.current, props.draggable.current.filter((x,i) => i !== Number(props.id.replace('id',''))))}}/>
+	      <MdDelete  onClick={() => {props.handleUpdateCurrent(props.envOptions.current, props.draggable.current.filter((x,i) => i !== Number(props.id.replace('id',''))), this.props.user.username)}}/>
         </div>
       )
   } else {

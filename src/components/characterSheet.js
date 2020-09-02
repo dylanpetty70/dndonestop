@@ -6,21 +6,22 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { Typeahead } from 'react-bootstrap-typeahead';
 import { connect } from 'react-redux';
 import Popover from 'react-bootstrap/Popover';
 import {FcInfo} from 'react-icons/fc';
 import {MdDelete} from 'react-icons/md';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import {handleSaveCharacter} from '../actions/characters';
+import {handleSaveCharacter, handleDeleteCharacter, handleShareCharacter} from '../actions/characters';
 import equal from 'fast-deep-equal'
 import BaseInformation from './Information';
 
-//delete character
+
 
 function Information(props) {
     let temp = BaseInformation(props.name, props.info);
     return (<OverlayTrigger trigger="click" placement="right" overlay={
-            <Popover id="popover-info">
+            <Popover id="popover-info" key={props.name}>
             <Popover.Title as="h3">{props.name}</Popover.Title>
             <Popover.Content style={{maxHeight: '80vh', overflow: 'auto'}}>{temp}</Popover.Content>
             </Popover>
@@ -82,7 +83,9 @@ class CharacterSheet extends Component {
                         otherEquip: '',
                         spellClass: 'Bard',
                         spells: [[],[],[],[],[],[],[],[],[],[]],
-                        extraNotes: ''
+                        extraNotes: '',
+                        showDelete: false,
+                        tempShare: ''
                         };
         this.classOptions = this.classOptions.bind(this);
         this.raceOptions = this.raceOptions.bind(this);
@@ -105,12 +108,13 @@ class CharacterSheet extends Component {
         this.saveCharacter = this.saveCharacter.bind(this);
         this.updateCharacter = this.updateCharacter.bind(this);
         this.deathSaves = this.deathSaves.bind(this);
+        this.deleteCharacter = this.deleteCharacter.bind(this);
 	}
 
     componentDidMount(){
         
-		if(this.props.dndInfo.characters[this.props.name] !== ''){
-            let root = this.props.dndInfo.characters[this.props.name];
+		if(this.props.characters[this.props.name] !== ''){
+            let root = this.props.characters[this.props.name];
             let spells1 = [[],[],[],[],[],[],[],[],[],[]];
             if(root.spells !== undefined){
                 for(let i = 0; i < root.spells.length; i++){
@@ -168,8 +172,8 @@ class CharacterSheet extends Component {
     } 
 
     updateCharacter(){
-        if(this.props.dndInfo.characters[this.props.name] !== ''){
-            let root = this.props.dndInfo.characters[this.props.name];
+        if(this.props.characters[this.props.name] !== ''){
+            let root = this.props.characters[this.props.name];
             let spells1 = [[],[],[],[],[],[],[],[],[],[]];
             if(root.spells !== undefined){
                 for(let i = 0; i < root.spells.length; i++){
@@ -216,6 +220,46 @@ class CharacterSheet extends Component {
                 spellClass: root.spellClass,
                 extraNotes: root.extraNotes             
             })
+		} else {
+              this.setState({
+                ...this.state,
+                class: '',
+                level: '',
+                background: '',
+                race:'',
+                subclass: '',
+                alignment: '',
+                player: '',
+                abilities: {CHA: 0, CON: 0, DEX: 0, INT: 0, STR: 0, WIS: 0},
+                savingsThrows: {CHA: false, CON: false, DEX: false, INT: false, STR: false, WIS: false},
+                proficiencyBonus: 0,
+                skills: {[`Animal Handling`]: false, Arcana: false, Athletics: false, Deception: false, History: false,
+                    Insight: false, Intimidation: false, Investigation: false, Medicine: false, Nature: false, 
+                    Perception: false, Performance: false, Persuasion: false, Religion: false, [`Sleight of Hand`]: false,
+                    Stealth: false, Survival: false},
+                proficiencies: [],
+                languages: [],
+                AC: '',
+                initiative: '',
+                speed: '',
+                currentHP: '',
+                tempHP: '',
+                hitDie: '',
+                deathSaves: '',
+                customAttacks: [],
+                equipment: [],
+                personalityTraits: '',
+                ideals: '',
+                bonds: '',
+                flaws: '',
+                features: [],
+                traits: [],
+                mainNotes: '',
+                otherEquip: '',
+                spells: [[],[],[],[],[],[],[],[],[],[]],
+                spellClass: '',
+                extraNotes: ''             
+            })
 		}
 	}
 
@@ -256,7 +300,7 @@ class CharacterSheet extends Component {
             extraNotes: this.state.extraNotes
         };
 
-        this.props.handleSaveCharacter(this.props.name, temp);
+        this.props.handleSaveCharacter(this.props.name, temp, this.props.user.username);
 
 	}
 
@@ -347,7 +391,7 @@ class CharacterSheet extends Component {
             <Row key={key + 'savingsThrows'}>
                 <Form.Check checked={this.state.savingsThrows[key]} style={{bottom: '3px'}} onChange={() => {this.setState({...this.state, savingsThrows: {...this.state.savingsThrows, [key]: (!this.state.savingsThrows[key])}})}}/>
                 <Form.Label style={{border: '1px solid', borderColor: 'lightGray', marginLeft: '15px', paddingLeft: '3px', paddingRight: '3px'}}>
-                    {(!isNaN(this.state.abilities[key])) ? 
+                    {(!isNaN(Number(this.state.abilities[key]))) ? 
                         ((Number(this.state.abilities[key]) - 10 > 0) ? 
                             (Math.floor((Number(this.state.abilities[key]) -  10)/2) + ((this.state.savingsThrows[key]) ? this.state.proficiencyBonus : 0)): 
                             (Math.ceil((Number(this.state.abilities[key]) - 10)/2) + ((this.state.savingsThrows[key]) ? this.state.proficiencyBonus : 0)))
@@ -365,15 +409,20 @@ class CharacterSheet extends Component {
             let key = Object.keys(this.props.dndInfo.generalInfo.specifics.skills)[i];
             let keySkill = this.props.dndInfo.generalInfo.specifics.skills[key].ability_score.name;
             let skill = 0;
-            if(this.state.skills[key]){
-                skill = (Number(this.state.abilities[keySkill]) - 10 > 0) ? 
-                        Math.floor((Number(this.state.abilities[keySkill]) -  10)/2) + this.state.proficiencyBonus: 
-                        Math.ceil((Number(this.state.abilities[keySkill]) - 10)/2) + this.state.proficiencyBonus
+            if(!isNaN(Number(this.state.abilities[keySkill]))){
+                if(this.state.skills[key]){
+                    skill = (Number(this.state.abilities[keySkill]) - 10 > 0) ? 
+                            Math.floor((Number(this.state.abilities[keySkill]) -  10)/2) + this.state.proficiencyBonus: 
+                            Math.ceil((Number(this.state.abilities[keySkill]) - 10)/2) + this.state.proficiencyBonus
+			    } else {
+                    skill = (Number(this.state.abilities[keySkill]) - 10 > 0) ? 
+                            Math.floor((Number(this.state.abilities[keySkill]) -  10)/2): 
+                            Math.ceil((Number(this.state.abilities[keySkill]) -10)/2)
+			    }
 			} else {
-                skill = (Number(this.state.abilities[keySkill]) - 10 > 0) ? 
-                        Math.floor((Number(this.state.abilities[keySkill]) -  10)/2): 
-                        Math.ceil((Number(this.state.abilities[keySkill]) -10)/2)
+                skill = 'N/A';     
 			}
+
             temp.push(
             <Row key={key + 'skill'}>
                 <Form.Check checked={!!this.state.skills[key]} style={{bottom: '3px'}} onChange={() => {this.setState({...this.state, skills: {...this.state.skills, [key]: (!this.state.skills[key])}})}}/>
@@ -679,6 +728,33 @@ class CharacterSheet extends Component {
         return temp;
     }
 
+    
+    deleteCharacter(){
+         return(
+              <Modal
+                show={this.state.showDelete}
+                onHide={() => {this.setState({showDelete: false})}}
+                backdrop="static"
+                keyboard={false}
+                >
+                <Modal.Header>
+                    <Modal.Title>Delete Character</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Label>Are you sure you want to delete {this.props.name}?</Form.Label>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="danger" onClick={() => {this.setState({showDelete: false}); this.props.handleDeleteCharacter(this.props.name, this.props.user.username);}}>
+                        Delete
+                    </Button>
+                    <Button variant="secondary" onClick={() => {this.setState({showDelete: false})}}>
+                    Cancel
+                    </Button>
+                </Modal.Footer>
+                </Modal>     
+	     )
+	}
+
 	render(){
 		return(
             <div style={{margin: '20px'}}>
@@ -689,9 +765,28 @@ class CharacterSheet extends Component {
                 {this.addFeat()}
                 {this.addTrait()}
                 {this.addSpell()}
+                {this.deleteCharacter()}
                 <Button variant="outline-success" style={{margin: '10px'}} onClick={() => {this.saveCharacter()}}>
                     Save Changes 
                 </Button>
+                <Button variant="outline-danger" style={{margin: '10px'}} onClick={() => {this.setState({...this.state, showDelete: true})}}>
+                    Delete Character 
+                </Button>
+                {(this.props.name !== 'Placeholder Character') ? <Form inline={true} style={{float: 'right'}}>
+					<Form.Group>
+						<Typeahead
+							id="searchshare"
+							labelKey="share"
+							onChange={(text) => {this.setState({...this.state, tempShare: text[0]})}}
+							options={this.props.userNames}
+							placeholder={"Share with..."}
+						/>
+					</Form.Group>
+                    <Button variant="outline-secondary" style={{margin: '10px'}} onClick={() => {this.props.handleShareCharacter(this.props.name, this.props.user.username, this.state.tempShare)}}>
+                        Share Character 
+                    </Button>
+				</Form>
+                : <></>}
 				<Card body>
 					<Container>
                       <Row style={{border: '1px solid', borderColor: 'lightGray', padding: '5px'}}>
@@ -975,7 +1070,12 @@ class CharacterSheet extends Component {
                             <Col sm={5} style={{borderRightStyle: 'solid', borderWidth: '1px', borderColor: 'lightGray'}}>
                                 <Row style={{marginLeft: '10px'}}>
                                     <Form.Group>
-                                    <Form.Label>Spellcasting Class <Information key={this.state.spellClass} name={this.state.spellClass} info={this.props.dndInfo.generalInfo.specifics.spellcasting[this.state.spellClass.toLowerCase()].info}/></Form.Label>
+                                    <Form.Label>
+                                    {(this.state.spellClass.length > 0) ? <>
+                                    Spellcasting Class 
+                                    <Information key={this.state.spellClass} name={this.state.spellClass} info={this.props.dndInfo.generalInfo.specifics.spellcasting[this.state.spellClass.toLowerCase()].info}/> 
+                                    </>
+                                    : <></>} </Form.Label>
                                         <Form.Control as="select" custom onChange={(text) =>{this.setState({...this.state, spellClass: text.target.value})}}>
                                         {this.spellClassOptions()}
                                         </Form.Control>
@@ -987,19 +1087,25 @@ class CharacterSheet extends Component {
                                     <Col sm>
                                         <Form.Group>
                                         <Form.Label>Spellcasting Ability</Form.Label>
+                                          {(this.state.spellClass.length > 0) ? 
                                           <Form.Control readOnly value={this.props.dndInfo.generalInfo.specifics.spellcasting[this.state.spellClass.toLowerCase()][`spellcasting_ability`].name} />
+                                          : <></>}
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group>
                                         <Form.Label>Spell Save DC</Form.Label>
+                                        {(this.state.spellClass.length > 0) ? 
                                           <Form.Control readOnly value={this.spellModifier() + 8} />
+                                        : <></>}
                                         </Form.Group>
                                     </Col>
                                     <Col sm>
                                         <Form.Group>
                                         <Form.Label>Spell Attack Bonus</Form.Label>
+                                        {(this.state.spellClass.length > 0) ? 
                                           <Form.Control readOnly value={this.spellModifier()} />
+                                         : <></>}
                                         </Form.Group>
                                     </Col>
                                 </Row>
@@ -1116,9 +1222,14 @@ class CharacterSheet extends Component {
 const mapStateToProps = state => {
 	return{
         dndInfo: state.dndInfo,
+        characters: state.characters,
+        user: state.user,
+        userNames: state.userNames
 	}
 }
 
 export default connect(mapStateToProps, {
 	handleSaveCharacter,
+    handleDeleteCharacter,
+    handleShareCharacter
 })(CharacterSheet);

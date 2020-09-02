@@ -48,7 +48,7 @@ class Header extends Component {
                     </Nav>
                   </Navbar.Collapse>
                 </Navbar>
-                <div style={{right: '0', position: 'absolute', margin: '10px', maxWidth: '300px',color: 'white', zIndex: '3000'}}>
+                <div style={{right: '0', position: 'absolute', margin: '10px', maxWidth: '300px',color: 'white', zIndex: '30000'}}>
 			        {(this.state.showDice) ? <Roller /> : <></>}
 			    </div>
 			</div>

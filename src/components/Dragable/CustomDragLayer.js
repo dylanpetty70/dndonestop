@@ -11,8 +11,8 @@ const layerStyles = {
   zIndex: 100,
   left: 0,
   top: 0,
-  width: '75vw',
-  height: '75vw',
+  height: '80vh', 
+  width: '98vw',
   margin: '5px'
 }
 

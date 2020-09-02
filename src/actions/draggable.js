@@ -6,6 +6,7 @@ export const NEW_ENVIRONMENT = 'NEW_ENVIRONMENT';
 export const GRAB_OPTIONS = 'GRAB_OPTIONS';
 export const CHANGE_CURRENT_ENV = 'CHANGE_CURRENT_ENV';
 export const CHANGE_SCALE = 'CHANGE_SCALE';
+export const DELETE_ENVIRONMENT = 'DELETE_ENVIRONMENT';
 
 
 export function changeCurrentEnv(data){
@@ -46,6 +47,13 @@ function newEnvironment(data, name, options){
 	}
 }
 
+function deleteEnvironment(data){
+	return{
+		type: DELETE_ENVIRONMENT,
+		data,
+	}
+}
+
 function grabOptions(data){
 	return{
 		type: GRAB_OPTIONS,
@@ -60,9 +68,18 @@ function changeScale(data){
 	}
 }
 
-export function handleChangeScale(scale, environment){
+export function handleDeleteEnvironment(name, user){
 	return async (dispatch) => {
-		await api.changeScale(scale, environment)
+		await api.deleteEnvironment(name, user)
+			.then((data) => {
+				dispatch(deleteEnvironment(data));
+			})
+	}
+}
+
+export function handleChangeScale(scale, environment, user){
+	return async (dispatch) => {
+		await api.changeScale(scale, environment, user)
 			.then((data) => {
 				dispatch(changeScale(scale));
 			})
@@ -78,38 +95,44 @@ export function handleAddNewItem(item, component){
 	}
 }
 
-export function handleUpdateCurrent(environment, current){
+export function handleUpdateCurrent(environment, current, user){
 	return async (dispatch) => {
-		await api.updateCurrent(environment, current)
+		await api.updateCurrent(environment, current, user)
 			.then((data) => {
 				dispatch(updateCurrent(data));
 			})
 	}
 }
 
-export function handleGrabDraggable(environment){
+export function handleGrabDraggable(environment, user){
 	return async (dispatch) => {
-		await api.grabDraggable(environment)
+		await api.grabDraggable(environment, user)
 			.then((data) => {
 				dispatch(grabDraggable(data, environment));
 			})
 	}
 }
 
-export function handleNewEnvironment(name){
+export function handleNewEnvironment(name, user){
 	return async (dispatch) => {
-		await api.newEnvironment(name)
+		await api.newEnvironment(name, user)
 			.then((data) => {
 				dispatch(newEnvironment(data[0], name, data[1]));
 			})
 	}
 }
 
-export function handleGrabOptions(){
+export function handleGrabOptions(user){
 	return async (dispatch) => {
-		await api.grabOptions()
+		await api.grabOptions(user)
 			.then((data) => {
 				dispatch(grabOptions(data));
 			})
+	}
+}
+
+export function handleShareEnvironment(environment, creator, user){
+	return async (dispatch) => {
+		await api.shareEnvironment(environment, creator, user)
 	}
 }

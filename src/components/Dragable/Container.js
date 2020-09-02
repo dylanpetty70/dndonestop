@@ -7,8 +7,8 @@ import { connect } from 'react-redux';
 import {handleGrabDraggable, handleUpdateCurrent} from '../../actions/draggable';
 
 const styles = {
-  width: '75vw',
-  height: '75vw',
+  height: '80vh', 
+  width: '98vw',
   border: '1px solid black',
   position: 'relative',
   margin: '5px'
@@ -92,7 +92,7 @@ const Container = (props) => {
       if(current[index]){
           current[index].pLeft = left;
           current[index].pTop = top;
-          props.handleUpdateCurrent(props.envOptions.current, current)
+          props.handleUpdateCurrent(props.envOptions.current, current, props.user.username)
 	  } else {
        updateBoxes1();
 	  }
@@ -111,7 +111,8 @@ const Container = (props) => {
 const mapStateToProps = state => {
 	return{
         draggable: state.draggable,
-        envOptions: state.envOptions
+        envOptions: state.envOptions,
+        user: state.user
 	}
 }
 
