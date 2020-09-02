@@ -9,6 +9,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import { Typeahead } from 'react-bootstrap-typeahead';
+import {editTokens} from '../../actions/editEnv';
 
 class CustomPanel extends Component {
 
@@ -17,8 +18,8 @@ class CustomPanel extends Component {
 		this.state = {tempItem: '',
 						tempScale: '',
 						scaleError: false,
-						tempToken: {creature: '', scene: '', background: ''},
-						tempTokenScale: {creature: 1, scene: 1, background: 1},
+						tempToken: {creature: '', scene: '', background: '', players: ''},
+						tempTokenScale: {creature: 1, scene: 1, background: 1, players: 1},
 						tempEnv: this.props.envOptions.current,
 						tempNewEnv: '',
 						showEnvVar: false,
@@ -44,7 +45,7 @@ class CustomPanel extends Component {
 	addToken(tag){
 		if(this.state.tempToken[tag] !== '' & this.state.tempToken[tag] !== 'Select One' & this.state.tempToken[tag] !== undefined){
 			let current = this.props.draggable.current;
-			current.push({item: this.state.tempToken[tag], pLeft: 80, pTop: 20, scale: this.state.tempTokenScale[tag]});
+			current.push({item: this.state.tempToken[tag], pLeft: 80, pTop: 20, scale: this.state.tempTokenScale[tag], rotation: 0});
 			this.props.handleUpdateCurrent(this.props.envOptions.current, current, this.props.user.username); 
 		}
 	}
@@ -98,8 +99,42 @@ class CustomPanel extends Component {
 
 	placeToken(){
 		return(<Card style={{marginTop: '5px', marginBottom: '5px', marginLeft: '2px', marginRight: '2px'}}>
-			<Card.Header>Place Token</Card.Header>
+			<Card.Header>Edit Tokens</Card.Header>
 			<Card.Body>
+			<Card.Title style={{fontSize: '16px'}}>Player Tokens</Card.Title>
+				<Form inline='true'>
+				<Container>
+					<Row>
+					<Col>
+				<Form.Label style={{float: 'left'}}>Name</Form.Label>
+					</Col>
+					<Col>
+				<Form.Label style={{float: 'left',  marginLeft: '75px'}}>Scale</Form.Label>
+					</Col>
+					</Row>
+					<Row>
+					<Col>
+				<Form.Group>
+				<Typeahead
+						id="playerTokens"
+						labelKey="players"
+						onChange={(text) => {this.setState({...this.state, tempToken: {...this.state.tempToken, players: text[0]}})}}
+						options={this.objectItems('players')}
+						placeholder="Choose a player token..."
+					/>
+				</Form.Group>
+					</Col>
+					<Col style={{marginLeft: '150px'}}>
+				<Form.Group>
+				<Form.Control placeholder={this.state.tempTokenScale.players} style={{width: '50px'}} custom onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, players: text.target.value}}) : this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, players: '1'}})}}/>
+				</Form.Group>
+					</Col>
+					</Row>
+				</Container>
+				</Form>
+				<Button variant="outline-primary" style={{float: 'right', width: '100px'}} onClick={() => {this.addToken('players')}}>Add Item</Button>
+
+				<br/>
 			<Card.Title style={{fontSize: '16px'}}>Creatures/Humanoids</Card.Title>
 				<Form inline='true'>
 				<Container>
@@ -270,7 +305,7 @@ class CustomPanel extends Component {
 			<h2 style={{paddingLeft: '25px', paddingRight: '25px', float: 'left'}}>{this.props.envOptions.current}</h2>
 			<Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvChange: !this.state.showEnvChange})}}>Change Environment</Button>
 			<Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvVar: !this.state.showEnvVar})}}>Environment Variables</Button>
-			<Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showPlaceTok: !this.state.showPlaceTok})}}>Place Tokens</Button>
+			<Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.props.editTokens(!this.props.editEnv.tokens); this.setState({...this.state, showPlaceTok: !this.state.showPlaceTok})}}>Place Tokens</Button>
 			{(this.props.envOptions.current.length > 0) ?
 			<>
 			<Form inline={true} style={{float: 'right'}}>
@@ -284,7 +319,7 @@ class CustomPanel extends Component {
 					/>
 				</Form.Group>
                 <Button variant="secondary" style={{margin: '10px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.props.handleShareEnvironment(this.props.envOptions.current, this.props.user.username, this.state.tempShare)}}>
-                    Share Character 
+                    Share Environment 
                 </Button>
 			</Form>
 			<Button variant="danger" style={{marginLeft: '30px'}} onClick={() => {this.setState({...this.state, showDelete: !this.state.showDelete, showEnvChange: false, showEnvVar: false, showPlaceTok: false})}}>Delete Current Environment</Button>
@@ -292,7 +327,7 @@ class CustomPanel extends Component {
 			:
 			<></>}
 		</div>
-			<div style={{width: '22vw', position: 'absolute', right: '10px', top: '130px', zIndex: '20000'}}>
+			<div style={{width: '22vw', position: 'absolute', right: '10px', top: '155px', zIndex: '20000'}}>
 				{(this.state.showEnvChange) ? this.envChange() : <></>}
 				{(this.state.showEnvVar) ? this.envVariables() : <></>}
 				{(this.state.showPlaceTok) ? this.placeToken() : <></>}
@@ -307,7 +342,8 @@ const mapStateToProps = state => {
         draggable: state.draggable,
 		envOptions: state.envOptions,
 		user: state.user,
-		userNames: state.userNames
+		userNames: state.userNames,
+		editEnv: state.editEnv
 	}
 }
 
@@ -318,5 +354,6 @@ export default connect(mapStateToProps,
 	handleChangeScale,
 	changeCurrentEnv,
 	handleDeleteEnvironment,
-	handleShareEnvironment}
+	handleShareEnvironment,
+	editTokens}
 	)(CustomPanel);

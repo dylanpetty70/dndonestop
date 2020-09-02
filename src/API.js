@@ -313,22 +313,6 @@ export async function updateCurrent(environment, current, user){
 	return temp;
 }
 
-export async function addItem(item, component, tag){
-	
-	let result = await api('https://dylan-s-database.firebaseio.com/dnd/environments.json', {
-			headers: {
-				"Content-type": "application/json; charset=UTF-8",
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
-				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
-			}})
-	let temp = result.data.items;
-	temp[item] = {title: component, tag: [[tag]]};
-	await api.put('https://dylan-s-database.firebaseio.com/dnd/environments/items.json',
-		temp
-		)
-	return temp;
-}
 
 export async function newEnvironment(name, user){
 	

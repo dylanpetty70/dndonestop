@@ -9,6 +9,7 @@ import notepads from './notepads';
 import notesOptions from './notesOptions';
 import characters from './characters';
 import userNames from './userNames';
+import editEnv from './editEnv';
 
 export default combineReducers({
 	user,
@@ -19,5 +20,6 @@ export default combineReducers({
 	notepads,
 	notesOptions,
 	characters,
-	userNames
+	userNames,
+	editEnv
 })

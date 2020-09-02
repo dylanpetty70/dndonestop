@@ -55,7 +55,7 @@ class CustomDragLayer extends Component {
                 <div
                 style={this.getItemStyles()}
                 >
-                <BoxDragPreview title={(this.props.draggable.items[this.props.itemType]) ? this.props.draggable.items[this.props.itemType].title : ''} scale={this.props.item.scale}/>
+                <BoxDragPreview title={(this.props.draggable.items[this.props.itemType]) ? this.props.draggable.items[this.props.itemType].title : ''} scale={this.props.item.scale} rotation={this.props.item.rotation}/>
                 </div>
             </div>)
 		}

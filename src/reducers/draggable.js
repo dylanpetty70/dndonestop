@@ -1,4 +1,3 @@
-import {ADD_ITEM} from '../actions/draggable';
 import {GRAB_DRAGGABLE} from '../actions/draggable';
 import {UPDATE_CURRENT} from '../actions/draggable';
 import {NEW_ENVIRONMENT} from '../actions/draggable';
@@ -8,9 +7,6 @@ import {DELETE_ENVIRONMENT} from '../actions/draggable';
 
 export default function draggable(state = {}, action) {
 	switch (action.type) {
-		case ADD_ITEM:
-			state.items = action.data;
-			return state;
 		case GRAB_DRAGGABLE:
 		case UPDATE_CURRENT:
 			return action.data;

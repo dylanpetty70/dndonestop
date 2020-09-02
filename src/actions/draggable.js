@@ -1,5 +1,4 @@
 import * as api from '../API';
-export const ADD_ITEM = 'ADD_ITEM';
 export const GRAB_DRAGGABLE = 'GRAB_DRAGGABLE';
 export const UPDATE_CURRENT = 'UPDATE_CURRENT';
 export const NEW_ENVIRONMENT = 'NEW_ENVIRONMENT';
@@ -16,12 +15,6 @@ export function changeCurrentEnv(data){
 	}
 }
 
-function addNewItem(data) {
-	return {
-		type: ADD_ITEM,
-		data
-	};
-}
 
 function grabDraggable(data, environment){
 	return{
@@ -86,14 +79,6 @@ export function handleChangeScale(scale, environment, user){
 	}
 }
 
-export function handleAddNewItem(item, component){
-	return async (dispatch) => {
-		await api.addItem(item, component)
-			.then((data) => {
-				dispatch(addNewItem(data));
-			})
-	}
-}
 
 export function handleUpdateCurrent(environment, current, user){
 	return async (dispatch) => {
