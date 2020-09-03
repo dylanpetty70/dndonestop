@@ -16,12 +16,18 @@
 		}})
 
         let temp = result.data.items;
-		for(let i = 0; i < items.length; i++){
-              string = <img src={"/images/mattsTokens/" + items[i] + ".png"} alt={items[i]} width="32" height="32"/>
-              temp[items[i].replace(/_/g, ' ').replace(/\[/g, '').replace(/\]/g, '')] = {title: ReactDOMServer.renderToString(string), tag: ['creature']};
+		for(var key in temp){
+			if(temp[key].title.contains('mattsTokens')){
+				delete temp[key]
+			}
 		}
+		
+		//for(let i = 0; i < items.length; i++){
+        //      string = <img src={"/images/mattsTokens/" + items[i] + ".png"} alt={items[i]} width="32" height="32"/>
+        //      temp[items[i].replace(/_/g, ' ').replace(/\[/g, '').replace(/\]/g, '')] = {title: ReactDOMServer.renderToString(string), tag: ['creature']};
+		//}
 		console.log(temp);
-		await api.put('https://dylan-s-database.firebaseio.com/dnd/environments/items.json',
-			temp
-		)
+		//await api.put('https://dylan-s-database.firebaseio.com/dnd/environments/items.json',
+		//	temp
+		//)
 	}
