@@ -169,40 +169,6 @@ class CustomPanel extends Component {
 				<Button variant="outline-primary" style={{float: 'right', width: '100px'}} onClick={() => {this.addToken('creature')}}>Add Item</Button>
 
 				<br/>
-				<Card.Title style={{fontSize: '16px', marginTop: '30px'}}>Backgrounds</Card.Title>
-				<Form inline='true'>
-				<Container>
-					<Row>
-					<Col>
-				<Form.Label style={{float: 'left'}}>Name</Form.Label>
-					</Col>
-					<Col>
-				<Form.Label style={{float: 'left',  marginLeft: '75px'}}>Scale</Form.Label>
-					</Col>
-					</Row>
-					<Row>
-					<Col>
-				<Form.Group>
-				<Typeahead
-						id="backgroundTokens"
-						labelKey="background"
-						onChange={(text) => {this.setState({...this.state, tempToken: {...this.state.tempToken, background: text[0]}})}}
-						options={this.objectItems('background')}
-						placeholder="Choose a background token..."
-					/>
-				</Form.Group>
-					</Col>
-					<Col style={{marginLeft: '150px'}}>
-				<Form.Group>
-				<Form.Control placeholder={this.state.tempTokenScale.background} style={{width: '50px'}} custom onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, background: text.target.value}}) : this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, background: '1'}})}}/>
-				</Form.Group>
-					</Col>
-					</Row>
-				</Container>
-				</Form>
-				<Button variant="outline-primary" style={{float: 'right', width: '100px'}} onClick={() => {this.addToken('background')}}>Add Item</Button>
-
-				<br/>
 				<Card.Title style={{fontSize: '16px', marginTop: '30px'}}>Scene</Card.Title>
 				<Form inline='true'>
 				<Container>

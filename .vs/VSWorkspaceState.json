@@ -1,15 +1,15 @@
 {
   "ExpandedNodes": [
     "",
+    "\\public",
+    "\\public\\images",
     "\\src",
-    "\\src\\actions",
     "\\src\\components",
-    "\\src\\components\\drag",
     "\\src\\components\\Dragable",
-    "\\src\\components\\Notes",
     "\\src\\Header",
     "\\src\\middleware",
     "\\src\\reducers"
   ],
+  "SelectedNode": "\\src\\components\\createEnv.js",
   "PreviewInSolutionExplorer": false
 }

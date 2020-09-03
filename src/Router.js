@@ -73,7 +73,7 @@ class Router extends Component {
         let temp = [<></>];
         if(!(this.props.notesOptions.all.length > 0)){
             this.props.handleGrabCampaigns();
-            setTimeout(() => {this.props.handleChangeCampaign(this.props.notesOptions.all[0])}, 1000)
+            setTimeout(() => {if(this.props.notesOptions.all.length > 0){this.props.handleChangeCampaign(this.props.notesOptions.all[0])}}, 1000)
 		} else if(!(Object.keys(this.props.notepads).length > 0)){
               this.props.handleChangeCampaign(this.props.notesOptions.all[0])
 		} else {
