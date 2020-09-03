@@ -21,7 +21,7 @@ const persistConfig = {
   key: 'ruse',
   storage,
   stateReconciler: autoMergeLevel2,
-  blacklist: ['envOptions', 'draggable', 'notepads', 'notesOptions']
+  blacklist: ['envOptions', 'draggable', 'notepads', 'notesOptions', 'editEnv', 'initiative', 'userNames']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

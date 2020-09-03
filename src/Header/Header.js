@@ -2,9 +2,11 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav';
+import Button from 'react-bootstrap/Button';
 import Roller from '../components/roller';
 import ToggleButton from 'react-bootstrap/ToggleButton';
-import ButtonGroup from 'react-bootstrap/ButtonGroup'
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import {changeInitiativeShow} from '../actions/initiative';
 
 
 class Header extends Component {
@@ -41,10 +43,9 @@ class Header extends Component {
                        : <></>}
                     </Nav>
                     <Nav>
+					  {(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} onClick={() => {this.props.changeInitiativeShow()}}>Initiatives</Nav.Link> : <></>}
                       <Nav.Link href="/login" style={{color: 'white'}}>Log In</Nav.Link>
-                      {(this.props.userStatus.status === true) ?
-                      <Nav.Link style={{color: 'white'}} ><div style={{paddingLeft: '30px',color: 'white'}}>Hello, {this.props.user.firstName}</div></Nav.Link>
-                      :<></>}
+                      {(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} ><div style={{paddingLeft: '30px',color: 'white'}}>Hello, {this.props.user.firstName}</div></Nav.Link> : <></>}
                     </Nav>
                   </Navbar.Collapse>
                 </Navbar>
@@ -60,7 +61,8 @@ const mapStateToProps = state => {
 	return{
 		userStatus: state.userStatus,
         user: state.user,
+		initiative: state.initiative,
 	}
 }
 
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps, {changeInitiativeShow})(Header);

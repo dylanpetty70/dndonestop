@@ -589,3 +589,125 @@ export async function deleteNote(campaign, notepad, subnotepad, notes){
 
 	return temp;
 }
+//name: {creator: user, items: [], shared: []}
+export async function grabInitiative(user){
+
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/initiatives.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data;
+	let temp1 = {};
+
+	if(Object.keys(temp).length > 0){
+		for(var key in temp){
+			if(temp[key].creator === user){
+				temp1[key] = temp[key];
+			}
+		}
+	}
+
+	return temp1;
+}
+
+export async function newInitiative(name, user){
+
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/initiatives.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data;
+	let flag = true;
+	if(Object.keys(temp).length > 0){
+		for(var key in temp){
+			if(key === name){
+				flag = false;
+			}
+		}
+	}
+	if(flag){
+		temp[name] = {creator: user, items: [], shared: []}
+	}
+
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/initiatives.json',
+		temp
+	)
+
+	return temp;
+}
+
+export async function deleteInitiative(name, user){
+
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/initiatives.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data;
+	if(Object.keys(temp).length > 0){
+		if(temp[name].creator === user){
+			delete temp[name]
+		} else if(temp[name].shared.includes(user)) {
+			temp[name].shared.splice(temp[name].shared.indexOf(user),1)
+		}
+	}
+	
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/initiatives.json',
+		temp
+	)
+	let temp1 = {};
+	for(var key in temp){
+		if(temp[key].creator === user){
+			temp1[key] = temp[key];
+		} else if(temp[key].shared){
+			if(temp[key].shared.includes(user)){
+				temp1[key] = temp[key];
+			}
+		}
+	}
+
+	return temp1;
+}
+
+export async function shareInitiative(name, creator, user){
+
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/initiatives/' + name + '.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data;
+	if(temp.creator === creator){
+		if(temp.shared === undefined){
+			temp.shared = [];
+		}
+		if(user !== creator && !temp.shared.includes(creator)){
+			temp.shared.push(user)
+		}
+	}
+	
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/initiatives/' + name + '.json',
+		temp
+	)
+}
+
+export async function updateInitiative(name, data, user){
+
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/initiatives/' + name + '/items.json',
+		data
+	)
+
+	let temp = await grabInitiative(name, user);
+
+	return temp;
+}

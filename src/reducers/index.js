@@ -10,6 +10,7 @@ import notesOptions from './notesOptions';
 import characters from './characters';
 import userNames from './userNames';
 import editEnv from './editEnv';
+import initiative from './initiative';
 
 export default combineReducers({
 	user,
@@ -21,5 +22,6 @@ export default combineReducers({
 	notesOptions,
 	characters,
 	userNames,
-	editEnv
+	editEnv,
+	initiative
 })

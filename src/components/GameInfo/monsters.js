@@ -302,8 +302,16 @@ class Monsters extends Component {
 				}
 				if(this.state.data.actions[i].damage){
 					for(let j = 0; j < this.state.data.actions[i].damage.length; j++){
-						let data = this.state.data.actions[i].damage[j];
-						temp.push(<p key={'popdfdaman'+j+ data.damage_dice}>Damage {data.damage_dice}, {data.damage_type.name}<br/></p>);
+						if(this.state.data.actions[i].damage[j].choose){
+							temp.push(<h5 key={'strodwdwdwodp'+i}>Options: Choose {this.state.data.actions[i].damage[j].choose}</h5>)
+							for(let h = 0; h < this.state.data.actions[i].damage[j].from.length; h++){
+								let data = this.state.data.actions[i].damage[j].from[h];
+								temp.push(<strong key={'poptdwddwdwdn'+h}>{data.damage_dice + ', ' + data.damage_type.name}<br/></strong>);
+							}
+						} else{
+							let data = this.state.data.actions[i].damage[j];
+							temp.push(<p key={'popdfdaman'+j+ data.damage_dice}>Damage {data.damage_dice}, {data.damage_type.name}<br/></p>);
+						}
 					}
 				}
 				if(this.state.data.actions[i].dc){

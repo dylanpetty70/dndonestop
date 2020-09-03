@@ -123,7 +123,7 @@ class Classes extends Component {
 				<div>
 				<h6>Hit Die</h6>
 				<p>d{this.state.data.hit_die}<br/></p>
-
+				
 				{this.proficiencies()}
 
 				{this.startingEquip()}

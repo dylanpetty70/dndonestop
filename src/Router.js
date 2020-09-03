@@ -86,8 +86,9 @@ class Router extends Component {
     render() {
       return (
         <div>
-        <Switch>
-                {(this.props.userStatus) ?  <>
+        {(this.props.userStatus) ? <>
+                
+            <Switch>
                 <Route exact path="/">{(this.props.dndInfo.generalInfo) ? 
 				<GameInfo/> :
                 <PulseLoader
@@ -98,7 +99,7 @@ class Router extends Component {
                         onLoad={setTimeout(() => {this.noGameInfo()},1000)}
                      />
                 }</Route>
-                <Route path="/createenv"> {(Object.keys(this.props.draggable).length > 0) ? <CreateEnv/> : 
+                <Route exact path="/createenv"> {(Object.keys(this.props.draggable).length > 0) ? <CreateEnv/> : 
                     <PulseLoader
                         css={{position: 'absolute', borderColor: 'red', top: '40vh', left: '35vw'}}
                         size={150}
@@ -107,7 +108,7 @@ class Router extends Component {
                         onLoad={setTimeout(() => {this.noDraggable()},1000) }
                      />
                 }</Route>
-                <Route path="/characterInfo"> {(Object.keys(this.props.characters).length > 0) ? <CharacterInfo/> : 
+                <Route exact path="/characterInfo"> {(Object.keys(this.props.characters).length > 0) ? <CharacterInfo/> : 
                     <PulseLoader
                         css={{position: 'absolute', borderColor: 'red', top: '40vh', left: '35vw'}}
                         size={150}
@@ -116,7 +117,7 @@ class Router extends Component {
                         onLoad={setTimeout(() => {this.noCharacter()},1000)}
                      />
                 }</Route>
-                <Route path="/campaigndetails"> {(Object.keys(this.props.notepads).length > 0) ? <CampaignDetails/> :
+                <Route exact path="/campaigndetails"> {(Object.keys(this.props.notepads).length > 0) ? <CampaignDetails/> :
                 <PulseLoader
                         css={{position: 'absolute', borderColor: 'red', top: '40vh', left: '35vw'}}
                         size={150}
@@ -125,12 +126,22 @@ class Router extends Component {
                         onLoad={setTimeout(() => {this.noCampaign()},1000)}
                      />
                 }</Route>
-                <Route path="/login" component={Login} /> 
-                </>: <><Route path="/*" component={Login} /></>}
-                <Route path="/why-are-you-trying-to-break-my-site" component={RedirectPage} />
-                {(!this.props.userStatus) ? <Redirect exact from="/*" to="/login" /> : <></>}
-                {(this.props.userStatus) ? <Redirect from="/*" to="/why-are-you-trying-to-break-my-site" /> : <></>}
-        </Switch>
+                
+                <Route exact path="/login" component={Login} /> 
+                <Route path="*"> 
+                    <RedirectPage/>
+                </Route>
+                </Switch>
+                </>
+                : 
+                <> 
+                <Switch>
+                <Route exact path="/login" component={Login} /> 
+                <Redirect from="*" to="/login" />
+                </Switch>
+                </>}
+                
+            
                 {(this.props.dndInfo.generalInfo && this.props.userStatus) ? <Chatbot/> : <></>}
         </div>
       );
