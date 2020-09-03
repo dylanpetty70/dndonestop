@@ -288,7 +288,7 @@ class CustomPanel extends Component {
                     Share Environment 
                 </Button>
 			</Form>
-			<Button variant="danger" style={{marginLeft: '30px'}} onClick={() => {this.setState({...this.state, showDelete: !this.state.showDelete, showEnvChange: false, showEnvVar: false, showPlaceTok: false})}}>Delete Current Environment</Button>
+			<Button variant="danger" style={{marginLeft: '30px'}} onClick={() => {this.props.editTokens(false); this.setState({...this.state, showDelete: !this.state.showDelete, showEnvChange: false, showEnvVar: false, showPlaceTok: false})}}>Delete Current Environment</Button>
 			</>
 			:
 			<></>}
