@@ -4,9 +4,6 @@ import {handleGrabDraggable, handleUpdateCurrent, handleNewEnvironment, handleCh
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import {editTokens} from '../../actions/editEnv';
