@@ -102,18 +102,8 @@ class CustomPanel extends Component {
 			<Card.Header>Edit Tokens</Card.Header>
 			<Card.Body>
 			<Card.Title style={{fontSize: '16px'}}>Player Tokens</Card.Title>
-				<Form inline='true'>
-				<Container>
-					<Row>
-					<Col>
-				<Form.Label style={{float: 'left'}}>Name</Form.Label>
-					</Col>
-					<Col>
-				<Form.Label style={{float: 'left',  marginLeft: '75px'}}>Scale</Form.Label>
-					</Col>
-					</Row>
-					<Row>
-					<Col>
+				<Form>
+				<Form.Label>Name</Form.Label>
 				<Form.Group>
 				<Typeahead
 						id="playerTokens"
@@ -123,31 +113,17 @@ class CustomPanel extends Component {
 						placeholder="Choose a player token..."
 					/>
 				</Form.Group>
-					</Col>
-					<Col style={{marginLeft: '150px'}}>
+				<Form.Label style={{float: 'left', paddingRight: '5px'}}>Scale</Form.Label>
 				<Form.Group>
-				<Form.Control placeholder={this.state.tempTokenScale.players} style={{width: '50px'}} custom onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, players: text.target.value}}) : this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, players: '1'}})}}/>
+				<Form.Control placeholder={this.state.tempTokenScale.players} style={{float: 'left', width: '50px'}} custom onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, players: text.target.value}}) : this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, players: '1'}})}}/>
 				</Form.Group>
-					</Col>
-					</Row>
-				</Container>
-				</Form>
 				<Button variant="outline-primary" style={{float: 'right', width: '100px'}} onClick={() => {this.addToken('players')}}>Add Item</Button>
+				</Form>
 
 				<br/>
 			<Card.Title style={{fontSize: '16px', marginTop: '30px'}}>Creatures/Humanoids</Card.Title>
-				<Form inline='true'>
-				<Container>
-					<Row>
-					<Col>
-				<Form.Label style={{float: 'left'}}>Name</Form.Label>
-					</Col>
-					<Col>
-				<Form.Label style={{float: 'left',  marginLeft: '75px'}}>Scale</Form.Label>
-					</Col>
-					</Row>
-					<Row>
-					<Col>
+				<Form>
+				<Form.Label>Name</Form.Label>
 				<Form.Group>
 				<Typeahead
 						id="creatureTokens"
@@ -157,32 +133,18 @@ class CustomPanel extends Component {
 						placeholder="Choose a creature token..."
 					/>
 				</Form.Group>
-					</Col>
-					<Col style={{marginLeft: '150px'}}>
+				<Form.Label style={{float: 'left', paddingRight: '5px'}}>Scale</Form.Label>
 				<Form.Group>
-				<Form.Control placeholder={this.state.tempTokenScale.creature} style={{width: '50px'}} custom onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, creature: text.target.value}}) : this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, creature: '1'}})}}/>
+				<Form.Control placeholder={this.state.tempTokenScale.creature} style={{float: 'left', width: '50px'}} custom onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, creature: text.target.value}}) : this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, creature: '1'}})}}/>
 				</Form.Group>
-					</Col>
-					</Row>
-				</Container>
-				</Form>
 				<Button variant="outline-primary" style={{float: 'right', width: '100px'}} onClick={() => {this.addToken('creature')}}>Add Item</Button>
+				</Form>
 
 				<br/>
 				<Card.Title style={{fontSize: '16px', marginTop: '30px'}}>Scene</Card.Title>
-				<Form inline='true'>
-				<Container>
-					<Row>
-					<Col>
-				<Form.Label style={{float: 'left'}}>Name</Form.Label>
-					</Col>
-					<Col>
-				<Form.Label style={{float: 'left',  marginLeft: '75px'}}>Scale</Form.Label>
-					</Col>
-					</Row>
-					<Row>
-					<Col>
-				<Form.Group>
+				<Form>
+				<Form.Label>Name</Form.Label>
+				<Form.Group style={{paddingRight: '20px'}}>
 				<Typeahead
 						id="sceneTokens"
 						labelKey="scene"
@@ -191,16 +153,12 @@ class CustomPanel extends Component {
 						placeholder="Choose a scene token..."
 					/>
 				</Form.Group>
-					</Col>
-					<Col style={{marginLeft: '150px'}}>
+				<Form.Label style={{float: 'left', paddingRight: '5px'}}>Scale</Form.Label>
 				<Form.Group>
 				<Form.Control placeholder={this.state.tempTokenScale.scene} style={{float: 'left', width: '50px'}} custom onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, scene: text.target.value}}) : this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, scene: '1'}})}}/>
 				</Form.Group>
-					</Col>
-					</Row>
-				</Container>
-				</Form>
 				<Button variant="outline-primary" style={{float: 'right', width: '100px'}} onClick={() => {this.addToken('scene')}}>Add Item</Button>
+				</Form>
 			</Card.Body>
 		</Card>)
 	}
@@ -217,15 +175,15 @@ class CustomPanel extends Component {
 						<option value='Select One'>Select One</option>
 						{this.envOptions()}
 					</Form.Control>
-					<br/>
-					<Button variant="outline-primary" style={{float: 'right', marginTop: '20px'}} onClick={() => {this.changeEnv()}}>Change Environment</Button>
+					<Button variant="outline-primary" style={{ float: 'right', marginTop: '10px'}} onClick={() => {this.changeEnv()}}>Change Environment</Button>
 				</Form>
+				<br/>
 				<Card.Title style={{fontSize: '16px', marginTop: '75px'}}>New Environment</Card.Title>
 				<Form style={{margin: '5px'}}>
 					<Form.Group>
 						<Form.Control placeholder='Name' style={{width: '250px'}} onChange={(text) => {this.setState({...this.state, tempNewEnv: text.target.value})}} />
 					</Form.Group>
-					<Button variant="outline-primary" style={{ float: 'right', marginTop: '10px'}} onClick={() => {this.props.handleNewEnvironment(this.state.tempNewEnv, this.props.user.username, this.props.user.username); this.setState({...this.state, tempEnv: this.state.tempNewEnv});}}>Create new Environment</Button>
+					<Button variant="outline-primary" style={{ float: 'right'}} onClick={() => {this.props.handleNewEnvironment(this.state.tempNewEnv, this.props.user.username, this.props.user.username); this.setState({...this.state, tempEnv: this.state.tempNewEnv});}}>Create new Environment</Button>
 				</Form>
 			</Card.Body>
 		</Card>)
@@ -293,11 +251,15 @@ class CustomPanel extends Component {
 			:
 			<></>}
 		</div>
-			<div style={{width: '22vw', position: 'absolute', right: '10px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto'}}>
+			{(this.state.showEnvChange || this.state.showEnvVar || this.state.showPlaceTok) ?
+			<div style={{width: '22vw', position: 'absolute', right: '10px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', minHeight: '80%'}}>
 				{(this.state.showEnvChange) ? this.envChange() : <></>}
 				{(this.state.showEnvVar) ? this.envVariables() : <></>}
 				{(this.state.showPlaceTok) ? this.placeToken() : <></>}
 			</div>
+			:
+			<></>
+			}
 		</div>
 		)
 	}

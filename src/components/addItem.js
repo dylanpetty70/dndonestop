@@ -1,10 +1,11 @@
-   import api from './APIFactory';
+   import api from '../APIFactory';
    import ReactDOMServer from 'react-dom/server';
 
-   const items = []
-   //https://www.pinterest.com/amkuhns5/dd-map-assets/
-   //https://drive.google.com/drive/folders/1c_8hDZKuZuu_NF76oq2fjcm4XaE1stkJ
-   
+   const items = ['alien_floors10_ae', 'alien_floors11_ae', 'alien_floors12_ae', 'alien_floors13_ae', 'alien_floors14_ae', 'alien_floors15_ae', 'alien_floors16_ae', 'alien_floors17_ae', 'alien_floors18_ae', 'alien_floors19_ae', 'alien_floors4_ae', 'alien_floors5_ae', 'alien_floors6_ae', 'alien_floors7_ae', 'alien_floors8_ae', 'alien_floors9_ae', 'Alien_Secretion_2_pdrv_hrc', 'Alien_Secretion_pdrv_hrc', 'Altar', 'altar_1', 'background ', 'background bamboo', 'background bamboo2', 'background beach rocks', 'background beach', 'background black rock', 'background black wood', 'background blood red', 'background blood tile', 'background blue cloud', 'background blue ocean sea', 'background blue', 'background brick large', 'background brick tan', 'background brick', 'background bronze', 'background brown rock', 'background brown stone other.PNG', 'background brown', 'background bumps blue green', 'background castle wall', 'background cave wall bronze', 'background cave wall brown', 'background cave wall dark', 'background cave wall grey', 'background cave wall vines', 'background cave wall white', 'background crystal blue', 'background dark brick', 'background dark grey', 'background dark marble', 'background goblin cage', 'background gooey blue', 'background green (2)', 'background green cloud', 'background green rock', 'background green', 'background ice', 'background knots design', 'background lava rock red', 'background lava rock', 'background maze 2', 'background maze dark', 'background maze', 'background orange', 'background pool water', 'background purple', 'background red rock', 'background red', 'background rock', 'background rocks rough', 'background shiny dark brick', 'background shiny red brick', 'background shiny white brick', 'background ship floor', 'background small blocks', 'background small wood smooth blue', 'background smooth dark wood', 'background smooth light brown', 'background smooth wood brown', 'background stone blue design', 'background stone dark', 'background stone design blue 2', 'background symbols', 'background tile blue', 'background tile colored', 'background water 2', 'background water sea', 'background water', 'background white brick', 'background white rough stone', 'background white stone', 'background wood', 'background yellow', 'bakcground black', 'bakcground blue stone other.PNG', 'ballista1', 'ballista2', 'barrel group 2', 'barrel group', 'barrel open empty', 'barrel open green', 'barrel open', 'barrel top closed', 'barrel top red', 'barrel', 'barrel2', 'barrels1', 'barrels2', 'barrel_1_id', 'Barrel_1_RS', 'bed blue', 'bed drow', 'bed plain', 'black rock seas', 'blood splatter decor', 'blue decor', 'boat', 'bowl blue powder decor', 'bowl green powder decor 2', 'bowl green powder decor', 'bowl red powder decor', 'bridge1', 'bush1', 'campfire real', 'campfire', 'carpet1', 'carpet2', 'carriage1', 'cauldron blue', 'cauldron dark blue', 'cauldron green', 'cauldron lights', 'cauldron octopus soup', 'cauldron red', 'cauldron yellow', 'cave entrance down', 'cave entrance round', 'chair ', 'chair 1', 'chair 10', 'chair 2', 'chair 3', 'chair 4', 'chair 5', 'chair 6', 'chair 7', 'chair 8', 'chair1', 'chest barrel', 'Chest-344_bg_mod-Neyjour-05a', 'Chest-Wood-22_bg', 'Chest', 'chest1', 'Chest_Closed-Blu', 'Chest_Demon_gt_bg', 'chest_goldedge_gt', 'Chest_Skin1_gt_bg', 'Chest_Skin2_gt_bg', 'circle blue light', 'circle bones', 'circle red fire', 'circle red glowing', 'circle webs', 'coffer gold stash', 'coins stash decor', 'colored smoke decor', 'column ', 'column 1', 'column 2', 'column 3', 'Crate Group', 'crate1', 'crystal black', 'crystal green', 'crystal light blue', 'crystal orange', 'crystal purple', 'crystal red', 'crystal yellow', 'dead deer decor', 'dead farmer decor', 'dead male decor', 'decor alchemy portal blue', 'decor alchemy portal green', 'decor alchemy portal red', 'decor alchemy portal yellow', 'decor axe group', 'decor bags', 'decor bowl glow', 'decor broken glass', 'decor broken painting', 'decor bucket with soap', 'decor cage bottom', 'decor cage dark', 'decor caged rat', 'decor ceremonial bowl', 'decor chained girl', 'decor chains', 'decor chess board', 'decor compass', 'decor dead body in coffin', 'decor dead knight', 'decor dragon stained glass', 'decor empty bucket', 'decor floor tile circle design', 'decor green blood ', 'decor gun container', 'Decor Knifeboard', 'decor maces', 'decor magic swirl', 'decor market', 'decor picnic', 'decor round light shield', 'decor shield red round', 'decor shields', 'decor slaves', 'decor spellbook 2', 'decor spellbook', 'decor swords', 'decor weapon ', 'decor well red', 'desk armorers', 'desk artist', 'desk books', 'desk papers', 'desk two stack', 'desk1', 'dragon 2', 'dragon wall trophy', 'dragon1', 'elevator shaft background', 'explosion fire 2', 'exposion fire', 'fireplace decor', 'floor alchemy gold', 'floor alchemy green', 'floor alchemy light green', 'floor alchemy red', 'floor alien 1', 'floor alien 2', 'floor alien 3', 'Floor brown 2', 'Floor brown 3', 'Floor Brown', 'Floor dark brown', 'Floor dark', 'floor hole 1', 'floor hole 2', 'floor hole 3', 'floor hole 4', 'floor red cross', 'floor weird blue', 'floor weird green', 'floor weird red', 'floor wierd black', 'fountain 4', 'fountain1', 'fountain2', 'Fountain3_bg', 'Fountain9', 'gold stash 2', 'house1', 'house2', 'house3', 'keg1', 'Magic Circle - Air', 'Magic Circle - Astral', 'Magic Circle - Earth', 'Magic Circle - Ether', 'Magic Circle - Fire', 'Magic Circle - Water', 'magiccircle', 'orb crystal decor', 'piano', 'powder silver', 'Queen Bed', 'quill decor', 'rail_dwarven_5H-a', 'rail_luxury_5H-a', 'ritual1', 'rock boulder', 'rug1', 'rug2', 'sailing ship', 'scroll', 'scroll2', 'scroll_1', 'Shield', 'shield2', 'shield3', 'shield4.PNG', 'shield5.PNG', 'shield6.PNG', 'ship wheel', 'ship1', 'Smoke 3', 'Smoke Puff', 'Smoke Ring 1', 'Smoke Ring 2', 'smoke1', 'smoke_cloud-a', 'smoke_cloud-b', 'smoke_coil-a', 'stairs circular', 'stairs1', 'statue barbarian', 'statue stone', 'statue1', 'stone checkered blue background', 'stone design background blue 3', 'stone design background blue 4', 'stone design background blue 5', 'stone moss ', 'stool decor', 'Summoning Circle Blue', 'symbol', 'table 4', 'table 5', 'table 6', 'table1', 'table2', 'table3', 'Tarrasque statue', 'trapdoor1', 'tree1', 'tree2', 'water trough', 'waterTub1', 'waterTub2', 'workbench1']
+
+
+
+
    async componentDidMount(){
 		let string = '';
    	    let result = await api('https://dylan-s-database.firebaseio.com/dnd/environments.json', {
@@ -16,18 +17,18 @@
 		}})
 
         let temp = result.data.items;
-		for(var key in temp){
-			if(temp[key].title.contains('mattsTokens')){
-				delete temp[key]
-			}
-		}
-		
-		//for(let i = 0; i < items.length; i++){
-        //      string = <img src={"/images/mattsTokens/" + items[i] + ".png"} alt={items[i]} width="32" height="32"/>
-        //      temp[items[i].replace(/_/g, ' ').replace(/\[/g, '').replace(/\]/g, '')] = {title: ReactDOMServer.renderToString(string), tag: ['creature']};
+		//for(var key in temp){
+		//	if(temp[key].title.includes('mattsScene')){
+		//		delete temp[key]
+		//	}
 		//}
+		
+		for(let i = 0; i < items.length; i++){
+              string = <img src={"/images/mattsScene/" + items[i] + ".png"} alt={items[i]} width="32" height="32"/>
+              temp[items[i].replace(/_/g, ' ').replace(/\[/g, '').replace(/\]/g, '').replace(/\./g, '')] = {title: ReactDOMServer.renderToString(string), tag: ['scene']};
+		}
 		console.log(temp);
-		//await api.put('https://dylan-s-database.firebaseio.com/dnd/environments/items.json',
-		//	temp
-		//)
+		await api.put('https://dylan-s-database.firebaseio.com/dnd/environments/items.json',
+			temp
+		)
 	}

@@ -17,7 +17,7 @@ class Header extends Component {
 	render(){
 		return(
 			<div className="App">
-				<Navbar collapseOnSelect expand="lg" style={{backgroundColor: '#8b3a3a'}}>
+				<Navbar collapseOnSelect expand="lg" style={{backgroundColor: '#8b3a3a', zIndex: '50000'}}>
                   <Navbar.Brand href="/" style={{color: 'white'}}>DND One Stop</Navbar.Brand>
                   <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                   <Navbar.Collapse id="responsive-navbar-nav">

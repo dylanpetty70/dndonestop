@@ -6,10 +6,10 @@
     "\\src",
     "\\src\\components",
     "\\src\\components\\Dragable",
+    "\\src\\components\\GameInfo",
     "\\src\\Header",
     "\\src\\middleware",
     "\\src\\reducers"
   ],
-  "SelectedNode": "\\src\\components\\createEnv.js",
   "PreviewInSolutionExplorer": false
 }
