@@ -73,7 +73,7 @@ class Environment extends Component {
 			{(this.state.current.length > 0) ? 
 			<div>
             <div style={{position: 'flex', marginTop: '100px'}}>
-			<Button variant="secondary" style={{position: 'absolute', top: '10px', width: '100px', left: '850px'}} onClick={() => {this.props.handleGrabDraggable(this.props.envOptions.current, this.props.user.username); handleGrabOptions(this.props.user.username)}}>Refresh</Button>
+			<Button variant="secondary" style={{position: 'absolute', top: '10px', width: '100px', left: '850px', zIndex: 3}} onClick={() => {this.props.handleGrabDraggable(this.props.envOptions.current, this.props.user.username); handleGrabOptions(this.props.user.username)}}>Refresh</Button>
 				<GridLayer />
 				<Container snapToGridAfterDrop={true} />
 				<DragLayer snapToGridWhileDragging={true}/>

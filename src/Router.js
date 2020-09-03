@@ -16,6 +16,7 @@ import {handleGrabDraggable,
 import {handleGrabCampaigns, 
         handleChangeCampaign} from './actions/notes';
 import {handleGrabNames} from './actions/user';
+import Chatbot from './components/Chatbot';
 
 
 class Router extends Component {
@@ -86,7 +87,9 @@ class Router extends Component {
       return (
         <div>
         <Switch>
-                {(this.props.userStatus) ?  <><Route exact path="/">{(this.props.dndInfo.generalInfo) ? <GameInfo/> :
+                {(this.props.userStatus) ?  <>
+                <Route exact path="/">{(this.props.dndInfo.generalInfo) ? 
+				<GameInfo/> :
                 <PulseLoader
                         css={{position: 'absolute', borderColor: 'red', top: '40vh', left: '35vw'}}
                         size={150}
@@ -122,12 +125,13 @@ class Router extends Component {
                         onLoad={setTimeout(() => {this.noCampaign()},1000)}
                      />
                 }</Route>
-                <Route path="/login" component={Login} /> </> 
-                : <><Route path="/*" component={Login} /></>}
+                <Route path="/login" component={Login} /> 
+                </>: <><Route path="/*" component={Login} /></>}
                 <Route path="/why-are-you-trying-to-break-my-site" component={RedirectPage} />
                 {(!this.props.userStatus) ? <Redirect exact from="/*" to="/login" /> : <></>}
                 {(this.props.userStatus) ? <Redirect from="/*" to="/why-are-you-trying-to-break-my-site" /> : <></>}
         </Switch>
+                {(this.props.dndInfo.generalInfo && this.props.userStatus) ? <Chatbot/> : <></>}
         </div>
       );
    }
