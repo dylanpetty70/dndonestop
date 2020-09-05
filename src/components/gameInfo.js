@@ -24,7 +24,7 @@ class GameInfo extends Component {
 
 	constructor(props){
 		super(props);
-        this.state = {page: 'spells', tempSearch: '', placeholder: 'Spell', selected: '', searchLabel: 'Spells', dndInfo: []};
+        this.state = {page: 'spells', tempSearch: '', placeholder: 'Spell', selected: '', searchLabel: 'Spells', dndInfo: [], spellFilter: '', monsterFilter: ''};
 		this.navTabs = this.navTabs.bind(this);
 		this.switchStatement = this.switchStatement.bind(this);
 		this.options = this.options.bind(this);
@@ -38,7 +38,51 @@ class GameInfo extends Component {
 
 	options(category){
 		let temp = [];
-		temp = Object.keys(this.props.dndInfo.generalInfo.specifics[category]);
+		let temp1 = [];
+		if(this.state.page === 'spells' && (this.state.spellFilter !== undefined && this.state.spellFilter !== '')){
+			if(this.state.spellFilter.substr(0,5) === 'Level'){
+				for(var key in this.props.dndInfo.generalInfo.specifics[category]){
+					if(String(this.props.dndInfo.generalInfo.specifics[category][key].level) === String(this.state.spellFilter.substr(7,1))){
+						temp1.push(key);
+					}
+				}
+				temp = temp1;
+			} else {
+				for(var key1 in this.props.dndInfo.generalInfo.specifics[category]){
+					if(this.props.dndInfo.generalInfo.specifics[category][key1].classes){
+						for(let i = 0; i < this.props.dndInfo.generalInfo.specifics[category][key1].classes.length; i++){
+							if(this.props.dndInfo.generalInfo.specifics[category][key1].classes[i].name.toLowerCase() === this.state.spellFilter.toLowerCase()){
+								temp1.push(key1);
+							}
+						}
+					}
+				}
+				temp = temp1;
+			}
+		} else if(this.state.page === 'monsters' && (this.state.monsterFilter !== undefined && this.state.monsterFilter !== '')){
+			if(this.state.monsterFilter.substr(0,2) === 'CR'){
+				for(var key3 in this.props.dndInfo.generalInfo.specifics[category]){
+					if(this.props.dndInfo.generalInfo.specifics[category][key3]['challenge_rating'] === Number(String(this.state.monsterFilter).substr(4,-1))){
+						temp1.push(key3);
+					}
+				}
+				temp = temp1;
+			} else {
+				for(var key2 in this.props.dndInfo.generalInfo.specifics[category]){
+					if(this.props.dndInfo.generalInfo.specifics[category][key2].type){
+						if(this.props.dndInfo.generalInfo.specifics[category][key2].type === this.state.monsterFilter.toLowerCase()){
+							temp1.push(key2);
+						}
+					}
+				}
+				temp = temp1;
+			}
+		} else {
+			temp = Object.keys(this.props.dndInfo.generalInfo.specifics[category]);
+		}		
+
+
+		
 		return temp;
 	}
 
@@ -143,6 +187,39 @@ class GameInfo extends Component {
 								placeholder={"Choose a "+ this.state.placeholder + "..."}
 						/> : <></>}
 					</Form.Group>
+					{(this.state.page === 'spells') ? 
+					<>
+					<Form.Label style={{fontSize: '16px', marginRight: '30px', marginLeft: '50px'}}>Filter</Form.Label>
+					<Form.Group>
+						{(Object.keys(this.props.dndInfo).length > 0) ? <Typeahead
+								id="searchspell"
+								labelKey="spellfilter"
+								onChange={(text) => {this.setState({...this.state, spellFilter: text[0]})}}
+								options={['Level: 1', 'Level: 2', 'Level: 3', 'Level: 4', 'Level: 5', 'Level: 6', 'Level: 7', 'Level: 8', 'Level: 9',
+											'Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger', 'Sorcerer', 'Warlock', 'Wizard']}
+								placeholder={"Choose a filter..."}
+						/>
+					: <></>}
+					</Form.Group>
+					</>
+					: <></>}
+					{(this.state.page === 'monsters') ? 
+					<>
+					<Form.Label style={{fontSize: '16px', marginRight: '30px', marginLeft: '50px'}}>Filter</Form.Label>
+					<Form.Group>
+						{(Object.keys(this.props.dndInfo).length > 0) ? <Typeahead
+								id="searchmonster"
+								labelKey="monsterfilter"
+								onChange={(text) => {this.setState({...this.state, monsterFilter: text[0]})}}
+								options={['CR: 0', 'CR: .125', 'CR: .25', 'CR: .5', 'CR: 1', 'CR: 2', 'CR: 3', 'CR: 4', 'CR: 5', 'CR: 6', 'CR: 7', 
+									'CR: 8', 'CR: 9', 'CR: 10', 'CR: 11', 'CR: 12', 'CR: 13', 'CR: 14', 'CR: 15', 'CR: 16', 'CR: 17', 'CR: 18', 
+									'CR: 19', 'CR: 20', 'CR: 21', 'CR: 22', 'CR: 23', 'CR: 24', 'CR: 30', 'Beast']}
+								placeholder={"Choose a filter..."}
+						/>
+					: <></>}
+					</Form.Group>
+					</>
+					: <></>}
 				</Form>
 			</div>
 			</div>
