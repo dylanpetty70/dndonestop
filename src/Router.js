@@ -20,7 +20,6 @@ import {handleGrabNames} from './actions/user';
 import Chatbot from './components/Chatbot';
 import {handleGrabInitiative} from './actions/initiative';
 
-
 class Router extends Component {
 
 	constructor(props){

@@ -6,6 +6,7 @@ import DamageTypes from './GameInfo/damageTypes';
 import Equipment from './GameInfo/equipment';
 import Features from './GameInfo/features';
 import Languages from './GameInfo/languages';
+import LevelUp from './GameInfo/levelup';
 import MagicSchools from './GameInfo/magicSchools';
 import Monsters from './GameInfo/monsters';
 import Races from './GameInfo/races';
@@ -30,7 +31,7 @@ class GameInfo extends Component {
 	}
 
 	componentDidMount(){
-		if(Object.keys(this.props.dndInfo).length > 0){
+		if(!(Object.keys(this.props.dndInfo).length > 0)){
 			this.props.handleGrab5e();
 		}
 	}
@@ -63,6 +64,9 @@ class GameInfo extends Component {
 			</Nav.Item>
 			<Nav.Item>
 			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey={['languages','Language','Languages']}><Button variant="secondary" style={{width: '100%', textAlign: 'left'}} active={this.state.page === 'languages'}>Languages</Button></Nav.Link>
+			</Nav.Item>
+			<Nav.Item>
+			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey={['level-up','Level Up','Level Up']}><Button variant="secondary" style={{width: '100%', textAlign: 'left'}} active={this.state.page === 'level-up'}>Level Up</Button></Nav.Link>
 			</Nav.Item>
 			<Nav.Item>
 			<Nav.Link style={{color: 'white', fontSize: '20px'}} eventKey={['magic-schools', 'Magic School', 'Magic Schools']}><Button variant="secondary" style={{width: '100%', textAlign: 'left'}} active={this.state.page === 'magic-schools'}>Magic Schools</Button></Nav.Link>
@@ -100,6 +104,8 @@ class GameInfo extends Component {
 				return (<Features item={this.state.tempSearch}/>);
 			case 'languages':
 				return (<Languages item={this.state.tempSearch}/>);
+			case 'level-up':
+				return (<LevelUp item={this.state.tempSearch}/>);
 			case 'magic-schools': 
 				return (<MagicSchools item={this.state.tempSearch}/>);
 			case 'monsters':
