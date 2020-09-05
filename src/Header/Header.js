@@ -7,6 +7,7 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import {changeInitiativeShow} from '../actions/initiative';
 import Initiative from '../components/TrackInitiative';
+import Ambiance from '../components/ambiance';
 import ReactModal from 'react-modal-resizable-draggable';
 
 
@@ -53,9 +54,10 @@ class Header extends Component {
                        : <></>}
                     </Nav>
                     <Nav>
+						{(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} onClick={() => {this.setState({...this.state, showAmbiance: !this.state.showAmbiance})}}>Ambiance</Nav.Link> : <></>}
 					  {(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} onClick={() => {this.props.changeInitiativeShow(); this.setState({...this.state, showInitiative: !this.state.showInitiative})}}>Initiatives</Nav.Link> : <></>}
-                      <Nav.Link href="/login" style={{color: 'white'}}>Log In</Nav.Link>
-                      {(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} ><div style={{paddingLeft: '30px',color: 'white'}}>Hello, {this.props.user.firstName}</div></Nav.Link> : <></>}
+                      {(!this.props.userStatus) ? <Nav.Link href="/login" style={{color: 'white'}}>Log In</Nav.Link> : <></>}
+                      {(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} href="/login" ><div style={{color: 'white'}}>Hello, {this.props.user.firstName}</div></Nav.Link> : <></>}
                     </Nav>
                   </Navbar.Collapse>
                 </Navbar>
@@ -66,6 +68,11 @@ class Header extends Component {
 					onRequestClose={() => this.closeModal()}
 					isOpen={this.state.showInitiative}>
 					<Initiative />
+				</ReactModal>
+				<ReactModal 
+					onRequestClose={() => this.setState({showAmbiance: false})}
+					isOpen={this.state.showAmbiance}>
+					<Ambiance />
 				</ReactModal>
 			</div>
 		)
