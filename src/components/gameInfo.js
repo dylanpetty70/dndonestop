@@ -24,7 +24,17 @@ class GameInfo extends Component {
 
 	constructor(props){
 		super(props);
-        this.state = {page: 'spells', tempSearch: '', placeholder: 'Spell', selected: '', searchLabel: 'Spells', dndInfo: [], spellFilter: '', monsterFilter: ''};
+        this.state = {page: 'spells', 
+					tempSearch: '', 
+					placeholder: 'Spell', 
+					selected: '', 
+					searchLabel: 'Spells', 
+					dndInfo: [], 
+					spellLevelFilter: '',
+					spellClassFilter: '',
+					monsterCRFilter: '',
+					monsterTypeFilter: ''
+					};
 		this.navTabs = this.navTabs.bind(this);
 		this.switchStatement = this.switchStatement.bind(this);
 		this.options = this.options.bind(this);
@@ -39,43 +49,56 @@ class GameInfo extends Component {
 	options(category){
 		let temp = [];
 		let temp1 = [];
-		if(this.state.page === 'spells' && (this.state.spellFilter !== undefined && this.state.spellFilter !== '')){
-			if(this.state.spellFilter.substr(0,5) === 'Level'){
+		let temp2 = [];
+		if(this.state.page === 'spells' && ((this.state.spellLevelFilter !== undefined && this.state.spellLevelFilter !== '') || (this.state.spellClassFilter !== undefined && this.state.spellClassFilter !== ''))){
+			if(this.state.spellLevelFilter !== undefined && this.state.spellLevelFilter !== ''){
 				for(var key in this.props.dndInfo.generalInfo.specifics[category]){
-					if(String(this.props.dndInfo.generalInfo.specifics[category][key].level) === String(this.state.spellFilter.substr(7,1))){
-						temp1.push(key);
+					if(String(this.props.dndInfo.generalInfo.specifics[category][key].level) === String(this.state.spellLevelFilter)){
+						temp2.push(key);
 					}
 				}
-				temp = temp1;
-			} else {
+			}
+			if(this.state.spellClassFilter !== undefined && this.state.spellClassFilter !== ''){
 				for(var key1 in this.props.dndInfo.generalInfo.specifics[category]){
 					if(this.props.dndInfo.generalInfo.specifics[category][key1].classes){
 						for(let i = 0; i < this.props.dndInfo.generalInfo.specifics[category][key1].classes.length; i++){
-							if(this.props.dndInfo.generalInfo.specifics[category][key1].classes[i].name.toLowerCase() === this.state.spellFilter.toLowerCase()){
+							if(this.props.dndInfo.generalInfo.specifics[category][key1].classes[i].name.toLowerCase() === this.state.spellClassFilter.toLowerCase()){
 								temp1.push(key1);
 							}
 						}
 					}
 				}
-				temp = temp1;
 			}
-		} else if(this.state.page === 'monsters' && (this.state.monsterFilter !== undefined && this.state.monsterFilter !== '')){
-			if(this.state.monsterFilter.substr(0,2) === 'CR'){
+			if(temp1.length > 0 && temp2.length > 0){
+				temp = temp1.filter(element => temp2.includes(element));
+			} else if (temp1.length > 0 && temp2.length === 0){
+				temp = temp1;
+			} else if (temp2.length > 0 && temp1.length === 0){
+				temp = temp2;
+			}
+		} else if(this.state.page === 'monsters' && ((this.state.monsterTypeFilter !== undefined && this.state.monsterTypeFilter !== '') || (this.state.monsterCRFilter !== undefined && this.state.monsterCRFilter !== ''))){
+			if(this.state.monsterCRFilter !== undefined && this.state.monsterCRFilter !== ''){
 				for(var key3 in this.props.dndInfo.generalInfo.specifics[category]){
-					if(this.props.dndInfo.generalInfo.specifics[category][key3]['challenge_rating'] === Number(String(this.state.monsterFilter).substr(4,-1))){
+					if(this.props.dndInfo.generalInfo.specifics[category][key3]['challenge_rating'] === Number(this.state.monsterCRFilter)){
 						temp1.push(key3);
 					}
 				}
-				temp = temp1;
-			} else {
+			} 
+			if(this.state.monsterTypeFilter !== undefined && this.state.monsterTypeFilter !== ''){
 				for(var key2 in this.props.dndInfo.generalInfo.specifics[category]){
 					if(this.props.dndInfo.generalInfo.specifics[category][key2].type){
-						if(this.props.dndInfo.generalInfo.specifics[category][key2].type === this.state.monsterFilter.toLowerCase()){
-							temp1.push(key2);
+						if(this.props.dndInfo.generalInfo.specifics[category][key2].type === this.state.monsterTypeFilter.toLowerCase()){
+							temp2.push(key2);
 						}
 					}
 				}
+			}
+			if(temp1.length > 0 && temp2.length > 0){
+				temp = temp1.filter(element => temp2.includes(element));
+			} else if (temp1.length > 0 && temp2.length === 0){
 				temp = temp1;
+			} else if (temp2.length > 0 && temp1.length === 0){
+				temp = temp2;
 			}
 		} else {
 			temp = Object.keys(this.props.dndInfo.generalInfo.specifics[category]);
@@ -84,6 +107,29 @@ class GameInfo extends Component {
 
 		
 		return temp;
+	}
+
+	filterOptions(category, filter){
+		let temp = [];
+		let data = this.props.dndInfo.generalInfo.specifics[category];
+		for(var key in data){
+			if(typeof data[key][filter] === 'string' || typeof data[key][filter] === 'number'){
+				temp.push(String(data[key][filter]));
+			} else if(Array.isArray(data[key][filter])){
+				for(let i = 0; i < data[key][filter].length; i++){
+					if(data[key][filter][i].name){
+						temp.push(data[key][filter][i].name);
+					}
+				}				
+			} else if(typeof data[key][filter] === 'object'){
+				if(data[key][filter].name){
+						temp.push(data[key][filter].name);
+				}
+			}
+		}
+		let temp1 = [...new Set(temp)];
+		temp1 = temp1.sort((a,b) => a - b)
+		return temp1;
 	}
 
 	navTabs(){
@@ -189,14 +235,28 @@ class GameInfo extends Component {
 					</Form.Group>
 					{(this.state.page === 'spells') ? 
 					<>
-					<Form.Label style={{fontSize: '16px', marginRight: '30px', marginLeft: '50px'}}>Filter</Form.Label>
+					<Form.Label style={{fontSize: '16px', marginRight: '30px', marginLeft: '50px'}}>Filter Level</Form.Label>
 					<Form.Group>
 						{(Object.keys(this.props.dndInfo).length > 0) ? <Typeahead
 								id="searchspell"
 								labelKey="spellfilter"
-								onChange={(text) => {this.setState({...this.state, spellFilter: text[0]})}}
-								options={['Level: 1', 'Level: 2', 'Level: 3', 'Level: 4', 'Level: 5', 'Level: 6', 'Level: 7', 'Level: 8', 'Level: 9',
-											'Bard', 'Cleric', 'Druid', 'Paladin', 'Ranger', 'Sorcerer', 'Warlock', 'Wizard']}
+								onChange={(text) => {this.setState({...this.state, spellLevelFilter: text[0]})}}
+								options={this.filterOptions('spells', 'level')}
+								placeholder={"Choose a filter..."}
+						/>
+					: <></>}
+					</Form.Group>
+					</>
+					: <></>}
+					{(this.state.page === 'spells') ? 
+					<>
+					<Form.Label style={{fontSize: '16px', marginRight: '30px', marginLeft: '50px'}}>Filter Class</Form.Label>
+					<Form.Group>
+						{(Object.keys(this.props.dndInfo).length > 0) ? <Typeahead
+								id="searchspellclass"
+								labelKey="spellclassfilter"
+								onChange={(text) => {this.setState({...this.state, spellClassFilter: text[0]})}}
+								options={this.filterOptions('spells', 'classes')}
 								placeholder={"Choose a filter..."}
 						/>
 					: <></>}
@@ -205,15 +265,28 @@ class GameInfo extends Component {
 					: <></>}
 					{(this.state.page === 'monsters') ? 
 					<>
-					<Form.Label style={{fontSize: '16px', marginRight: '30px', marginLeft: '50px'}}>Filter</Form.Label>
+					<Form.Label style={{fontSize: '16px', marginRight: '30px', marginLeft: '50px'}}>Filter Type</Form.Label>
 					<Form.Group>
 						{(Object.keys(this.props.dndInfo).length > 0) ? <Typeahead
 								id="searchmonster"
 								labelKey="monsterfilter"
-								onChange={(text) => {this.setState({...this.state, monsterFilter: text[0]})}}
-								options={['CR: 0', 'CR: .125', 'CR: .25', 'CR: .5', 'CR: 1', 'CR: 2', 'CR: 3', 'CR: 4', 'CR: 5', 'CR: 6', 'CR: 7', 
-									'CR: 8', 'CR: 9', 'CR: 10', 'CR: 11', 'CR: 12', 'CR: 13', 'CR: 14', 'CR: 15', 'CR: 16', 'CR: 17', 'CR: 18', 
-									'CR: 19', 'CR: 20', 'CR: 21', 'CR: 22', 'CR: 23', 'CR: 24', 'CR: 30', 'Beast']}
+								onChange={(text) => {this.setState({...this.state, monsterTypeFilter: text[0]})}}
+								options={this.filterOptions('monsters', 'type')}
+								placeholder={"Choose a filter..."}
+						/>
+					: <></>}
+					</Form.Group>
+					</>
+					: <></>}
+					{(this.state.page === 'monsters') ? 
+					<>
+					<Form.Label style={{fontSize: '16px', marginRight: '30px', marginLeft: '50px'}}>Filter CR</Form.Label>
+					<Form.Group>
+						{(Object.keys(this.props.dndInfo).length > 0) ? <Typeahead
+								id="searchcrmonster"
+								labelKey="monstercrfilter"
+								onChange={(text) => {this.setState({...this.state, monsterCRFilter: text[0]})}}
+								options={this.filterOptions('monsters', 'challenge_rating')}
 								placeholder={"Choose a filter..."}
 						/>
 					: <></>}
@@ -238,7 +311,6 @@ class GameInfo extends Component {
 		)
 	}
 }
-
 
 const mapStateToProps = state => {
 	return{
