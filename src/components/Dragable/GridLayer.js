@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import ToggleButton from 'react-bootstrap/ToggleButton';
 
 class GridLayer extends Component {
 
 	constructor(props){
 		super(props);
-		this.state = {checked: true}
+		this.state = {}
 		this.createGrid = this.createGrid.bind(this);
 	}
 
@@ -22,8 +20,8 @@ class GridLayer extends Component {
 				position: 'absolute',
 				width: this.props.draggable.scale,
 				height: '80vh',
-				border: '1px solid',
-				borderColor: (this.state.checked) ? 'black' : 'white',
+				border: (this.props.envOptions.options) ? (this.props.envOptions.options.color === 'none') ? '0' : '1px solid' : '1px solid',
+				borderColor: (this.props.envOptions.options) ? this.props.envOptions.options.color : 'black',
 				left: variableLeft,
 				top: '156px',
 				opacity: .25,
@@ -45,8 +43,8 @@ class GridLayer extends Component {
 				position: 'absolute',
 				width: '98vw',
 				height: this.props.draggable.scale,
-				border: '1px solid',
-				borderColor: (this.state.checked) ? 'black' : 'white',
+				border: (this.props.envOptions.options) ? (this.props.envOptions.options.color === 'none') ? '0' : '1px solid' : '1px solid',
+				borderColor: (this.props.envOptions.options) ? this.props.envOptions.options.color : 'black',
 				left: '11px',
 				top: variableTop,
 				opacity: .25,
@@ -69,17 +67,6 @@ class GridLayer extends Component {
 		return(
 			<div>
 				{this.createGrid()}
-				<ButtonGroup toggle style={{position: 'absolute', top: '10px', width: '100px', left: '970px'}}>
-					<ToggleButton
-					  type="checkbox"
-					  variant="secondary"
-					  checked={this.state.checked}
-					  value="true"
-					  onChange={() => this.setState({...this.state, checked: !this.state.checked})}
-					>
-					  Grid Color
-					</ToggleButton>
-				  </ButtonGroup>
 			</div>
 		)
 	}
@@ -87,7 +74,9 @@ class GridLayer extends Component {
 
 const mapStateToProps = state => {
 	return{
-        draggable: state.draggable
+        draggable: state.draggable,
+		envOptions: state.envOptions,
+    draggableItems: state.draggableItems
 	}
 }
 

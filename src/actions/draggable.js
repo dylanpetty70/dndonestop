@@ -6,6 +6,8 @@ export const GRAB_OPTIONS = 'GRAB_OPTIONS';
 export const CHANGE_CURRENT_ENV = 'CHANGE_CURRENT_ENV';
 export const CHANGE_SCALE = 'CHANGE_SCALE';
 export const DELETE_ENVIRONMENT = 'DELETE_ENVIRONMENT';
+export const CHANGE_GRID = 'CHANGE_GRID';
+export const GRAB_DRAGGABLE_ITEMS = 'GRAB_DRAGGABLE_ITEMS';
 
 
 export function changeCurrentEnv(data){
@@ -57,6 +59,20 @@ function grabOptions(data){
 function changeScale(data){
 	return{
 		type: CHANGE_SCALE,
+		data
+	}
+}
+
+function grabDraggableItems(data){
+	return{
+		type: GRAB_DRAGGABLE_ITEMS,
+		data
+	}
+}
+
+export function handleChangeGrid(data){
+	return{
+		type: CHANGE_GRID,
 		data
 	}
 }
@@ -119,5 +135,14 @@ export function handleGrabOptions(user){
 export function handleShareEnvironment(environment, creator, user){
 	return async (dispatch) => {
 		await api.shareEnvironment(environment, creator, user)
+	}
+}
+
+export function handleGrabDraggableItems(){
+	return async (dispatch) => {
+		await api.grabDraggableItems()
+			.then((data) => {
+				dispatch(grabDraggableItems(data));
+			})
 	}
 }

@@ -12,11 +12,13 @@ import { handleGrab5e } from './actions/5eInfo';
 import {handleGrabCharacters} from './actions/characters';
 import {handleGrabDraggable, 
         handleGrabOptions,
-        handleNewEnvironment} from './actions/draggable';
+        handleNewEnvironment,
+        handleGrabDraggableItems} from './actions/draggable';
 import {handleGrabCampaigns, 
         handleChangeCampaign} from './actions/notes';
 import {handleGrabNames} from './actions/user';
 import Chatbot from './components/Chatbot';
+import {handleGrabInitiative} from './actions/initiative';
 
 
 class Router extends Component {
@@ -30,6 +32,12 @@ class Router extends Component {
 
 	componentDidMount(){
 		this.props.handleGrabNames()
+       if(Object.keys(this.props.initiative.initiatives).length < 1){
+           this.props.handleGrabInitiative(this.props.user.username);
+	    }
+        if(Object.keys(this.props.draggableItems).length === 0){
+            this.props.handleGrabDraggableItems();  
+		}
 	}
 
     noGameInfo(){
@@ -157,7 +165,9 @@ const mapStateToProps = state => {
         notesOptions: state.notesOptions,
         userStatus: state.userStatus,
         characters: state.characters,
-        user: state.user
+        user: state.user,
+        initiative: state.initiative,
+        draggableItems: state.draggableItems
 	}
 }
 
@@ -168,4 +178,6 @@ export default connect(mapStateToProps, {handleGrab5e,
                                         handleGrabCampaigns, 
                                         handleChangeCampaign,
                                         handleNewEnvironment,
-                                        handleGrabNames})(Router);
+                                        handleGrabNames,
+                                        handleGrabInitiative,
+                                        handleGrabDraggableItems})(Router);

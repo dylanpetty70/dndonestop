@@ -11,6 +11,7 @@ import characters from './characters';
 import userNames from './userNames';
 import editEnv from './editEnv';
 import initiative from './initiative';
+import draggableItems from './draggableItems';
 
 export default combineReducers({
 	user,
@@ -23,5 +24,6 @@ export default combineReducers({
 	characters,
 	userNames,
 	editEnv,
-	initiative
+	initiative,
+	draggableItems
 })

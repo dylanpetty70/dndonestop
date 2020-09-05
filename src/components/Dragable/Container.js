@@ -21,7 +21,7 @@ const Container = (props) => {
   if(props.draggable.current){
       if(Object.keys(props.draggable.current).length > 0){
           for(let i = 0; i < Object.keys(props.draggable.current).length; i++){
-            let temp1 = (props.draggable.items) ? Object.keys(props.draggable.items).find(key => key === props.draggable.current[i].item) : [];
+            let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.draggable.current[i].item) : [];
             temp[['id' + i]] = {id: 'id'+i, top: props.draggable.current[i].pTop, left: props.draggable.current[i].pLeft, object: temp1, scale: props.draggable.current[i].scale, rotation: props.draggable.current[i].rotation};
           }
         } else {
@@ -50,7 +50,7 @@ const Container = (props) => {
        if(props.draggable.current){
             if(Object.keys(props.draggable.current).length > 0){
                 for(let i = 0; i < Object.keys(props.draggable.current).length; i++){
-                let temp1 = (props.draggable.items) ? Object.keys(props.draggable.items).find(key => key === props.draggable.current[i].item) : '';
+                let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.draggable.current[i].item) : '';
                 temp[['id' + i]] = {id: 'id'+i, top: props.draggable.current[i].pTop, left: props.draggable.current[i].pLeft, object: temp1, scale: props.draggable.current[i].scale, rotation: props.draggable.current[i].rotation};
                 }
                 setBoxes(temp);
@@ -60,14 +60,14 @@ const Container = (props) => {
         } else {
             setBoxes({})  
 		}
-  }, [props.draggable]);
+  }, [props.draggable, props.draggableItems]);
 
     const updateBoxes1 = () => {
       let temp = {};
       if(props.draggable.current){
             if(Object.keys(props.draggable.current).length > 0){
                 for(let i = 0; i < Object.keys(props.draggable.current).length; i++){
-                let temp1 = (props.draggable.items) ? Object.keys(props.draggable.items).find(key => key === props.draggable.current[i].item) : '';
+                let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.draggable.current[i].item) : '';
                 temp[['id' + i]] = {id: 'id'+i, top: props.draggable.current[i].pTop, left: props.draggable.current[i].pLeft, object: temp1, scale: props.draggable.current[i].scale, rotation: props.draggable.current[i].rotation};
                 }
                 setBoxes(temp);
@@ -80,7 +80,7 @@ const Container = (props) => {
   };
 
   const [, drop] = useDrop({
-    accept: (props.draggable.items) ? [...Object.keys(props.draggable.items)] : [],
+    accept: (props.draggableItems) ? [...Object.keys(props.draggableItems)] : [],
     drop(item, monitor) {
       const delta = monitor.getDifferenceFromInitialOffset()
       let left = Math.round(item.left + delta.x)
@@ -112,7 +112,9 @@ const mapStateToProps = state => {
 	return{
         draggable: state.draggable,
         envOptions: state.envOptions,
-        user: state.user
+        user: state.user,
+    draggableItems: state.draggableItems
+
 	}
 }
 

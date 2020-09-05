@@ -55,7 +55,7 @@ class CustomDragLayer extends Component {
                 <div
                 style={this.getItemStyles()}
                 >
-                <BoxDragPreview title={(this.props.draggable.items[this.props.item.type]) ? this.props.draggable.items[this.props.item.type].title : ''} scale={this.props.item.scale} rotation={this.props.item.rotation}/>
+                <BoxDragPreview title={(this.props.draggableItems[this.props.item.type]) ? this.props.draggableItems[this.props.item.type].title : ''} scale={this.props.item.scale} rotation={this.props.item.rotation}/>
                 </div>
             </div>)
 		}
@@ -84,13 +84,14 @@ const DragLayer = (props) => {
         currentOffset: monitor.getSourceClientOffset(),
         isDragging: monitor.isDragging(),
       }))
-      return(<CustomDragLayer itemType={itemType} isDragging={isDragging} item={item} initialOffset={initialOffset} currentOffset={currentOffset} draggable={props.draggable}/>)
+      return(<CustomDragLayer draggableItems={props.draggableItems} itemType={itemType} isDragging={isDragging} item={item} initialOffset={initialOffset} currentOffset={currentOffset} draggable={props.draggable}/>)
 }
 
 const mapStateToProps = state => {
 	return{
         draggable: state.draggable,
-        envOptions: state.envOptions
+        envOptions: state.envOptions,
+    draggableItems: state.draggableItems
 	}
 }
 

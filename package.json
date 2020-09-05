@@ -27,6 +27,7 @@
     "react-dom": "^16.13.1",
     "react-html-parser": "^2.0.2",
     "react-icons": "^3.11.0",
+    "react-modal-resizable-draggable": "^0.1.4",
     "react-popup": "^0.10.0",
     "react-redux": "^7.2.0",
     "react-router": "^5.2.0",

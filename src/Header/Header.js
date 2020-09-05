@@ -2,19 +2,29 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav';
-import Button from 'react-bootstrap/Button';
 import Roller from '../components/roller';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import {changeInitiativeShow} from '../actions/initiative';
+import Initiative from '../components/TrackInitiative';
+import ReactModal from 'react-modal-resizable-draggable';
 
 
 class Header extends Component {
 
 	constructor(props){
 		super(props);
-        this.state = {showDice: false};
+        this.state = {showDice: false, showInitiative: false};
+		this.openModal = this.openModal.bind(this);
+        this.closeModal = this.closeModal.bind(this);
 	}
+
+	openModal() {
+        this.setState({showInitiative: true});
+    }
+    closeModal() {
+        this.setState({showInitiative: false});
+    }
 
 	render(){
 		return(
@@ -43,7 +53,7 @@ class Header extends Component {
                        : <></>}
                     </Nav>
                     <Nav>
-					  {(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} onClick={() => {this.props.changeInitiativeShow()}}>Initiatives</Nav.Link> : <></>}
+					  {(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} onClick={() => {this.props.changeInitiativeShow(); this.setState({...this.state, showInitiative: !this.state.showInitiative})}}>Initiatives</Nav.Link> : <></>}
                       <Nav.Link href="/login" style={{color: 'white'}}>Log In</Nav.Link>
                       {(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} ><div style={{paddingLeft: '30px',color: 'white'}}>Hello, {this.props.user.firstName}</div></Nav.Link> : <></>}
                     </Nav>
@@ -51,7 +61,12 @@ class Header extends Component {
                 </Navbar>
                 <div style={{right: '0', position: 'absolute', margin: '10px', maxWidth: '300px',color: 'white', zIndex: '30000'}}>
 			        {(this.state.showDice) ? <Roller /> : <></>}
-			    </div>
+			    </div> 
+				<ReactModal 
+					onRequestClose={() => this.closeModal()}
+					isOpen={this.state.showInitiative}>
+					<Initiative />
+				</ReactModal>
 			</div>
 		)
 	}

@@ -91,7 +91,8 @@ const mapStateToProps = state => {
 	return{
         draggable: state.draggable,
 		envOptions: state.envOptions,
-		user: state.user
+		user: state.user,
+    draggableItems: state.draggableItems
 	}
 }
 

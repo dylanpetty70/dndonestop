@@ -3,6 +3,7 @@ import {CHANGE_CURRENT_ENV} from '../actions/draggable';
 import {NEW_ENVIRONMENT} from '../actions/draggable';
 import {GRAB_DRAGGABLE} from '../actions/draggable';
 import {DELETE_ENVIRONMENT} from '../actions/draggable';
+import {CHANGE_GRID} from '../actions/draggable';
 
 
 export default function envOptions(state ={}, action) {
@@ -23,6 +24,9 @@ export default function envOptions(state ={}, action) {
 		case DELETE_ENVIRONMENT:
 			state.all = Object.keys(action.data);
 			state.current = '';
+			return state;
+		case CHANGE_GRID:
+			state.options = action.data;
 			return state;
 		default:
 			return state;

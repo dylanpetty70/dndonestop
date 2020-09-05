@@ -265,8 +265,20 @@ export async function update5eDetails(dndInfo){
     return result1.data;
 }
 
+export async function grabDraggableItems(){
+		let result = await api('https://dylan-s-database.firebaseio.com/dnd/environments/items.json', {
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+            "Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+		}})
+	
+    return result.data;
+}
+
 export async function grabDraggable(environment, user){
-	let result = await api('https://dylan-s-database.firebaseio.com/dnd/environments.json', {
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/environments/options.json', {
 		headers: {
 			"Content-type": "application/json; charset=UTF-8",
             "Access-Control-Allow-Origin": "*",
@@ -274,23 +286,20 @@ export async function grabDraggable(environment, user){
             "Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
 		}})
 	let temp = {};
-	if(result.data.options === undefined){
-		temp['items'] = result.data.items;
+	if(result.data === undefined){
 		temp['current'] = [];
 		temp['scale'] = '';
-	} else if(result.data.options[environment] === undefined){
-		temp['items'] = result.data.items;
+	} else if(result.data[environment] === undefined){
 		temp['current'] = [];
 		temp['scale'] = '';
 	} else {
-		temp['items'] = result.data.items;
-		if(result.data.options[environment].creator === user){
-			temp['current'] = (result.data.options[environment].items !== undefined) ? result.data.options[environment].items : [];
-			temp['scale'] = Number(result.data.options[environment].scale);
-		} else if(result.data.options[environment].shared){
-			if(result.data.options[environment].shared.includes(user)){
-				temp['current'] = (result.data.options[environment].items !== undefined) ? result.data.options[environment].items : [];
-				temp['scale'] = Number(result.data.options[environment].scale);
+		if(result.data[environment].creator === user){
+			temp['current'] = (result.data[environment].items !== undefined) ? result.data[environment].items : [];
+			temp['scale'] = Number(result.data[environment].scale);
+		} else if(result.data[environment].shared){
+			if(result.data[environment].shared.includes(user)){
+				temp['current'] = (result.data[environment].items !== undefined) ? result.data[environment].items : [];
+				temp['scale'] = Number(result.data[environment].scale);
 			} else {
 				temp['current'] = [];
 				temp['scale'] = '';
@@ -606,6 +615,10 @@ export async function grabInitiative(user){
 		for(var key in temp){
 			if(temp[key].creator === user){
 				temp1[key] = temp[key];
+			} else if(temp[key].shared){
+				if(temp[key].shared.includes(user)){
+					temp1[key] = temp[key];
+				}
 			}
 		}
 	}
@@ -614,7 +627,6 @@ export async function grabInitiative(user){
 }
 
 export async function newInitiative(name, user){
-
 	let result = await api('https://dylan-s-database.firebaseio.com/dnd/initiatives.json', {
 			headers: {
 				"Content-type": "application/json; charset=UTF-8",
@@ -639,7 +651,9 @@ export async function newInitiative(name, user){
 		temp
 	)
 
-	return temp;
+	let temp1 = await grabInitiative(user);
+
+	return temp1;
 }
 
 export async function deleteInitiative(name, user){
@@ -655,24 +669,18 @@ export async function deleteInitiative(name, user){
 	if(Object.keys(temp).length > 0){
 		if(temp[name].creator === user){
 			delete temp[name]
-		} else if(temp[name].shared.includes(user)) {
-			temp[name].shared.splice(temp[name].shared.indexOf(user),1)
+		} else if(temp[name].shared) {
+			if(temp[name].shared.includes(user)){
+				temp[name].shared.splice(temp[name].shared.indexOf(user),1)
+			}
 		}
 	}
 	
 	await api.put('https://dylan-s-database.firebaseio.com/dnd/initiatives.json',
 		temp
 	)
-	let temp1 = {};
-	for(var key in temp){
-		if(temp[key].creator === user){
-			temp1[key] = temp[key];
-		} else if(temp[key].shared){
-			if(temp[key].shared.includes(user)){
-				temp1[key] = temp[key];
-			}
-		}
-	}
+	
+	let temp1 = await grabInitiative(user);
 
 	return temp1;
 }
@@ -707,7 +715,7 @@ export async function updateInitiative(name, data, user){
 		data
 	)
 
-	let temp = await grabInitiative(name, user);
+	let temp = await grabInitiative(user);
 
 	return temp;
 }

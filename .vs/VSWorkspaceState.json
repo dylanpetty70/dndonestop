@@ -5,11 +5,8 @@
     "\\public\\images",
     "\\src",
     "\\src\\components",
-    "\\src\\components\\Dragable",
-    "\\src\\components\\GameInfo",
-    "\\src\\Header",
-    "\\src\\middleware",
-    "\\src\\reducers"
+    "\\src\\components\\Dragable"
   ],
+  "SelectedNode": "\\src\\components\\TrackInitiative.js",
   "PreviewInSolutionExplorer": false
 }

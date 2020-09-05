@@ -15,7 +15,8 @@ const BoxDragPreview = memo((props) => {
 
 const mapStateToProps = state => {
 	return{
-        draggable: state.draggable
+        draggable: state.draggable,
+    draggableItems: state.draggableItems
 	}
 }
 

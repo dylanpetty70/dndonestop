@@ -9,6 +9,7 @@ export default function initiative(state = {show: false, initiatives: {}}, actio
 		case DELETE_INITIATIVE:
 		case UPDATE_INITIATIVE:
 		case GRAB_INITIATIVE:
+			state.initiatives = action.data;
 			return state;
 		case CHANGE_INITIATIVE_SHOW:
 			state.show = !state.show;

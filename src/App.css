@@ -36,3 +36,27 @@
     transform: rotate(360deg);
   }
 }
+
+.flexible-modal {
+  position: absolute;
+  z-index: 50000;
+}
+.flexible-modal-resizer {
+  position:absolute;
+  right:0;
+  bottom:0;
+  cursor:se-resize;
+  margin:5px;
+  border-bottom: solid 2px #333;
+  border-right: solid 2px #333;
+}
+.flexible-modal-drag-area{
+  background: lightGrey;
+  height: 30px;
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  cursor:move;
+  border-radius: .15em;
+}

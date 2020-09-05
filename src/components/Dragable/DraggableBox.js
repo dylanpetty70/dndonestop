@@ -79,12 +79,12 @@ const DraggableBox = (props) => {
     function1(props.envOptions.current, temp, user);
   }
 
-  if(props.draggable.items){
+  if(props.draggableItems){
         let width = String(props.draggable.scale * props.scale);
         return (
         <div ref={drag} style={getStyles(left, top, isDragging)}>
           <div style={style()}>
-          {ReactHtmlParser(props.draggable.items[object].title.replace(/32/g, String(props.draggable.scale * props.scale)))}
+          {ReactHtmlParser(props.draggableItems[object].title.replace(/32/g, String(props.draggable.scale * props.scale)))}
           </div>
 	      {(props.editEnv.tokens) ? <>
           <div style={{width: {width}}}>
@@ -112,7 +112,8 @@ const mapStateToProps = state => ({
     draggable: state.draggable,
     envOptions: state.envOptions,
     user: state.user,
-    editEnv: state.editEnv
+    editEnv: state.editEnv,
+    draggableItems: state.draggableItems
 });
 
 export default connect(mapStateToProps,{handleUpdateCurrent, editTokens})(DraggableBox)
