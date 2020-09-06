@@ -80,8 +80,14 @@ class Router extends Component {
     noCampaign(){
         let temp = [<></>];
         if(!(this.props.notesOptions.all.length > 0)){
-            this.props.handleGrabCampaigns();
-            setTimeout(() => {if(this.props.notesOptions.all.length > 0){this.props.handleChangeCampaign(this.props.notesOptions.all[0])}}, 1000)
+            this.props.handleGrabCampaigns(this.props.user.username);
+            setTimeout(() => {
+                if(this.props.notesOptions.all.length > 0){
+                    this.props.handleChangeCampaign(this.props.notesOptions.all[0])
+                    } else {
+                        this.props.handleChangeCampaign('Placeholder Campaign')           
+					}
+                }, 1000)
 		} else if(!(Object.keys(this.props.notepads).length > 0)){
               this.props.handleChangeCampaign(this.props.notesOptions.all[0])
 		} else {

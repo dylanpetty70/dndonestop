@@ -9,6 +9,22 @@ export const CHANGE_SUBNOTEPAD = 'CHANGE_SUBNOTEPAD';
 export const CHANGE_NOTEPAD = 'CHANGE_NOTEPAD';
 export const UPDATE_NOTE = 'UPDATE_NOTE';
 export const DELETE_NOTE = 'DELETE_NOTE';
+export const DELETE_NOTEPAD = 'DELETE_NOTEPAD';
+export const DELETE_SUBNOTEPAD = 'DELETE_SUBNOTEPAD';
+
+function deleteNotepad(data){
+	return{
+		type: DELETE_NOTEPAD,
+		data
+	}
+}
+
+function deleteSubnotepad(data){
+	return{
+		type: DELETE_SUBNOTEPAD,
+		data
+	}
+}
 
 function grabCampaigns(data){
 	return{
@@ -85,9 +101,9 @@ export function changeSubnotepad(subnotepad){
 	}
 }
 
-export function handleGrabCampaigns(){
+export function handleGrabCampaigns(user){
 	return async (dispatch) => {
-		await api.grabCampaigns()
+		await api.grabCampaigns(user)
 			.then((data) => {
 				dispatch(grabCampaigns(data));
 			})
@@ -103,9 +119,9 @@ export function handleChangeCampaign(campaign){
 	}
 }
 
-export function handleAddCampaign(campaign){
+export function handleAddCampaign(campaign, user){
 	return async (dispatch) => {
-		await api.addCampaign(campaign)
+		await api.addCampaign(campaign, user)
 			.then((data) => {
 				dispatch(addCampaign(campaign, data));
 			})
@@ -130,9 +146,9 @@ export function handleAddSubnotepad(campaign, notepad, subnotepad){
 	}
 }
 
-export function handleAddNote(campaign, notepad, subnotepad, object, size){
+export function handleAddNote(campaign, notepad, subnotepad, object){
 	return async (dispatch) => {
-		await api.addNote(campaign, notepad, subnotepad, object, size)
+		await api.addNote(campaign, notepad, subnotepad, object)
 			.then((data) => {
 				dispatch(addNote(data));
 			})
@@ -154,5 +170,35 @@ export function handleDeleteNote(campaign, notepad, subnotepad, note){
 			.then((data) => {
 				dispatch(deleteNote(data));
 			})
+	}
+}
+
+export function handleDeleteNotepad(campaign, notepad){
+	return async (dispatch) => {
+		await api.deleteNotepad(campaign, notepad)
+			.then((data) => {
+				dispatch(deleteNotepad(data));
+			})
+	}
+}
+
+export function handleDeleteSubnotepad(campaign, notepad, subnotepad){
+	return async (dispatch) => {
+		await api.deleteSubnotepad(campaign, notepad, subnotepad)
+			.then((data) => {
+				dispatch(deleteSubnotepad(data));
+			})
+	}
+}
+
+export function handleDeleteCampaign(campaign, user){
+	return async (dispatch) => {
+		await api.deleteCampaign(campaign, user)
+	}
+}
+
+export function handleShareCampaign(campaign, creator, user){
+	return async (dispatch) => {
+		await api.shareCampaign(campaign, creator, user)
 	}
 }

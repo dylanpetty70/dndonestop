@@ -60,7 +60,7 @@ class CustomDragLayer extends Component {
                 <div
                 style={this.getItemStyles()}
                 >
-                <BoxDragPreview title={this.props.itemType} size={this.state.items.size} item={this.props.item}/>
+                <BoxDragPreview title={this.props.itemType} item={this.props.item}/>
                 </div>
             </div>)
 		}

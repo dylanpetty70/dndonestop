@@ -84,13 +84,22 @@ export async function addNewCharacter(name, user) {
         )
 	
     let temp = {};
-	for(var keys in result1.data){
-		if(result1.data[keys].creator === user || result.data[keys].shared.includes(user)){
-			if(result1.data[keys].items){
-				temp[keys] = result1.data[keys].items
+	for(var keys in result.data){
+		if(result.data[keys].creator === user){
+			if(result.data[keys].items){
+				temp[keys] = result.data[keys].items
 			} else{
 				temp[keys] = ''
 			}
+		} else if(result.data[keys].shared){
+			if(result.data[keys].shared.includes(user)){
+				if(result.data[keys].items){
+					temp[keys] = result.data[keys].items
+				} else{
+					temp[keys] = ''
+				}
+			}
+		
 		}
 	}
 	
@@ -110,12 +119,21 @@ export async function saveCharacter(name, data, user) {
 		}})
 	let temp = {};
 	for(var keys in result.data){
-		if(result.data[keys].creator === user || result.data[keys].shared.includes(user)){
+		if(result.data[keys].creator === user){
 			if(result.data[keys].items){
 				temp[keys] = result.data[keys].items
 			} else{
 				temp[keys] = ''
 			}
+		} else if(result.data[keys].shared){
+			if(result.data[keys].shared.includes(user)){
+				if(result.data[keys].items){
+					temp[keys] = result.data[keys].items
+				} else{
+					temp[keys] = ''
+				}
+			}
+		
 		}
 	}
 	if(result.data === null || Object.keys(temp).length === 0){
@@ -168,15 +186,24 @@ export async function deleteCharacter(name, user) {
 		)
 
 		temp1 = {};
-		for(var keys in temp){
-			if(temp[keys].creator === user || result.data[keys].shared.includes(user)){
-				if(temp[keys].items){
-					temp1[keys] = temp[keys].items
+	for(var keys in result.data){
+		if(result.data[keys].creator === user){
+			if(result.data[keys].items){
+				temp[keys] = result.data[keys].items
+			} else{
+				temp[keys] = ''
+			}
+		} else if(result.data[keys].shared){
+			if(result.data[keys].shared.includes(user)){
+				if(result.data[keys].items){
+					temp[keys] = result.data[keys].items
 				} else{
-					temp1[keys] = ''
+					temp[keys] = ''
 				}
 			}
+		
 		}
+	}
 	}
 	if(temp === null){
 		temp1 = {'Placeholder Character': ''};
@@ -195,12 +222,21 @@ export async function grabCharacters(user) {
 		}})
 	let temp = {};
 	for(var keys in result.data){
-		if(result.data[keys].creator === user || result.data[keys].shared.includes(user)){
+		if(result.data[keys].creator === user){
 			if(result.data[keys].items){
 				temp[keys] = result.data[keys].items
 			} else{
 				temp[keys] = ''
 			}
+		} else if(result.data[keys].shared){
+			if(result.data[keys].shared.includes(user)){
+				if(result.data[keys].items){
+					temp[keys] = result.data[keys].items
+				} else{
+					temp[keys] = ''
+				}
+			}
+		
 		}
 	}
 	if(result.data === null || Object.keys(temp).length === 0){
@@ -444,7 +480,7 @@ export async function shareEnvironment(environment, creator, user){
 	return temp;
 }
 
-export async function grabCampaigns(){
+export async function grabCampaigns(user){
 	
 	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns.json', {
 			headers: {
@@ -453,24 +489,39 @@ export async function grabCampaigns(){
 				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
 				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
 			}})
-	let temp = Object.keys(result.data);
+	let temp = [];
+	for(var key in result.data){
+		if(result.data[key].creator === user){
+			temp.push(key);
+		} else if(result.data[key].shared){
+			if(result.data[key].shared.includes(user)){
+				temp.push(key);
+			}
+		}
+	}
+
 	return temp;
 }
 
 export async function changeCampaign(campaign){
+	let temp = {};
+	if(campaign === 'Placeholder Campaign'){
+		temp = {'Placeholder Campaign': ''};
+		return temp;
+	} else {
 	
-	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns.json', {
-			headers: {
-				"Content-type": "application/json; charset=UTF-8",
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
-				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
-			}})
-	let temp =  result.data[campaign];
-	return temp;
+		let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns/'+ campaign + '.json', {
+				headers: {
+					"Content-type": "application/json; charset=UTF-8",
+					"Access-Control-Allow-Origin": "*",
+					"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+					"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+				}})
+		return result.data;
+	}
 }
 
-export async function addCampaign(campaign){
+export async function addCampaign(campaign, user){
 
 	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns.json', {
 			headers: {
@@ -480,11 +531,12 @@ export async function addCampaign(campaign){
 				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
 			}})
 	let temp = result.data;
-	temp[campaign] = {[`First Tab`]: [{notes:[], subnotepad: "First Subtab"}]};
+	temp[campaign] = {creator: user, shared: [], [`First Tab`]: [{notes:[], subnotepad: "First Subtab"}]};
 	
 	await api.put('https://dylan-s-database.firebaseio.com/dnd/campaigns.json',
 		temp
 		)
+
 	return temp[campaign];
 }
 
@@ -498,6 +550,9 @@ export async function addNotepad(campaign, notepad){
 				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
 			}})
 	let temp = result.data;
+	if(temp === null){
+		temp = {};
+	}
 	temp[notepad] = '';
 	
 	await api.put('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json',
@@ -517,7 +572,7 @@ export async function addSubnotepad(campaign, notepad, subnotepad){
 				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
 			}})
 	let temp = result.data;
-	if(temp[notepad] === ''){
+	if(temp[notepad] === '' || !temp[notepad]){
 		temp[notepad] = [{subnotepad: subnotepad, notes: []}]
 	} else {
 		temp[notepad].push({subnotepad: subnotepad, notes: []})
@@ -530,7 +585,7 @@ export async function addSubnotepad(campaign, notepad, subnotepad){
 	return temp;
 }
 
-export async function addNote(campaign, notepad, subnotepad, object, size){
+export async function addNote(campaign, notepad, subnotepad, object){
 
 	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json', {
 			headers: {
@@ -543,9 +598,9 @@ export async function addNote(campaign, notepad, subnotepad, object, size){
 	for(let i = 0; i < temp[notepad].length; i++){
 		if(temp[notepad][i].subnotepad === subnotepad){
 			if(Object.keys(temp[notepad][i]).includes('notes')){
-				temp[notepad][i].notes.push({object: String(object), pLeft: '200', pTop: '200', size: size});
+				temp[notepad][i].notes.push({object: String(object), pLeft: '200', pTop: '200', height: '20', width: '20', title: '', body: ''});
 			} else {
-				temp[notepad][i]['notes'] = [{object: String(object), pLeft: '200', pTop: '200', size: size}];
+				temp[notepad][i]['notes'] = [{object: String(object), pLeft: '200', pTop: '200', height: '20', width: '20', title: '', body: ''}];
 			}
 		}
 	}
@@ -597,6 +652,94 @@ export async function deleteNote(campaign, notepad, subnotepad, notes){
 		)
 
 	return temp;
+}
+
+export async function deleteNotepad(campaign, notepad){
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data;
+	delete temp[notepad];
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json',
+		temp
+		)
+
+	return temp;
+}
+
+export async function deleteSubnotepad(campaign, notepad, subnotepad){
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns/'+ campaign +'.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data;
+
+	temp[notepad].splice(subnotepad,1)
+	console.log(temp)
+	
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json',
+		temp
+		)
+
+	return temp;
+}
+
+export async function deleteCampaign(campaign, user){
+console.log([campaign, user])
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data;
+	if(result.data[campaign].creator === user){
+		delete temp[campaign];
+	} else if(result.data[campaign].shared.includes(user)){
+		result.data[campaign].shared.splice(result.data[campaign].shared.indexOf(user),1)
+	}
+
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/campaigns.json',
+		temp
+	)
+
+}
+
+export async function shareCampaign(campaign, creator, user){
+	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns.json', {
+			headers: {
+				"Content-type": "application/json; charset=UTF-8",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
+			}})
+	let temp = result.data;
+
+	if(result.data[campaign].creator === creator){
+		if(result.data[campaign].shared){
+			if(!result.data[campaign].shared.includes(user) && !result.data[campaign].shared.includes(creator)){
+				result.data[campaign].shared.push(user);
+			}
+		} else {
+			if(!result.data[campaign].shared.includes(creator)){
+				result.data[campaign].shared = [];
+				result.data[campaign].shared.push(user);
+			}
+		}
+	}
+
+	await api.put('https://dylan-s-database.firebaseio.com/dnd/campaigns.json',
+		temp
+	)
+
 }
 //name: {creator: user, items: [], shared: []}
 export async function grabInitiative(user){

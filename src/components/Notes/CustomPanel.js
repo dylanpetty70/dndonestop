@@ -20,7 +20,7 @@ class CustomPanel extends Component {
 		for(let i = 0; i < colors.length; i++){
 			temp.push(
 				<div key={'item'+i}>
-					<img src={'/images/postit/'+colors[i]+'.png'}  style={{width: '98px', height: '98px', bottom: '0'}} alt='note'  onClick={() => {this.props.handleAddNote(this.props.notesOptions.current.campaign, this.props.notesOptions.current.notepad, this.props.notesOptions.current.subnotepad, i, 300); this.props.handleUpdate(undefined)}}/>
+					<img src={'/images/postit/'+colors[i]+'.png'}  style={{width: '98px', height: '98px', bottom: '0'}} alt='note'  onClick={() => {this.props.handleAddNote(this.props.notesOptions.current.campaign, this.props.notesOptions.current.notepad, this.props.notesOptions.current.subnotepad, i); this.props.handleUpdate(undefined)}}/>
 					<img src='/images/postit/thumbtack.png' style={{position: 'relative', width: '20px', height: '30px', left: '-60px', top: '-30px'}} alt="tack"/>
 				</div>
 			)

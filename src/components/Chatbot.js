@@ -190,10 +190,11 @@ class Chatbot extends Component {
 					},
 					{
 					  id: 'Intro help',
-					  message: "If you seek a quest, type help.",
+					  message: "If you seek help on your quest, type help. For assistance creating randomness, type roll.",
 					  trigger: 'userInput',
 					  delay: 1000
 					},
+
 					{
 					  id: 'userInput',
 					  user: true,
