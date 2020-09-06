@@ -61,9 +61,9 @@ class Notepad extends Component {
 		} else {
 			temp = {};
 		}
-		if(this.props.notesOptions.current.campaign === "Placeholder Campaign"){
+		setTimeout(() => {if(this.props.notesOptions.current.campaign === "Placeholder Campaign"){
 			this.setState({...this.state, showAddCampaign: true});
-		}
+		}}, 600);
 		
 		this.setState({...this.state, boxes: temp, items: tempItems});
     }
@@ -157,7 +157,7 @@ class Notepad extends Component {
 					<Nav.Item key={'subnotepadsitem'+i}>
 						<Nav.Link style={{color: 'black', fontSize: '16px'}} eventKey={this.state.subnotepads[i]}>
 							{this.state.subnotepads[i]}
-							{(this.state.subnotepads[i] !== 'First Subtab') ? <MdDelete onClick={() => {this.deleteSubnotepad(this.state.subnotepads[i])}} /> : <></>}
+							{(this.state.subnotepads[i] !== 'First Subtab') ? <MdDelete onClick={() => {this.deleteSubnotepad(i)}} /> : <></>}
 						</Nav.Link>
 					</Nav.Item>
 				)
@@ -205,7 +205,7 @@ class Notepad extends Component {
 					</Nav.Link>
 				</Nav.Item>)
 			}
-
+			if(this.props.notesOptions.current.campaign !== 'Placeholder Campaign'){
 			return (
 			<Nav variant='tabs' activeKey={this.props.notesOptions.current.notepad} style={{marginLeft: '30px', border: '1px dashed', borderColor: 'darkGrey'}} className="flex-row mr-auto" onSelect={handleSelect}>
 				<div style={{marginRight: '10px', marginTop: '7px', marginBottom: '7px', paddingRight: '10px', paddingLeft: '5px'}}><h6>Notepads</h6></div>
@@ -215,12 +215,19 @@ class Notepad extends Component {
 				</Nav.Item>
 			</Nav>
 			);
+			} else {
+				return (<></>)
+			}
 		} else {
+			if(this.props.notesOptions.current.campaign !== 'Placeholder Campaign'){
 			return(<Nav variant='tabs' activeKey={''} style={{marginLeft: '30px'}} className="flex-row mr-auto">
 				<Nav.Item>
 				<Nav.Link style={{color: 'blue',fontSize: '16px'}} onClick={() => {this.setState({...this.state, showAddNotepad: true})}}>+ Notepad</Nav.Link>
 				</Nav.Item>
 			</Nav>)
+			} else {
+				return (<></>)
+			}
 		}
 	}
 
@@ -330,13 +337,14 @@ class Notepad extends Component {
 							labelKey="campaigns"
 							onChange={(text) => {if(this.props.notesOptions.all.includes(text[0])){this.props.handleChangeCampaign(text[0])}; this.updateSubState();}}
 							options={this.props.notesOptions.all}
-							placeholder={this.props.notesOptions.current.campaign}
-							value={this.props.notesOptions.current.campaign}
+							placeholder={(this.props.notesOptions.current.campaign !== 'Placeholder Campaign') ? this.props.notesOptions.current.campaign : 'Add Campaign'}
+							value={(this.props.notesOptions.current.campaign !== 'Placeholder Campaign') ? this.props.notesOptions.current.campaign : 'Add Campaign'}
 							style={{height: '36px'}}
 						/>
 						<GrAdd style={{borderRadius: '.25em', backgroundColor: 'lightGrey', height: '36px', width: '36px', top: '-35px', marginLeft: '163px', position: 'relative'}} onClick={() => {this.setState({...this.state, showAddCampaign: true}); this.updateSubState();}} />
 					</Form.Group>
-					{this.notepads()} Still a WIP. Will Bug Out. Just refresh. Your Data will save.
+					{this.notepads()}
+				{(this.props.notesOptions.current.campaign !== 'Placeholder Campaign') ? <>
 				<Typeahead
 							id="campaignShare"
 							labelKey="campaignShare"
@@ -346,7 +354,8 @@ class Notepad extends Component {
 							style={{height: '36px'}}
 						/>
 				<Button variant ="outline-secondary" style={{float: 'right', marginRight: '10px'}} onClick={() => {this.shareCampaign()}}>Share Campaign</Button>
-				<Button variant="danger" style={{float: 'right', marginRight: '20px'}} onClick={() => {this.deleteCampaign()}}>Delete Campaign</Button>
+				<Button variant="danger" style={{float: 'right', marginRight: '20px'}} onClick={() => {this.deleteCampaign()}}>Delete Campaign</Button></>
+				: <></>}
 				</Form>
 				</div>
 				<div className="p-3" style={{backgroundColor: '#e8e9ed', zIndex: '1', position: 'absolute', left: '0', top: '100px', minHeight: '104.5%', margin: '0', width: '200px'}}>

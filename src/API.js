@@ -531,7 +531,10 @@ export async function addCampaign(campaign, user){
 				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
 			}})
 	let temp = result.data;
-	temp[campaign] = {creator: user, shared: [], [`First Tab`]: [{notes:[], subnotepad: "First Subtab"}]};
+	if(temp === null){
+		temp = {};
+	}
+	temp[campaign] = {creator: user, shared: [], [`First Tab`]: [{notes:[{object: '1', pLeft: '200', pTop: '200', height: '20', width: '20', title: '', body: ''}], subnotepad: "First Subtab"}]};
 	
 	await api.put('https://dylan-s-database.firebaseio.com/dnd/campaigns.json',
 		temp
@@ -553,7 +556,7 @@ export async function addNotepad(campaign, notepad){
 	if(temp === null){
 		temp = {};
 	}
-	temp[notepad] = '';
+	temp[notepad] = [{notes:[{object: '1', pLeft: '200', pTop: '200', height: '20', width: '20', title: '', body: ''}], subnotepad: "First Subtab"}];
 	
 	await api.put('https://dylan-s-database.firebaseio.com/dnd/campaigns/' + campaign + '.json',
 		temp
@@ -595,12 +598,14 @@ export async function addNote(campaign, notepad, subnotepad, object){
 				"Access-Control-Allow-Headers": "append,delete,entries,foreach,get,has,keys,set,values,Authorization"
 			}})
 	let temp = result.data;
-	for(let i = 0; i < temp[notepad].length; i++){
-		if(temp[notepad][i].subnotepad === subnotepad){
-			if(Object.keys(temp[notepad][i]).includes('notes')){
-				temp[notepad][i].notes.push({object: String(object), pLeft: '200', pTop: '200', height: '20', width: '20', title: '', body: ''});
-			} else {
-				temp[notepad][i]['notes'] = [{object: String(object), pLeft: '200', pTop: '200', height: '20', width: '20', title: '', body: ''}];
+	if(temp[notepad]){
+		for(let i = 0; i < temp[notepad].length; i++){
+			if(temp[notepad][i].subnotepad === subnotepad){
+				if(Object.keys(temp[notepad][i]).includes('notes')){
+					temp[notepad][i].notes.push({object: String(object), pLeft: '200', pTop: '200', height: '20', width: '20', title: '', body: ''});
+				} else {
+					temp[notepad][i]['notes'] = [{object: String(object), pLeft: '200', pTop: '200', height: '20', width: '20', title: '', body: ''}];
+				}
 			}
 		}
 	}
@@ -692,7 +697,6 @@ export async function deleteSubnotepad(campaign, notepad, subnotepad){
 }
 
 export async function deleteCampaign(campaign, user){
-console.log([campaign, user])
 	let result = await api('https://dylan-s-database.firebaseio.com/dnd/campaigns.json', {
 			headers: {
 				"Content-type": "application/json; charset=UTF-8",
@@ -703,8 +707,10 @@ console.log([campaign, user])
 	let temp = result.data;
 	if(result.data[campaign].creator === user){
 		delete temp[campaign];
-	} else if(result.data[campaign].shared.includes(user)){
-		result.data[campaign].shared.splice(result.data[campaign].shared.indexOf(user),1)
+	} else if(result.data[campaign].shared){
+		if(result.data[campaign].shared.includes(user)){
+			result.data[campaign].shared.splice(result.data[campaign].shared.indexOf(user),1)
+		}
 	}
 
 	await api.put('https://dylan-s-database.firebaseio.com/dnd/campaigns.json',

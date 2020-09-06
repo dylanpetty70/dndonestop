@@ -32,7 +32,7 @@ export default function notesOptions(state = {current: {campaign: '', notepad: '
 			return state;
 		case ADD_NOTEPAD: 
 			state.current.notepad = action.notepad;
-			state.current.subnotepad = '';
+			state.current.subnotepad = action.notepad[0].subnotepad;
 			return state;
 		case CHANGE_NOTEPAD:
 			state.current.notepad = action.notepad;
