@@ -22,62 +22,71 @@ function getStyles(left, top, isDragging) {
   }
 }
 const DraggableBox = (props) => {
-  const { id, left, top, object, height, width, title, body } = props
+  const {id, left, top, object, height, width, title, body, campaign, notepad, subnotepad } = props
   const [{ isDragging }, drag, preview] = useDrag({
-    item: { type: object, id, left, top, object: object, height, width, title, body },
+    item: { type: String(object), key: id, left, top, object: object, height, width, title, body, campaign, notepad, subnotepad },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   })
-  
+
   useEffect(() => {
     preview(getEmptyImage(), { captureDraggingState: true })
   })
-    let items = [];
-    if(props.notesOptions.current.subnotepad !== '' & Object.keys(props.notepads).length > 0){
-        for(let i = 0; i < props.notepads[props.notesOptions.current.notepad].length; i++){
-            if(props.notepads[props.notesOptions.current.notepad][i].subnotepad === props.notesOptions.current.subnotepad){
-            if(props.notepads[props.notesOptions.current.notepad][i].notes){
-                items = props.notepads[props.notesOptions.current.notepad][i].notes;
-			}
-	        }
-        }
-    }
-  const deleteItem = () => {
-      items.splice(Number(props.id.replace('id','')),1)
-      return items;
-    }
 
     const handleDeleteNote = () => {
-        props.handleDeleteNote(props.notesOptions.current.campaign, props.notesOptions.current.notepad, props.notesOptions.current.subnotepad, deleteItem()); 
-        setTimeout(function(){props.updateBoxes();},300);
+        props.handleDeleteNote(props.campaign, props.notepad, props.subnotepad, props.id); 
     }
-
     const handleResizeNote = (input) => {
+        let height = Number(props.height);
+        let width = Number(props.width);
        if(input === 'high'){
-                items[Number(props.id.replace('id',''))].height = Number(items[Number(props.id.replace('id',''))].height) + 3; 
-                items[Number(props.id.replace('id',''))].width = Number(items[Number(props.id.replace('id',''))].width) +  3; 
+                height += 3; 
+                width += 3; 
 	   } else {
-            if(Number(items[Number(props.id.replace('id',''))].height) > 3){
-                items[Number(props.id.replace('id',''))].height = Number(items[Number(props.id.replace('id',''))].height) - 3; 
-                items[Number(props.id.replace('id',''))].width = Number(items[Number(props.id.replace('id',''))].width) -  3; 
+            if(Number(height) > 3){
+                height -= 3; 
+                width -= 3; 
             }
 	   }
-       props.handleUpdateNote(props.notesOptions.current.campaign, props.notesOptions.current.notepad, props.notesOptions.current.subnotepad, items);
-       setTimeout(function(){props.updateBoxes();},300);
+       let data = {
+                    object: props.object, 
+                    pLeft: props.left, 
+                    pTop: props.top, 
+                    height: height, 
+                    width: width, 
+                    title: props.title, 
+                    body: props.body, 
+                    campaign: props.campaign, 
+                    notepad: props.notepad, 
+                    subnotepad: props.subnotepad,
+                    key: props.id
+                    }
+
+       props.handleUpdateNote(props.campaign, props.notepad, props.subnotepad, props.id, data);
 	}
 
     const handleSaveNote = () => {
         let title = document.getElementById('textTitle' + props.id).value;
         let body = document.getElementById('textBody' + props.id).value;
+        console.log(props)
+        let data = {
+                object: props.object, 
+                pLeft: props.left, 
+                pTop: props.top, 
+                height: props.height, 
+                width: props.width, 
+                title: title, 
+                body: body, 
+                campaign: props.campaign, 
+                notepad: props.notepad, 
+                subnotepad: props.subnotepad,
+                    key: props.id
+        }
 
-        items[Number(props.id.replace('id',''))].title = title; 
-        items[Number(props.id.replace('id',''))].body = body; 
-
-       props.handleUpdateNote(props.notesOptions.current.campaign, props.notesOptions.current.notepad, props.notesOptions.current.subnotepad, items);
+        props.handleUpdateNote(props.campaign, props.notepad, props.subnotepad, props.id, data);
 	}
 
-  if(items.length > 0){
         let noteWidth = Number(props.width) * 9.8;
         let noteHeight = Number(props.height) * 9.8;
 
@@ -131,12 +140,6 @@ const DraggableBox = (props) => {
             </div>
         </div>
       )
-  } else {
-        return(
-      <div>
-      </div>
-      )
-  }
 
 }
 

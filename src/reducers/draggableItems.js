@@ -1,11 +1,10 @@
-import {GRAB_DRAGGABLE_ITEMS} from '../actions/draggable';
+import {GRAB_ALL_OPTIONS} from '../actions/draggable';
 
 
 export default function draggableItems(state = {}, action) {
 	switch (action.type) {
-		case GRAB_DRAGGABLE_ITEMS:
-			state = action.data;
-			return state;
+		case GRAB_ALL_OPTIONS:
+			return action.data;
 		default:
 			return state;
 	}

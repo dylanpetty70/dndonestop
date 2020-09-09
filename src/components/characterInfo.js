@@ -4,7 +4,8 @@ import Form from 'react-bootstrap/Form';
 import { connect } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import {handleUpdateNewCharacter, handleGrabCharacters} from '../actions/characters';
+import {handleUpdateNewCharacter, handleGrabCharacter} from '../actions/characters';
+
 
 class CharacterInfo extends Component {
 
@@ -15,19 +16,7 @@ class CharacterInfo extends Component {
                         characterName: '',
                         showDelete: false
                         };
-        this.characterOptions = this.characterOptions.bind(this);
-	}
-
-    componentDidMount(){
-        this.props.handleGrabCharacters(this.props.user.username);
-    }
-
-    characterOptions(){
-        let temp = [];
-        for(var key in this.props.characters){
-              temp.push(<option value={key} key={key}>{key}</option>)
-		}
-        return temp;
+        this.updateChar = this.updateChar.bind(this);
 	}
 
     newCharacter(){
@@ -50,7 +39,7 @@ class CharacterInfo extends Component {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={() => {this.setState({showNew: false}); this.props.handleUpdateNewCharacter(this.state.characterName, this.props.user.username);}}>
+                    <Button variant="primary" onClick={() => {this.setState({showNew: false}); this.props.handleUpdateNewCharacter(this.state.characterName);}}>
                         Create
                     </Button>
                     <Button variant="secondary" onClick={() => {this.setState({showNew: false})}}>
@@ -59,6 +48,14 @@ class CharacterInfo extends Component {
                 </Modal.Footer>
                 </Modal>     
 	     )
+	}
+
+    updateChar(character){
+        for(let i = 0; i < Object.values(this.props.characters.options).length; i++){
+            if(Object.values(this.props.characters.options)[i] === character){
+                this.props.handleGrabCharacter(Object.keys(this.props.characters.options)[i]);
+			}  
+		}
 	}
 
 
@@ -70,18 +67,21 @@ class CharacterInfo extends Component {
                     <Form.Control
                     as="select"
                     className="my-1 mr-sm-2"
-                    onChange={(text) => {this.setState({...this.state, character: text.target.value})}}
+                    onChange={(text) => {this.setState({...this.state, character: text.target.value}); this.updateChar(text.target.value);}}
                     defaultValue={''}
                     custom
                     >
                     <option value='' disable='true'>Choose Character</option>
-                    {this.characterOptions()}
+                    {Object.values(this.props.characters.options).map((element) => {
+                        return(<option value={element} key={element}>{element}</option>)           
+					})}
                     </Form.Control>
                     <Button variant="outline-secondary" style={{marginLeft: '10px'}} onClick={() => {this.setState({...this.state, showNew: true})}}>
                         New Character
                     </Button>
                 </Form>
-				{(this.state.character !== '') ? <CharacterSheet name={this.state.character} character={this.props.characters[this.state.character]}/> : <></>}
+				{(this.state.character !== '') ? <CharacterSheet name={this.state.character}/>
+                : <></>}
             </div>
 		)
 	}
@@ -89,13 +89,12 @@ class CharacterInfo extends Component {
 
 const mapStateToProps = state => {
 	return{
-        dndInfo: state.dndInfo,
         characters: state.characters,
-        user: state.user
+        optionsLength: state.characters.options.length
 	}
 }
 
 export default connect(mapStateToProps, {
 	handleUpdateNewCharacter,
-    handleGrabCharacters
+    handleGrabCharacter
 })(CharacterInfo);

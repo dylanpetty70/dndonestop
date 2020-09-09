@@ -21,6 +21,8 @@ function getStyles(left, top, isDragging) {
     height: isDragging ? 0 : '',
   }
 }
+
+
 const DraggableBox = (props) => {
   const { id, left, top, object, scale, rotation } = props
   const [{ isDragging }, drag, preview] = useDrag({
@@ -33,6 +35,7 @@ const DraggableBox = (props) => {
     preview(getEmptyImage(), { captureDraggingState: true })
   })
 
+
   const style = () => {
     let rotate = 'rotate('+ Number(rotation) + 'deg)';
     return {
@@ -41,17 +44,17 @@ const DraggableBox = (props) => {
 	}
   }
 
-  const rotateItem = (all, object, function1, user, amount) => {
+  const rotateItem = (all, object, function1, amount) => {
     for(let i = 0; i < all.length; i++){
       if(i === Number(props.id.replace('id',''))){
         all[i].rotation = Number(all[i].rotation) + amount;
 	  }
 	}
 
-    function1(props.envOptions.current, all, user);
+    function1(props.draggable.key, all);
   }
 
-  const zIndexItem = (all, object, function1, user, position) => {
+  const zIndexItem = (all, object, function1, position) => {
     let temp = [];
     let index = 0;
     for(let i = 0; i < all.length; i++){
@@ -76,23 +79,23 @@ const DraggableBox = (props) => {
 	} else {
         temp = all;
 	}
-    function1(props.envOptions.current, temp, user);
+    function1(props.draggable.key, temp);
   }
 
   if(props.draggableItems){
-        let width = String(props.draggable.scale * props.scale);
+        let width = String(Number(props.draggable.environment.scale) * Number(props.scale));
         return (
         <div ref={drag} style={getStyles(left, top, isDragging)}>
           <div style={style()}>
-          {ReactHtmlParser(props.draggableItems[object].title.replace(/32/g, String(props.draggable.scale * props.scale)))}
+          {ReactHtmlParser(props.draggableItems[object].title.replace(/32/g, String(Number(props.draggable.environment.scale) * Number(props.scale))))}
           </div>
 	      {(props.editEnv.tokens) ? <>
           <div style={{width: {width}}}>
-          <MdDelete style={{position: 'relative', top: '0'}} onClick={() => {props.handleUpdateCurrent(props.envOptions.current, props.draggable.current.filter((x,i) => i !== Number(props.id.replace('id',''))), props.user.username)}}/>
-          <GrRotateRight style={{position: 'relative', top: '0'}} onClick={() => {rotateItem(props.draggable.current, object, props.handleUpdateCurrent, props.user.username, 45)}}/>
-          <GrRotateLeft style={{position: 'relative', top: '0px'}} onClick={() => {rotateItem(props.draggable.current, object, props.handleUpdateCurrent, props.user.username, -45)}}/>
-          <AiOutlineArrowUp style={{position: 'relative', top: '0px'}} onClick={() => {zIndexItem(props.draggable.current, object, props.handleUpdateCurrent, props.user.username, 'up')}}/>
-          <AiOutlineArrowDown style={{position: 'relative', top: '0px'}} onClick={() => {zIndexItem(props.draggable.current, object, props.handleUpdateCurrent, props.user.username, 'down')}}/>
+          <MdDelete style={{position: 'relative', top: '0'}} onClick={() => {props.handleUpdateCurrent(props.draggable.key, props.draggable.environment.items.filter((x,i) => i !== Number(props.id.replace('id',''))))}}/>
+          <GrRotateRight style={{position: 'relative', top: '0'}} onClick={() => {rotateItem(props.draggable.environment.items, object, props.handleUpdateCurrent, 45)}}/>
+          <GrRotateLeft style={{position: 'relative', top: '0px'}} onClick={() => {rotateItem(props.draggable.environment.items, object, props.handleUpdateCurrent, -45)}}/>
+          <AiOutlineArrowUp style={{position: 'relative', top: '0px'}} onClick={() => {zIndexItem(props.draggable.environment.items, object, props.handleUpdateCurrent, 'up')}}/>
+          <AiOutlineArrowDown style={{position: 'relative', top: '0px'}} onClick={() => {zIndexItem(props.draggable.environment.items, object, props.handleUpdateCurrent, 'down')}}/>
           </div>
           </>:
           <></>}
@@ -111,7 +114,6 @@ const DraggableBox = (props) => {
 const mapStateToProps = state => ({
     draggable: state.draggable,
     envOptions: state.envOptions,
-    user: state.user,
     editEnv: state.editEnv,
     draggableItems: state.draggableItems
 });

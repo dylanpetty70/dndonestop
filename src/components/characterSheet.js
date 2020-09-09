@@ -12,8 +12,7 @@ import Popover from 'react-bootstrap/Popover';
 import {FcInfo} from 'react-icons/fc';
 import {MdDelete} from 'react-icons/md';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import {handleSaveCharacter, handleDeleteCharacter, handleShareCharacter} from '../actions/characters';
-import equal from 'fast-deep-equal'
+import {handleSaveCharacter, handleDeleteCharacter, handleShareCharacter,handleGrabCharacterOptions} from '../actions/characters';
 import BaseInformation from './Information';
 
 
@@ -34,7 +33,8 @@ class CharacterSheet extends Component {
 
     constructor(props){
 		super(props);
-        this.state = {showProf: false,
+        this.state = {uid: '',
+                        showProf: false,
                         showLang: false,
                         showAttacks: false,
                         showFeat: false,
@@ -113,67 +113,13 @@ class CharacterSheet extends Component {
 
     componentDidMount(){
         
-		if(this.props.characters[this.props.name] !== ''){
-            let root = this.props.characters[this.props.name];
-            let spells1 = [[],[],[],[],[],[],[],[],[],[]];
-            if(root.spells !== undefined){
-                for(let i = 0; i < root.spells.length; i++){
-                    if(root.spells[i] !== null){
-                        spells1[i] = root.spells[i];
-					}
-			    }
-			}
-
-
-            this.setState({
-                ...this.state,
-                class: root.class,
-                level: root.level,
-                background: root.background,
-                race: root.race,
-                subclass: root.subclass,
-                alignment: root.alignment,
-                player: root.player,
-                abilities: root.abilities,
-                savingsThrows: root.savingsThrows,
-                proficiencyBonus: root.proficiencyBonus,
-                skills: root.skills,
-                proficiencies: ((root.proficiencies !== undefined) ? root.proficiencies : []),
-                languages: ((root.languages !== undefined) ? root.languages : []),
-                AC: root.AC,
-                initiative: root.initiative,
-                speed: root.speed,
-                currentHP: root.currentHP,
-                tempHP: root.tempHP,
-                hitDie: root.hitDie,
-                deathSaves: root.deathSaves,
-                customAttacks: ((root.customAttacks !== undefined) ? root.customAttacks : []),
-                equipment: ((root.equipment !== undefined) ? root.equipment : []),
-                personalityTraits: root.personalityTraits,
-                ideals: root.ideals,
-                bonds: root.bonds,
-                flaws: root.flaws,
-                features: ((root.features !== undefined) ? root.features : []),
-                traits: ((root.traits !== undefined) ? root.traits : []),
-                mainNotes: root.mainNotes,
-                otherEquip: root.otherEquip,
-                spells: spells1,
-                spellClass: root.spellClass,
-                extraNotes: root.extraNotes             
-            })
-		}
-	}
-
-    componentDidUpdate(prevProps) {
-      if(!equal(this.props.name, prevProps.name)) // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
-      {
-        this.updateCharacter();
-      }
-    } 
+        setTimeout(() => {this.updateCharacter()}, 1000)
+    }
 
     updateCharacter(){
-        if(this.props.characters[this.props.name] !== ''){
-            let root = this.props.characters[this.props.name];
+        if(this.props.characters.character){
+        if(this.props.characters.character.items){
+            let root = this.props.characters.character.items;
             let spells1 = [[],[],[],[],[],[],[],[],[],[]];
             if(root.spells !== undefined){
                 for(let i = 0; i < root.spells.length; i++){
@@ -220,6 +166,46 @@ class CharacterSheet extends Component {
                 spellClass: root.spellClass,
                 extraNotes: root.extraNotes             
             })
+        } else {
+                this.setState({
+                ...this.state,
+                class: '',
+                level: '',
+                background: '',
+                race:'',
+                subclass: '',
+                alignment: '',
+                player: '',
+                abilities: {CHA: 0, CON: 0, DEX: 0, INT: 0, STR: 0, WIS: 0},
+                savingsThrows: {CHA: false, CON: false, DEX: false, INT: false, STR: false, WIS: false},
+                proficiencyBonus: 0,
+                skills: {[`Animal Handling`]: false, Arcana: false, Athletics: false, Deception: false, History: false,
+                    Insight: false, Intimidation: false, Investigation: false, Medicine: false, Nature: false, 
+                    Perception: false, Performance: false, Persuasion: false, Religion: false, [`Sleight of Hand`]: false,
+                    Stealth: false, Survival: false},
+                proficiencies: [],
+                languages: [],
+                AC: '',
+                initiative: '',
+                speed: '',
+                currentHP: '',
+                tempHP: '',
+                hitDie: '',
+                deathSaves: '',
+                customAttacks: [],
+                equipment: [],
+                personalityTraits: '',
+                ideals: '',
+                bonds: '',
+                flaws: '',
+                features: [],
+                traits: [],
+                mainNotes: '',
+                otherEquip: '',
+                spells: [[],[],[],[],[],[],[],[],[],[]],
+                spellClass: '',
+                extraNotes: ''    })
+		}
 		} else {
               this.setState({
                 ...this.state,
@@ -300,7 +286,7 @@ class CharacterSheet extends Component {
             extraNotes: this.state.extraNotes
         };
 
-        this.props.handleSaveCharacter(this.props.name, temp, this.props.user.username);
+        this.props.handleSaveCharacter(this.props.characters.key, temp);
 
 	}
 
@@ -744,7 +730,7 @@ class CharacterSheet extends Component {
                     <Form.Label>Are you sure you want to delete {this.props.name}?</Form.Label>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={() => {this.setState({showDelete: false}); this.props.handleDeleteCharacter(this.props.name, this.props.user.username);}}>
+                    <Button variant="danger" onClick={() => {this.setState({showDelete: false}); this.props.handleDeleteCharacter(this.props.characters.key); setTimeout(() => {this.props.handleGrabCharacterOptions()}, 1000)}}>
                         Delete
                     </Button>
                     <Button variant="secondary" onClick={() => {this.setState({showDelete: false})}}>
@@ -772,21 +758,21 @@ class CharacterSheet extends Component {
                 <Button variant="outline-danger" style={{margin: '10px'}} onClick={() => {this.setState({...this.state, showDelete: true})}}>
                     Delete Character 
                 </Button>
-                {(this.props.name !== 'Placeholder Character') ? <Form inline={true} style={{float: 'right'}}>
+                <Form inline={true} style={{float: 'right'}}>
 					<Form.Group>
 						<Typeahead
 							id="searchshare"
 							labelKey="share"
-							onChange={(text) => {this.setState({...this.state, tempShare: text[0]})}}
-							options={this.props.userNames}
+							onChange={(value) => {this.setState({...this.state, tempShare: Object.keys(this.props.userNames)[Object.values(this.props.userNames).indexOf(value[0])]})}}
+							options={Object.values(this.props.userNames)}
+                            value={Object.keys(this.props.userNames)}
 							placeholder={"Share with..."}
 						/>
 					</Form.Group>
-                    <Button variant="outline-secondary" style={{margin: '10px'}} onClick={() => {this.props.handleShareCharacter(this.props.name, this.props.user.username, this.state.tempShare)}}>
+                    <Button variant="outline-secondary" style={{margin: '10px'}} onClick={() => {this.props.handleShareCharacter(this.props.characters.key, this.state.tempShare)}}>
                         Share Character 
                     </Button>
 				</Form>
-                : <></>}
 				<Card body>
 					<Container>
                       <Row style={{border: '1px solid', borderColor: 'lightGray', padding: '5px'}}>
@@ -1223,7 +1209,6 @@ const mapStateToProps = state => {
 	return{
         dndInfo: state.dndInfo,
         characters: state.characters,
-        user: state.user,
         userNames: state.userNames
 	}
 }
@@ -1231,5 +1216,6 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
 	handleSaveCharacter,
     handleDeleteCharacter,
-    handleShareCharacter
+    handleShareCharacter,
+    handleGrabCharacterOptions
 })(CharacterSheet);

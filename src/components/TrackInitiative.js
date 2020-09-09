@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import {changeInitiativeShow, handleNewInitiative, handleDeleteInitiative, handleShareInitiative, handleUpdateInitiative, handleGrabInitiative} from '../actions/initiative';
+import {changeInitiativeShow, handleNewInitiative, handleDeleteInitiative, handleShareInitiative, handleUpdateInitiative, handleGrabInitiative, handleGrabInitiativeOptions} from '../actions/initiative';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -19,7 +19,7 @@ class TrackInitiative extends Component {
         this.state = {currentInitiative: 'Choose an initiative name...',
 						tempInitiative: [],
 						tempShare: '',
-						tempNew: ''
+						tempNew: '',
 						};
 		this.noInitiatives = this.noInitiatives.bind(this);
 		this.cardView = this.cardView.bind(this);
@@ -34,11 +34,13 @@ class TrackInitiative extends Component {
 	}
 
 	componentDidMount() {
-	  
+		if(Object.values(this.props.initiative.options).length < 1){
+			this.props.handleGrabInitiativeOptions();
+		}
 	}
 
 	rows(){
-		if(this.state.currentInitiative !== 'Choose an initiative name...' && this.state.currentInitiative !== ''){
+		if(this.props.initiative.key.length > 0){
 			if(this.state.tempInitiative !== [] && this.state.tempInitiative !== undefined){
 				return this.state.tempInitiative.map((item, i) => {
 					return (<Row key={i}>
@@ -101,26 +103,26 @@ class TrackInitiative extends Component {
 
 	handleSort(){
 		let newData = this.state.tempInitiative;
-		let holder = this.state.currentInitiative;
 		newData.sort((a, b) => {return b.initiative - a.initiative})
-		this.setState({...this.state, tempInitiative: newData, currentInitiative: 'Choose an initiative name...'});
-		setTimeout(() => {this.setState({...this.state, currentInitiative: holder})}, 500)
+		this.props.handleUpdateInitiative(this.props.initiative.key, newData);
+		this.setState({...this.state, tempInitiative: []})
+		setTimeout(() => {this.setState({...this.state, tempInitiative: this.props.initiative.initiative.items})}, 1000)
 	}
 
-	handleChangeIni(text){
-		this.setState({...this.state, currentInitiative: text, tempInitiative: this.props.initiative.initiatives[text].items});
+	handleChangeIni(text, key){
+		this.props.handleGrabInitiative(key)
+		setTimeout(() => {this.setState({...this.state, currentInitiative: text, tempInitiative: this.props.initiative.initiative.items})}, 1000)
 	}
 
 	handleDelete(i){
 		let temp = this.state.tempInitiative;
 		temp.splice(i, 1);
 		this.setState({...this.state, tempInitiative: temp});
-		this.props.handleUpdateInitiative(this.state.currentInitiative, temp, this.props.user.username)
+		this.props.handleUpdateInitiative(this.props.initiative.key, temp)
 	}
 
 	handleAddNew(){
-		this.props.handleNewInitiative(this.state.tempNew, this.props.user.username)
-		setTimeout(() => {this.setState({...this.state, currentInitiative: this.state.tempNew, tempInitiative: []})}, 1000)
+		this.props.handleNewInitiative(this.state.tempNew)
 		
 	}
 
@@ -138,11 +140,11 @@ class TrackInitiative extends Component {
 							<Typeahead
 								id="initiatives"
 								labelKey="initiatives"
-								onChange={(text) => {if(text.length !== 0) {this.handleChangeIni(text[0])}}}
-								options={Object.keys(this.props.initiative.initiatives)}
-								placeholder={this.state.currentInitiative}
+								onChange={(value) => {if(value.length !== 0) {this.handleChangeIni(value[0], Object.keys(this.props.initiative.options)[Object.values(this.props.initiative.options).indexOf(value[0])])}}}
+								options={Object.values(this.props.initiative.options)}
+								placeholder={(this.props.initiative.initiative) ? this.props.initiative.initiative.name : 'Choose initiative...'}
 								/>
-							<Button variant="outline-danger" style={{float: 'left'}} onClick={() => {this.props.handleDeleteInitiative(this.state.currentInitiative, this.props.user.username); this.refresh();}}>
+							<Button variant="outline-danger" style={{float: 'left'}} onClick={() => {this.props.handleDeleteInitiative(this.props.initiative.key);}}>
 								Delete
 							</Button>
 						</Form.Group>
@@ -161,14 +163,14 @@ class TrackInitiative extends Component {
 								<Typeahead
 									id="searchshare"
 									labelKey="share"
-									onChange={(text) => {if(text.length !== 0) {this.setState({...this.state, tempShare: text[0]})}}}
-									options={this.props.userNames}
+									onChange={(value) => {this.setState({...this.state, tempShare: Object.keys(this.props.userNames)[Object.values(this.props.userNames).indexOf(value[0])]})}}
+									options={Object.values(this.props.userNames)}
 									placeholder={"Share with..."}
 								/>
-							<Button variant="outline-primary" onClick={() => {this.props.handleShareInitiative(this.state.currentInitiative, this.props.user.username, this.state.tempShare)}}>
+							<Button variant="outline-primary" onClick={() => {this.props.handleShareInitiative(this.props.initiative.key, this.state.tempShare)}}>
 								Share
 							</Button>
-							<Button variant="outline-success" style={{marginLeft: '10px', marginRight: '10px'}} onClick={() => {this.props.handleUpdateInitiative(this.state.currentInitiative, this.state.tempInitiative, this.props.user.username)}}>
+							<Button variant="outline-success" style={{marginLeft: '10px', marginRight: '10px'}} onClick={() => {this.props.handleUpdateInitiative(this.props.initiative.key, this.state.tempInitiative)}}>
 								Save
 							</Button>
 						</Form.Group>
@@ -205,7 +207,7 @@ class TrackInitiative extends Component {
 
 						{this.rows()}
 						<Row>
-							{(this.state.currentInitiative !== 'Choose an initiative name...') ?<><GrAdd onClick={() => {this.props.handleUpdateInitiative(this.state.currentInitiative, this.newIni(), this.props.user.username)}} />
+							{(this.state.currentInitiative !== 'Choose an initiative name...') ?<><GrAdd onClick={() => {this.props.handleUpdateInitiative(this.props.initiative.key, this.newIni())}} />
 							<p style={{paddingLeft: '5px'}}>Add Player</p></>
 							: <></>}
 						</Row>
@@ -216,6 +218,7 @@ class TrackInitiative extends Component {
 	}
 
 	newIni(){
+		console.log(this.state.tempInitiative);
 		let temp = this.state.tempInitiative;
 		if(this.state.tempInitiative === undefined){
 			temp = [];
@@ -244,7 +247,7 @@ class TrackInitiative extends Component {
 	render(){
 		return(
             <div style={{height: '100%', width: '100%'}}>
-				{(Object.keys(this.props.initiative.initiatives).length > 0) ? 
+				{(Object.values(this.props.initiative.options).length > 0) ? 
 				this.cardView()
 				: 
 				this.noInitiatives()
@@ -256,7 +259,6 @@ class TrackInitiative extends Component {
 
 const mapStateToProps = state => {
 	return{
-		user: state.user,
 		initiative: state.initiative,
 		userNames: state.userNames,
 	}
@@ -267,5 +269,6 @@ export default connect(mapStateToProps, {changeInitiativeShow,
 										handleDeleteInitiative, 
 										handleShareInitiative, 
 										handleUpdateInitiative, 
-										handleGrabInitiative
+										handleGrabInitiative,
+										handleGrabInitiativeOptions
 										})(TrackInitiative);

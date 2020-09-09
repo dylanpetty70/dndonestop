@@ -10,14 +10,17 @@ import Initiative from '../components/TrackInitiative';
 import Ambiance from '../components/ambiance';
 import ReactModal from 'react-modal-resizable-draggable';
 
-
 class Header extends Component {
 
 	constructor(props){
 		super(props);
-        this.state = {showDice: false, showInitiative: false};
+        this.state = {showDice: false, showInitiative: false, name: ''};
 		this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
+	}
+
+	componentDidMount(){
+		
 	}
 
 	openModal() {
@@ -35,12 +38,11 @@ class Header extends Component {
                   <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                   <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="mr-auto">
-                      {(this.props.userStatus === true) ?
-                      <><Nav.Link href="/" style={{color: 'white'}}>Game Info</Nav.Link>
-                      <Nav.Link href="/createenv" style={{color: 'white'}}>Create Environment</Nav.Link>
-                      <Nav.Link href="/characterinfo" style={{color: 'white'}}>Character Info</Nav.Link>
-                      <Nav.Link href="/campaigndetails" style={{color: 'white'}}>Campaign Details</Nav.Link>
-                       <ButtonGroup toggle className="mb-2" style={{color: 'white', position: 'absolute', top: '10px', left: '675px'}}>
+                      {(this.props.userStatus) ? <Nav.Link href="/" style={{color: 'white'}}>Game Info</Nav.Link> : <></>}
+                      {(this.props.userStatus) ? <Nav.Link href="/createenv" style={{color: 'white'}}>Create Environment</Nav.Link> : <></>}
+                      {(this.props.userStatus) ? <Nav.Link href="/characterinfo" style={{color: 'white'}}>Character Info</Nav.Link> : <></>}
+                      {(this.props.userStatus) ? <Nav.Link href="/campaigndetails" style={{color: 'white'}}>Campaign Details</Nav.Link> : <></>}
+                       {(this.props.userStatus) ? <ButtonGroup toggle className="mb-2" style={{color: 'white', position: 'absolute', top: '10px', left: '675px'}}>
 							<ToggleButton
 							  type="checkbox"
 							  variant="secondary"
@@ -50,14 +52,13 @@ class Header extends Component {
 							>
 							  Toggle Dice Roller
 							</ToggleButton>
-						</ButtonGroup></>
-                       : <></>}
+						</ButtonGroup>
+						: <></>}
                     </Nav>
                     <Nav>
 						{(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} onClick={() => {this.setState({...this.state, showAmbiance: !this.state.showAmbiance})}}>Ambiance</Nav.Link> : <></>}
-					  {(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} onClick={() => {this.props.changeInitiativeShow(); this.setState({...this.state, showInitiative: !this.state.showInitiative})}}>Initiatives</Nav.Link> : <></>}
-                      {(!this.props.userStatus) ? <Nav.Link href="/login" style={{color: 'white'}}>Log In</Nav.Link> : <></>}
-                      {(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} href="/login" ><div style={{color: 'white'}}>Hello, {this.props.user.firstName}</div></Nav.Link> : <></>}
+						{(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} onClick={() => {this.props.changeInitiativeShow(); this.setState({...this.state, showInitiative: !this.state.showInitiative})}}>Initiatives</Nav.Link> : <></>}
+						<Nav.Link href="/login" style={{color: 'white'}}>{(this.props.userStatus) ? 'Log Out' : 'Log In'}</Nav.Link>
                     </Nav>
                   </Navbar.Collapse>
                 </Navbar>

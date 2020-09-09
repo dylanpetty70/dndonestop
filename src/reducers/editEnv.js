@@ -5,8 +5,7 @@ import {EDIT_TOKENS} from '../actions/editEnv';
 export default function editEnv(state = {tokens: false}, action) {
 	switch (action.type) {
 		case EDIT_TOKENS:
-			state.tokens = action.data;
-			return state;
+			return {...state, tokens: action.data};
 		default:
 			return state;
 	}

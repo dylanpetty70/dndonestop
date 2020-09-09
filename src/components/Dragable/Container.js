@@ -6,6 +6,7 @@ import update from 'immutability-helper'
 import { connect } from 'react-redux';
 import {handleGrabDraggable, handleUpdateCurrent} from '../../actions/draggable';
 
+
 const styles = {
   height: '80vh', 
   width: '98vw',
@@ -18,11 +19,11 @@ function renderBox(item, key, updateBoxes) {
 }
 const Container = (props) => {
   let temp = {};
-  if(props.draggable.current){
-      if(Object.keys(props.draggable.current).length > 0){
-          for(let i = 0; i < Object.keys(props.draggable.current).length; i++){
-            let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.draggable.current[i].item) : [];
-            temp[['id' + i]] = {id: 'id'+i, top: props.draggable.current[i].pTop, left: props.draggable.current[i].pLeft, object: temp1, scale: props.draggable.current[i].scale, rotation: props.draggable.current[i].rotation};
+  if(props.draggable.environment.items){
+      if(Object.keys(props.draggable.environment.items).length > 0){
+          for(let i = 0; i < Object.keys(props.draggable.environment.items).length; i++){
+            let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.draggable.environment.items[i].item) : [];
+            temp[['id' + i]] = {id: 'id'+i, top: props.draggable.environment.items[i].pTop, left: props.draggable.environment.items[i].pLeft, object: temp1, scale: props.draggable.environment.items[i].scale, rotation: props.draggable.environment.items[i].rotation};
           }
         } else {
             temp = {};  
@@ -30,6 +31,7 @@ const Container = (props) => {
     } else {
         temp = {};
 	}
+
 
   const [boxes, setBoxes] = useState(temp)
   const moveBox = useCallback(
@@ -47,36 +49,36 @@ const Container = (props) => {
 
   const updateBoxes = useMemo(() => {
       let temp = {};
-       if(props.draggable.current){
-            if(Object.keys(props.draggable.current).length > 0){
-                for(let i = 0; i < Object.keys(props.draggable.current).length; i++){
-                let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.draggable.current[i].item) : '';
-                temp[['id' + i]] = {id: 'id'+i, top: props.draggable.current[i].pTop, left: props.draggable.current[i].pLeft, object: temp1, scale: props.draggable.current[i].scale, rotation: props.draggable.current[i].rotation};
-                }
-                setBoxes(temp);
-            } else {
-                setBoxes({})     
-			}
-        } else {
-            setBoxes({})  
-		}
-  }, [props.draggable, props.draggableItems]);
+      if(props.draggable.environment.items){
+          if(Object.keys(props.draggable.environment.items).length > 0){
+              for(let i = 0; i < Object.keys(props.draggable.environment.items).length; i++){
+                let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.draggable.environment.items[i].item) : [];
+                temp[['id' + i]] = {id: 'id'+i, top: props.draggable.environment.items[i].pTop, left: props.draggable.environment.items[i].pLeft, object: temp1, scale: props.draggable.environment.items[i].scale, rotation: props.draggable.environment.items[i].rotation};
+              }
+          } else {
+                temp = {};  
+          }
+      } else {
+            temp = {};
+      }
+      setBoxes(temp);
+  }, [props.draggable.environment.items, props.draggableItems]);
 
     const updateBoxes1 = () => {
-      let temp = {};
-      if(props.draggable.current){
-            if(Object.keys(props.draggable.current).length > 0){
-                for(let i = 0; i < Object.keys(props.draggable.current).length; i++){
-                let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.draggable.current[i].item) : '';
-                temp[['id' + i]] = {id: 'id'+i, top: props.draggable.current[i].pTop, left: props.draggable.current[i].pLeft, object: temp1, scale: props.draggable.current[i].scale, rotation: props.draggable.current[i].rotation};
-                }
-                setBoxes(temp);
-            } else {
-                setBoxes({})     
-			}
+  let temp = {};
+  if(props.draggable.environment.items){
+      if(Object.keys(props.draggable.environment.items).length > 0){
+          for(let i = 0; i < Object.keys(props.draggable.environment.items).length; i++){
+            let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.draggable.environment.items[i].item) : [];
+            temp[['id' + i]] = {id: 'id'+i, top: props.draggable.environment.items[i].pTop, left: props.draggable.environment.items[i].pLeft, object: temp1, scale: props.draggable.environment.items[i].scale, rotation: props.draggable.environment.items[i].rotation};
+          }
         } else {
-            setBoxes({})  
+            temp = {};  
 		}
+    } else {
+        temp = {};
+	}
+    setBoxes(temp);
   };
 
   const [, drop] = useDrop({
@@ -85,14 +87,14 @@ const Container = (props) => {
       const delta = monitor.getDifferenceFromInitialOffset()
       let left = Math.round(item.left + delta.x)
       let top = Math.round(item.top + delta.y)
-        ;[left, top] = snapToGrid(left, top, props.draggable.scale)
+        ;[left, top] = snapToGrid(left, top, Number(props.draggable.environment.scale))
       moveBox(item.id, left, top)
-      let current = props.draggable.current;
+      let current = props.draggable.environment.items;
       let index = Number(item.id.replace('id', ''));
       if(current[index]){
           current[index].pLeft = left;
           current[index].pTop = top;
-          props.handleUpdateCurrent(props.envOptions.current, current, props.user.username)
+          props.handleUpdateCurrent(props.draggable.key, current)
 	  } else {
        updateBoxes1();
 	  }
@@ -112,7 +114,6 @@ const mapStateToProps = state => {
 	return{
         draggable: state.draggable,
         envOptions: state.envOptions,
-        user: state.user,
     draggableItems: state.draggableItems
 
 	}

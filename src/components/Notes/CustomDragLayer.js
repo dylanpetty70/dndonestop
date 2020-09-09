@@ -25,15 +25,6 @@ class CustomDragLayer extends Component {
 	}
 
     componentDidMount(){
-		if(this.props.notesOptions.current.subnotepad !== '' & Object.keys(this.props.notepads).length > 0){
-            for(let i = 0; i < this.props.notepads[this.props.notesOptions.current.notepad].length; i++){
-                if(this.props.notepads[this.props.notesOptions.current.notepad][i].subnotepad === this.props.notesOptions.current.subnotepad){
-                    if(this.props.notepads[this.props.notesOptions.current.notepad][i].notes){
-                        this.setState({...this.state, items: this.props.notepads[this.props.notesOptions.current.notepad][i].notes});
-			        }
-	            }
-            }
-        }
     }
 
 

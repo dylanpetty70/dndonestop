@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {handleChangeGrid, handleGrabDraggable, handleUpdateCurrent, handleNewEnvironment, handleChangeScale,changeCurrentEnv,handleDeleteEnvironment, handleShareEnvironment} from '../../actions/draggable';
+import {handleGrabDraggable, handleUpdateCurrent, handleNewEnvironment, handleGrabOptions, handleChangeGrid, handleChangeScale, handleDeleteEnvironment, handleShareEnvironment} from '../../actions/draggable';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -8,16 +8,18 @@ import Modal from 'react-bootstrap/Modal';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import {editTokens} from '../../actions/editEnv';
 
+
 class CustomPanel extends Component {
 
 	constructor(props){
 		super(props);
 		this.state = {tempItem: '',
+						uid: '',
 						tempScale: '',
 						scaleError: false,
 						tempToken: {creature: '', scene: '', background: '', players: ''},
 						tempTokenScale: {creature: 1, scene: 1, background: 1, players: 1},
-						tempEnv: this.props.envOptions.current,
+						tempEnv: this.props.draggable.environment.name,
 						tempNewEnv: '',
 						showEnvVar: false,
 						showPlaceTok: false,
@@ -36,14 +38,13 @@ class CustomPanel extends Component {
 	}
 
 	componentDidMount(){
-		this.props.handleChangeGrid({color: 'black'})
     }
 
 	addToken(tag){
 		if(this.state.tempToken[tag] !== '' & this.state.tempToken[tag] !== 'Select One' & this.state.tempToken[tag] !== undefined){
-			let current = this.props.draggable.current;
+			let current = (this.props.draggable.environment.items) ? this.props.draggable.environment.items : [];
 			current.push({item: this.state.tempToken[tag], pLeft: 80, pTop: 20, scale: this.state.tempTokenScale[tag], rotation: 0});
-			this.props.handleUpdateCurrent(this.props.envOptions.current, current, this.props.user.username); 
+			this.props.handleUpdateCurrent(this.props.draggable.key, current); 
 		}
 	}
 
@@ -61,20 +62,15 @@ class CustomPanel extends Component {
 
 	envOptions(){
 		let temp = [];
-		if(this.props.envOptions){
-			if(this.props.envOptions.all){
-				for(let i = 0; i < this.props.envOptions.all.length; i++){
-					temp.push(<option key={i} value={this.props.envOptions.all[i]}>{this.props.envOptions.all[i]}</option>)
-				}
+			for(let i = 0; i < Object.values(this.props.draggable.options).length; i++){
+				temp.push(<option key={i} value={Object.keys(this.props.draggable.options)[i]}>{Object.values(this.props.draggable.options)[i]}</option>)
 			}
-		}
 		return temp;
 	}
 
 	changeEnv(){
 		if(this.state.tempEnv!== '' & this.state.tempEnv !== 'Select One'){
-			this.props.handleGrabDraggable(this.state.tempEnv, this.props.user.username);
-			this.props.changeCurrentEnv(this.state.tempEnv, this.props.user.username);
+			this.props.handleGrabDraggable(this.state.tempEnv);
 		}
 	}
 
@@ -91,9 +87,9 @@ class CustomPanel extends Component {
 			<Card.Title style={{fontSize: '16px'}}>Grid Scale</Card.Title>
 				<Form inline='true' style={{marginLeft: '10px'}}>
 					<Form.Group>
-						<Form.Control placeholder={this.props.draggable.scale} style={{width: '70px'}} onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempScale: text.target.value}) : this.setState({...this.state, tempScale: this.props.draggable.scale})}} />
+						<Form.Control placeholder={this.props.draggable.environment.scale} style={{width: '70px'}} onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempScale: text.target.value}) : this.setState({...this.state, tempScale: this.props.draggable.scale})}} />
 					</Form.Group>
-					<Button variant="outline-primary" style={{marginLeft: '30px'}} onClick={() => {(this.state.tempScale !== '' & !isNaN(Number(this.state.tempScale))) ? this.props.handleChangeScale(this.state.tempScale, this.props.envOptions.current, this.props.user.username) : this.setState({...this.state, scaleError: true})}}>Change Scale</Button>
+					<Button variant="outline-primary" style={{marginLeft: '30px'}} onClick={() => {(this.state.tempScale !== '' & !isNaN(Number(this.state.tempScale))) ? this.props.handleChangeScale(this.props.draggable.key, this.state.tempScale) : this.setState({...this.state, scaleError: true})}}>Change Scale</Button>
 				</Form>
 				<Form>
 				<Card.Title  style={{fontSize: '16px', marginTop: '30px'}}>Grid Color</Card.Title>
@@ -103,7 +99,7 @@ class CustomPanel extends Component {
 							labelKey="gridColor"
 							onChange={(text) => {this.changeGrid(text[0])}}
 							options={['black', 'white', 'none']}
-							placeholder={this.props.envOptions.options.color}
+							placeholder={this.props.envOptions.color}
 						/>
 					</Form.Group>
 				</Form>
@@ -192,7 +188,14 @@ class CustomPanel extends Component {
 					<Button variant="outline-primary" style={{ float: 'right', marginTop: '10px'}} onClick={() => {this.changeEnv()}}>Change Environment</Button>
 				</Form>
 				<br/>
-				{(this.props.envOptions.current.length > 0) ?
+				<Card.Title style={{fontSize: '16px', marginTop: '75px'}}>New Environment</Card.Title>
+				<Form style={{margin: '5px'}}>
+					<Form.Group>
+						<Form.Control placeholder='Name' style={{width: '250px'}} onChange={(text) => {this.setState({...this.state, tempNewEnv: text.target.value})}} />
+					</Form.Group>
+					<Button variant="outline-primary" style={{ float: 'right'}} onClick={() => {this.props.handleNewEnvironment(this.state.tempNewEnv); this.setState({...this.state, tempEnv: this.state.tempNewEnv});}}>Create new Environment</Button>
+				</Form>
+				{(this.props.draggable.key.length > 0) ?
 				<>
 				<Card.Title style={{fontSize: '16px', marginTop: '75px'}}>Share Environment</Card.Title>
 				<Form style={{margin: '5px'}}>
@@ -200,33 +203,26 @@ class CustomPanel extends Component {
 					<Typeahead
 						id="searchshare"
 						labelKey="share"
-						onChange={(text) => {this.setState({...this.state, tempShare: text[0]})}}
-						options={this.props.userNames}
+						onChange={(value) => {this.setState({...this.state, tempShare: Object.keys(this.props.userNames)[Object.values(this.props.userNames).indexOf(value[0])]})}}
+						options={Object.values(this.props.userNames)}
 						placeholder={"Share with..."}
 					/>
 				</Form.Group>
-                <Button variant="outline-primary" style={{ float: 'right', marginTop: '10px'}} onClick={() => {this.props.handleShareEnvironment(this.props.envOptions.current, this.props.user.username, this.state.tempShare)}}>
+                <Button variant="outline-primary" style={{ float: 'right', marginTop: '10px'}} onClick={() => {this.props.handleShareEnvironment(this.props.draggable.key, this.state.tempShare)}}>
                     Share Environment 
                 </Button>
 			</Form>
 			<br/>
-			</>
-			:
-			<></>}
-				<Card.Title style={{fontSize: '16px', marginTop: '75px'}}>New Environment</Card.Title>
-				<Form style={{margin: '5px'}}>
-					<Form.Group>
-						<Form.Control placeholder='Name' style={{width: '250px'}} onChange={(text) => {this.setState({...this.state, tempNewEnv: text.target.value})}} />
-					</Form.Group>
-					<Button variant="outline-primary" style={{ float: 'right'}} onClick={() => {this.props.handleNewEnvironment(this.state.tempNewEnv, this.props.user.username, this.props.user.username); this.setState({...this.state, tempEnv: this.state.tempNewEnv});}}>Create new Environment</Button>
-				</Form>
 				<Button variant="danger" style={{float: 'right', marginTop: '25px', marginRight: '10px'}} onClick={() => {this.props.editTokens(false); this.setState({...this.state, showDelete: !this.state.showDelete, showEnvChange: false, showEnvVar: false, showPlaceTok: false})}}>Delete Current Environment</Button>
+			</>:
+			<></>}
+			
 			</Card.Body>
 		</Card>)
 	}
 
 	deleteEnv(){
-		if(this.props.envOptions.current){
+		if(this.props.draggable.key.length > 0){
 			return(
 				  <Modal
 					show={this.state.showDelete}
@@ -238,10 +234,10 @@ class CustomPanel extends Component {
 						<Modal.Title>Delete Enivronment</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
-						<Form.Label>Are you sure you want to delete {this.props.envOptions.current}?</Form.Label>
+						<Form.Label>Are you sure you want to delete {this.props.draggable.environment.name}?</Form.Label>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button variant="danger" onClick={() => {this.setState({showDelete: false}); this.props.handleDeleteEnvironment(this.props.envOptions.current, this.props.user.username); this.props.changeState();}}>
+						<Button variant="danger" onClick={() => {this.setState({showDelete: false}); this.props.handleDeleteEnvironment(this.props.draggable.key); setTimeout(() => {this.props.handleGrabOptions()}, 1000)}}>
 							Delete
 						</Button>
 						<Button variant="secondary" onClick={() => {this.setState({showDelete: false})}}>
@@ -263,14 +259,14 @@ class CustomPanel extends Component {
 		{this.deleteEnv()}
 		<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '55px', minWidth: '100%', margin: '0'}}>
 			<h2 style={{paddingLeft: '25px', paddingRight: '25px', float: 'left'}}>{this.props.envOptions.current}</h2>
-			<Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvChange: !this.state.showEnvChange})}}>Change Environment</Button>
-			<Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvVar: !this.state.showEnvVar})}}>Environment Variables</Button>
-			<Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.props.editTokens(!this.props.editEnv.tokens); this.setState({...this.state, showPlaceTok: !this.state.showPlaceTok})}}>Place Tokens</Button>
+			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvChange: !this.state.showEnvChange})}}>Change Environment</Button> : <></>}
+			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvVar: !this.state.showEnvVar})}}>Environment Variables</Button> : <></>}
+			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.props.editTokens(!this.props.editEnv.tokens); this.setState({...this.state, showPlaceTok: !this.state.showPlaceTok})}}>Place Tokens</Button> : <></>}
 			
 		</div>
-			{(this.state.showEnvChange || this.state.showEnvVar || this.state.showPlaceTok) ?
+			{(this.state.showEnvChange || this.state.showEnvVar || this.state.showPlaceTok || this.props.draggable.key.length < 1) ?
 			<div style={{width: '22vw', position: 'absolute', right: '10px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', minHeight: '80%'}}>
-				{(this.state.showEnvChange) ? this.envChange() : <></>}
+				{(this.state.showEnvChange || this.props.draggable.key.length < 1) ? this.envChange() : <></>}
 				{(this.state.showEnvVar) ? this.envVariables() : <></>}
 				{(this.state.showPlaceTok) ? this.placeToken() : <></>}
 			</div>
@@ -286,7 +282,6 @@ const mapStateToProps = state => {
 	return{
         draggable: state.draggable,
 		envOptions: state.envOptions,
-		user: state.user,
 		userNames: state.userNames,
 		editEnv: state.editEnv,
 		draggableItems: state.draggableItems
@@ -294,13 +289,7 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps, 
-	{handleGrabDraggable, 
-	handleUpdateCurrent, 
-	handleNewEnvironment, 
-	handleChangeScale,
-	changeCurrentEnv,
-	handleDeleteEnvironment,
-	handleShareEnvironment,
-	editTokens,
-	handleChangeGrid}
+	{handleGrabDraggable, handleUpdateCurrent, handleNewEnvironment, handleGrabOptions, 
+	handleChangeGrid, handleChangeScale, handleDeleteEnvironment, handleShareEnvironment,
+	editTokens}
 	)(CustomPanel);

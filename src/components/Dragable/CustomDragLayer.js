@@ -35,7 +35,7 @@ class CustomDragLayer extends Component {
       if (true) {
         x -= this.props.initialOffset.x
         y -= this.props.initialOffset.y
-        ;[x, y] = snapToGrid(x, y, this.props.draggable.scale)
+        ;[x, y] = snapToGrid(x, y, Number(this.props.draggable.environment.scale))
         x += this.props.initialOffset.x
         y += this.props.initialOffset.y
       }

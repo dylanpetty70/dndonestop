@@ -4,9 +4,12 @@
     "\\public",
     "\\public\\images",
     "\\src",
+    "\\src\\actions",
     "\\src\\components",
-    "\\src\\components\\Dragable"
+    "\\src\\components\\Dragable",
+    "\\src\\Header",
+    "\\src\\reducers"
   ],
-  "SelectedNode": "\\src\\components\\TrackInitiative.js",
+  "SelectedNode": "\\src\\components\\Dragable\\BoxDragPreview.js",
   "PreviewInSolutionExplorer": false
 }

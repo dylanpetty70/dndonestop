@@ -3,67 +3,80 @@ import { connect } from 'react-redux';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { handleCheckPassword, handleNewUser } from '../actions/user';
-
+import { handleFirebaseCreateUser} from '../actions/user';
+import {handleUserStatus} from '../actions/user';
+var firebase = require('firebase/app');
+require('firebase/auth')
 
 class Login extends Component {
 
 	constructor(props){
 		super(props);
-        this.state = {show: false,
-                        username: '',
+        this.state = {showSuccess: false,
+                        showFail: false,
+                        email: '',
                         password: '',
                         showNew: false,
-                        newUsername: '',
+                        newEmail: '',
                         newPassword: '',
                         newFirstName: '',
                         newLastName: ''};
-        this.login = this.login.bind(this);
+        this.loginSuccess = this.loginSuccess.bind(this);
+        this.loginFail = this.loginFail.bind(this);
         this.newUser = this.newUser.bind(this);
+        this.signIn = this.signIn.bind(this);
+        this.createUser = this.createUser.bind(this);
 	}
 
-    login() {
-         if(this.props.userStatus === true) {
-            return(
-                <Modal
-                show={this.state.show}
-                onHide={() => {this.setState({show: false})}}
-                backdrop="static"
-                keyboard={false}
-                >
-                <Modal.Header>
-                    <Modal.Title>Yay!</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    You've successfully logged in!
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="primary" onClick={() => {this.setState({show: false})}}>Continue</Button>
-                </Modal.Footer>
-                </Modal>     
-			)
-		 } else if(this.props.userStatus === false){
-            return(
-                <Modal
-                show={this.state.show}
-                onHide={() => {this.setState({show: false})}}
-                backdrop="static"
-                keyboard={false}
-                >
-                <Modal.Header>
-                    <Modal.Title>Boo!</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    If you don't know what you're doing, just stop
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="primary" onClick={() => {this.setState({show: false})}}>Continue</Button>
-                </Modal.Footer>
-                </Modal>     
-			)  
-		 } else {
-            return (<div></div>)  
-		 }
+    componentDidMount(){
+        if(firebase.auth().currentUser){
+            firebase.auth.signOut();  
+            this.props.handleUserStatus(false);
+		} else {
+            this.props.handleUserStatus(false);  
+		}
+	}
+
+    loginSuccess(){
+        return(
+            <Modal
+            show={this.state.showSuccess}
+            onHide={() => {this.setState({showSuccess: false})}}
+            backdrop="static"
+            keyboard={false}
+            >
+            <Modal.Header>
+                <Modal.Title>Yay!</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                You've successfully logged in!
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={() => {this.setState({showSuccess: false}); window.location.href = "/";}}>Continue</Button>
+            </Modal.Footer>
+            </Modal>     
+		)
+	}
+
+    loginFail(){
+        return(
+            <Modal
+            show={this.state.showFail}
+            onHide={() => {this.setState({showFail: false})}}
+            backdrop="static"
+            keyboard={false}
+            >
+            <Modal.Header>
+                <Modal.Title>Boo!</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                If you don't know what you're doing, just stop
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={() => {this.setState({showFail: false})}}>Continue</Button>
+            </Modal.Footer>
+            </Modal> 
+        )
 	}
 
     newUser(){
@@ -81,16 +94,16 @@ class Login extends Component {
                 <Modal.Body>
                     <Form className="container">
                       <Form.Group controlId="formBasicEmail">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control type="email" placeholder="Enter Username" onChange={(text) => {this.setState({...this.state, newUsername: text.target.value})}}/>
+                        <Form.Label>Email</Form.Label>
+                        <Form.Control type="email" placeholder="Enter Email" onChange={(text) => {this.setState({...this.state, newEmail: text.target.value})}}/>
                       </Form.Group>
 
-                      <Form.Group controlId="formBasicEmail">
+                      <Form.Group controlId="formBasicfirstname">
                         <Form.Label>First Name</Form.Label>
                         <Form.Control type="email" placeholder="Enter First Name" onChange={(text) => {this.setState({...this.state, newFirstName: text.target.value})}}/>
                       </Form.Group>
 
-                      <Form.Group controlId="formBasicEmail">
+                      <Form.Group controlId="formBasiclastname">
                         <Form.Label>Last Name</Form.Label>
                         <Form.Control type="email" placeholder="Enter Last Name" onChange={(text) => {this.setState({...this.state, newLastName: text.target.value})}}/>
                       </Form.Group>
@@ -103,7 +116,7 @@ class Login extends Component {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={() => {this.setState({showNew: false, show: true}); this.props.handleNewUser(this.state.newUsername, this.state.newFirstName, this.state.newLastName, this.state.newPassword);}}>
+                    <Button variant="primary" onClick={() => {this.createUser()}}>
                         Create New User
                     </Button>
                     <Button variant="secondary" onClick={() => {this.setState({showNew: false});}}>
@@ -117,24 +130,59 @@ class Login extends Component {
 		 }
 	}
 
+    createUser(){
+         this.setState({showNew: false}); 
+         firebase.auth().createUserWithEmailAndPassword(this.state.newEmail, this.state.newPassword)
+            .then((result) => {
+                this.props.handleFirebaseCreateUser(result.user.uid, this.state.newFirstName);
+                firebase.auth().signInWithEmailAndPassword(this.state.newEmail, this.state.newPassword)
+                this.props.handleUserStatus(true);
+                this.setState({...this.state, showSuccess: true})
+			})
+            .catch(function(error) {
+                    // Handle Errors here.
+                  var errorCode = error.code;
+                  var errorMessage = error.message;
+                  if (errorCode === 'auth/weak-password') {
+                    alert('The password is too weak.');
+                  } else {
+                    alert(errorMessage);
+                  }
+            });
+	}
+
+    signIn(){
+        firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+            .then(() => {
+                this.props.handleUserStatus(true);
+                this.setState({...this.state, showSuccess: true})
+            })
+            .catch(function(error) {
+                var errorMessage = error.message;
+                alert(errorMessage);
+            });
+          
+	}
+
 
 	render(){
 		return(
 			<div>
-            {this.login()}
+            {this.loginSuccess()}
+            {this.loginFail()}
             {this.newUser()}
 			<div className="App" style={{marginTop: '20px'}}>
 				<Form className="container">
                   <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control type="email" placeholder="Enter Username" onChange={(text) => {this.setState({...this.state, username: text.target.value})}}/>
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control type="email" placeholder="Enter Email" onChange={(text) => {this.setState({...this.state, email: text.target.value})}}/>
                   </Form.Group>
 
                   <Form.Group controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
                     <Form.Control type="password" placeholder="Password" onChange={(text) => {this.setState({...this.state, password: text.target.value})}}/>
                   </Form.Group>
-                  <Button variant="primary" onClick={() => {this.setState({show: true}); this.props.handleCheckPassword(this.state.username, this.state.password);}}>
+                  <Button variant="primary" onClick={() => {this.signIn()}}>
                     Login
                   </Button>
                   <Button variant="outline-dark" style={{marginLeft: '30px'}} onClick={() => {this.setState({showNew: true})}}>
@@ -149,12 +197,11 @@ class Login extends Component {
 
 const mapStateToProps = state => {
 	return{
-		user: state.user,
         userStatus: state.userStatus,
 	}
 }
 
 export default connect(mapStateToProps, {
-    handleCheckPassword,
-    handleNewUser,
+    handleFirebaseCreateUser,
+    handleUserStatus
 })(Login);

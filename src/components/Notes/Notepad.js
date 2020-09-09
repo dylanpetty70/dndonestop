@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import UseDrag from './useDrag';
 import DragLayer from './CustomDragLayer';
 import { connect } from 'react-redux';
-import {handleChangeCampaign, handleAddCampaign, handleAddNotepad, handleAddSubnotepad, handleAddNote, handleGrabCampaigns, 
-	changeNotepad, changeSubnotepad, handleUpdateNote, handleDeleteNotepad, handleDeleteSubnotepad, handleDeleteCampaign,
-	handleShareCampaign} from '../../actions/notes';
+import {handleNewCampaign, handleNewNotepad, handleNewSubnotepad, handleNewNote, handleGrabCampaign, 
+	handleUpdateNote, handleDeleteNotepad, handleDeleteSubnotepad, handleDeleteCampaign,
+	handleShareCampaign, handleGrabCampaignOptions} from '../../actions/notes';
 import CustomPanel from './CustomPanel';
 import Nav from 'react-bootstrap/Nav';
 import Form from 'react-bootstrap/Form';
@@ -28,97 +28,58 @@ class Notepad extends Component {
 					boxes: {},
 					items: [],
 					tempShare: '',
+					currentNotepad: '',
+					currentSubnotepad: ''
 					}
 		this.subnotepads = this.subnotepads.bind(this);
 		this.notepads = this.notepads.bind(this);
 		this.addNotepad = this.addNotepad.bind(this);
 		this.addSubnotepad = this.addSubnotepad.bind(this);
-		this.updateSubState = this.updateSubState.bind(this);
-		this.handleUpdate = this.handleUpdate.bind(this);
 		this.styles = this.styles.bind(this);
 		this.deleteNotepad = this.deleteNotepad.bind(this);
 		this.deleteSubnotepad = this.deleteSubnotepad.bind(this);
 		this.deleteCampaign = this.deleteCampaign.bind(this);
 		this.shareCampaign = this.shareCampaign.bind(this);
+		this.handleUpdate = this.handleUpdate.bind(this);
 	}
 
 	componentDidMount(){
-		let tempItems = [];
-          if(this.props.notesOptions.current.subnotepad !== '' & Object.keys(this.props.notepads).length > 0){
-              for(let i = 0; i < this.props.notepads[this.props.notesOptions.current.notepad].length; i++){
-                  if(this.props.notepads[this.props.notesOptions.current.notepad][i].subnotepad === this.props.notesOptions.current.subnotepad){
-                    if(this.props.notepads[this.props.notesOptions.current.notepad][i].notes){
-                        tempItems = this.props.notepads[this.props.notesOptions.current.notepad][i].notes;
-			        }
-	              }
-              }
-          }
-		let temp = {};
-		if(tempItems.length > 0){
-			for(let i = 0; i < tempItems.length; i++){
-			temp[['id' + i]] = {id: 'id'+i, top: Number(tempItems[i].pTop), left: Number(tempItems[i].pLeft), object: tempItems[i].object, height: tempItems[i].height, width: tempItems[i].width, title: tempItems[i].title, body: tempItems[i].body};
-			}
-		} else {
-			temp = {};
+		if(Object.keys(this.props.notepads.options).length < 1){
+			this.props.handleGrabCampaignOptions();
 		}
-		setTimeout(() => {if(this.props.notesOptions.current.campaign === "Placeholder Campaign"){
-			this.setState({...this.state, showAddCampaign: true});
-		}}, 600);
-		
-		this.setState({...this.state, boxes: temp, items: tempItems});
     }
 
-	componentDidUpdate(prevProps){
-		if(prevProps.notepads !== this.props.notepads){
-			let tempItems = [];
-			  if(this.props.notesOptions.current.subnotepad !== '' & Object.keys(this.props.notepads).length > 0 && this.props.notepads[this.props.notesOptions.current.notepad]){
-				  for(let i = 0; i < this.props.notepads[this.props.notesOptions.current.notepad].length; i++){
-					  if(this.props.notepads[this.props.notesOptions.current.notepad][i].subnotepad === this.props.notesOptions.current.subnotepad){
-						if(this.props.notepads[this.props.notesOptions.current.notepad][i].notes){
-							tempItems = this.props.notepads[this.props.notesOptions.current.notepad][i].notes;
-						}
-					  }
-				  }
-			  }
-			let temp = {};
-			if(tempItems.length > 0){
-				for(let i = 0; i < tempItems.length; i++){
-				temp[['id' + i]] = {id: 'id'+i, top: Number(tempItems[i].pTop), left: Number(tempItems[i].pLeft), object: tempItems[i].object, height: tempItems[i].height, width: tempItems[i].width, title: tempItems[i].title, body: tempItems[i].body};
+	handleUpdate(){
+		let tempItems = {};
+		if(this.state.currentSubnotepad !== '' && this.props.notepads.campaign.notepads){
+			if(this.props.notepads.campaign.notepads[this.state.currentNotepad].subnotepads){
+				if(this.props.notepads.campaign.notepads[this.state.currentNotepad].subnotepads[this.state.currentSubnotepad].notes){
+					tempItems = this.props.notepads.campaign.notepads[this.state.currentNotepad].subnotepads[this.state.currentSubnotepad].notes;
 				}
-			} else {
-				temp = {};
 			}
-			this.setState({...this.state, boxes: temp, items: tempItems});
 		}
-	}
 
-	handleUpdate(items){
-		let tempItems = [];
-          if(this.props.notesOptions.current.subnotepad !== '' & Object.keys(this.props.notepads).length > 0){
-              for(let i = 0; i < this.props.notepads[this.props.notesOptions.current.notepad].length; i++){
-                  if(this.props.notepads[this.props.notesOptions.current.notepad][i].subnotepad === this.props.notesOptions.current.subnotepad){
-                    if(this.props.notepads[this.props.notesOptions.current.notepad][i].notes){
-						if(items === undefined){
-							tempItems = this.props.notepads[this.props.notesOptions.current.notepad][i].notes;
-						} else {
-							tempItems = items;
-						}
-			        }
-	              }
-              }
-          }
 		let temp = {};
-		if(tempItems.length > 0){
-			for(let i = 0; i < tempItems.length; i++){
-			temp[['id' + i]] = {id: 'id'+i, top: Number(tempItems[i].pTop), left: Number(tempItems[i].pLeft), object: tempItems[i].object, height: tempItems[i].height, width: tempItems[i].width, title: tempItems[i].title, body: tempItems[i].body};
+		if(Object.keys(tempItems).length){
+			for(var key in tempItems){
+				temp[[key]] = {
+					key: key, 
+					top: Number(tempItems[key].pTop), 
+					left: Number(tempItems[key].pLeft), 
+					object: tempItems[key].object, 
+					height: tempItems[key].height, 
+					width: tempItems[key].width, 
+					title: tempItems[key].title, 
+					body: tempItems[key].body,
+					campaign: tempItems[key].campaign,
+					notepad: tempItems[key].notepad,
+					subnotepad: tempItems[key].subnotepad
+				}
 			}
-		} else {
-			temp = {};
 		}
 
-		
-		this.setState({...this.state, boxes: temp, items: tempItems});
-		if(items !== undefined){ this.props.handleUpdateNote(this.props.notesOptions.current.campaign, this.props.notesOptions.current.notepad, this.props.notesOptions.current.subnotepad, tempItems)}
+
+		return temp;
 	}
 
 	styles(){
@@ -135,79 +96,72 @@ class Notepad extends Component {
 		)
 	}
 
-	updateSubState(){
-		setTimeout(() => {
-			let tempsub = [];
-			if(this.props.notesOptions.current.notepad !== '' && this.props.notepads[this.props.notesOptions.current.notepad]){
-				for(let i = 0; i < this.props.notepads[this.props.notesOptions.current.notepad].length; i++){
-					tempsub.push(this.props.notepads[this.props.notesOptions.current.notepad][i].subnotepad)
-				}
-				this.setState({...this.state, subnotepads: tempsub});
-			} else {
-				this.setState({...this.state, subnotepads: ''});
-			}
-		}, 300)
-	}
-
 	subnotepads(){
-		if(Object.keys(this.props.notepads).length !== 0 & this.props.notesOptions.current.subnotepad !== ''){
-			let temp = [];
-			for(let i = 0; i < this.state.subnotepads.length; i++){
-				temp.push(
-					<Nav.Item key={'subnotepadsitem'+i}>
-						<Nav.Link style={{color: 'black', fontSize: '16px'}} eventKey={this.state.subnotepads[i]}>
-							{this.state.subnotepads[i]}
-							{(this.state.subnotepads[i] !== 'First Subtab') ? <MdDelete onClick={() => {this.deleteSubnotepad(i)}} /> : <></>}
-						</Nav.Link>
-					</Nav.Item>
-				)
-			}
-			const handleSelect = (eventKey) => {
-				this.props.changeSubnotepad(eventKey);
-				this.updateSubState();
-				setTimeout(this.handleUpdate(), 600);
-			}
+		if(this.state.currentNotepad !== '' && this.props.notepads.campaign.notepads){
+			if(this.props.notepads.campaign.notepads[this.state.currentNotepad]){
+				let subnotepads = this.props.notepads.campaign.notepads[this.state.currentNotepad].subnotepads;
+				let temp = [];
+				for(var key in subnotepads){
+					let tempString = key;
+					const handleDelete = () => {
+						this.deleteSubnotepad(tempString)
+					}
+					temp.push(
+						<Nav.Item key={'subnotepadsitem'+key}>
+							<Nav.Link style={{color: 'black', fontSize: '16px'}} eventKey={key}>
+								{subnotepads[key].name}
+								{(this.state.currentSubnotepad === key) ? <MdDelete onClick={() => {handleDelete()}} /> : <></>}
+							</Nav.Link>
+						</Nav.Item>
+					)
+				}
+				const handleSelect = (eventKey) => {
+					this.setState({...this.state, currentSubnotepad: eventKey})
+				}
 
-			return (
-			<Nav variant='tabs' style={{border: '1px dashed', borderColor: 'darkGrey'}} activeKey={this.props.notesOptions.current.subnotepad} className="flex-column mr-auto" onSelect={handleSelect}>
-				<div style={{marginRight: '10px', marginTop: '7px', marginBottom: '7px', paddingRight: '10px', paddingLeft: '5px'}}><h6>Page</h6></div>
-				{temp}
-				<Nav.Item>
-				<Nav.Link style={{color: 'blue', fontSize: '16px'}}  onClick={() => {this.setState({...this.state, showAddSubnotepad: true})}}>+ Page</Nav.Link>
-				</Nav.Item>
-			</Nav>
-			);
+				return (
+				<>
+				<Nav variant='tabs' style={{border: '1px dashed', borderColor: 'darkGrey'}} activeKey={this.state.currentSubnotepad} className="flex-column mr-auto" onSelect={handleSelect}>
+					
+				{(this.state.currentSubnotepad === '') ? <h6 style={{color: 'red'}}>Choose a Page</h6> : <></>}
+					<div style={{marginRight: '10px', marginTop: '7px', marginBottom: '7px', paddingRight: '10px', paddingLeft: '5px'}}><h6>Page</h6></div>
+					{temp}
+					<Nav.Item>
+					<Nav.Link style={{color: 'blue', fontSize: '16px'}}  onClick={() => {this.setState({...this.state, showAddSubnotepad: true})}}>+ Page</Nav.Link>
+					</Nav.Item>
+				</Nav>
+				</>
+				);
+			}
 		} else {
-			return(<Nav variant='tabs' defaultActiveKey={''} className="flex-column mr-auto">
-				<Nav.Item>
-				<Nav.Link style={{color: 'blue', fontSize: '16px'}}  onClick={() => {this.setState({...this.state, showAddSubnotepad: true})}}>+ Page</Nav.Link>
-				</Nav.Item>
-			</Nav>)
+			return(
+				<h6 style={{color: 'red'}}>Choose a Notepad</h6>
+			)
 		}
 	}	
 
 	
 	notepads(){
-		if(this.props.notepads !== {} & this.props.notesOptions.current.notepad !== ''){
-			setTimeout(()=>{this.updateSubState()}, 600)
-			let notepads = Object.keys(this.props.notepads)
+		if(this.props.notepads.campaign.notepads){
+			let notepads = this.props.notepads.campaign.notepads
 			const handleSelect = (eventKey) => {
-				this.props.changeNotepad(eventKey, this.props.notepads[eventKey]);
-				this.updateSubState();
-				setTimeout(this.handleUpdate(), 600);
+				this.setState({...this.state, currentNotepad: eventKey, currentSubnotepad: ''})
 			}
 			let temp = [];
-			for(let i = 0; i < notepads.length; i++){
-				temp.push(<Nav.Item key={'notepadsitem'+i}>
-					<Nav.Link style={{color: 'black', fontSize: '16px'}} eventKey={notepads[i]}>
-						{notepads[i]}
-						{(notepads[i] !== 'First Tab') ? <MdDelete onClick={() => {this.deleteNotepad(i)}} /> : <></>}
+			for(var key in notepads){
+				let tempString = key;
+				const handleDelete = () => {
+					this.deleteNotepad(tempString)
+				}
+				temp.push(<Nav.Item key={'notepadsitem'+key}>
+					<Nav.Link style={{color: 'black', fontSize: '16px'}} eventKey={key}>
+						{notepads[key].name}
+						{(this.state.currentNotepad === key) ? <MdDelete onClick={() => {handleDelete()}} /> : <></>}
 					</Nav.Link>
 				</Nav.Item>)
 			}
-			if(this.props.notesOptions.current.campaign !== 'Placeholder Campaign'){
 			return (
-			<Nav variant='tabs' activeKey={this.props.notesOptions.current.notepad} style={{marginLeft: '30px', border: '1px dashed', borderColor: 'darkGrey'}} className="flex-row mr-auto" onSelect={handleSelect}>
+			<Nav variant='tabs' activeKey={this.state.currentNotepad} style={{marginLeft: '30px', border: '1px dashed', borderColor: 'darkGrey'}} className="flex-row mr-auto" onSelect={handleSelect}>
 				<div style={{marginRight: '10px', marginTop: '7px', marginBottom: '7px', paddingRight: '10px', paddingLeft: '5px'}}><h6>Notepads</h6></div>
 				{temp}
 				<Nav.Item>
@@ -215,19 +169,13 @@ class Notepad extends Component {
 				</Nav.Item>
 			</Nav>
 			);
-			} else {
-				return (<></>)
-			}
-		} else {
-			if(this.props.notesOptions.current.campaign !== 'Placeholder Campaign'){
+		} else if(this.props.notepads.key !== ''){
 			return(<Nav variant='tabs' activeKey={''} style={{marginLeft: '30px'}} className="flex-row mr-auto">
+					<div style={{marginRight: '10px', marginTop: '7px', marginBottom: '7px', paddingRight: '10px', paddingLeft: '5px'}}><h6>Notepads</h6></div>
 				<Nav.Item>
 				<Nav.Link style={{color: 'blue',fontSize: '16px'}} onClick={() => {this.setState({...this.state, showAddNotepad: true})}}>+ Notepad</Nav.Link>
 				</Nav.Item>
 			</Nav>)
-			} else {
-				return (<></>)
-			}
 		}
 	}
 
@@ -249,7 +197,7 @@ class Notepad extends Component {
                         </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={() => {this.setState({...this.state, showAddCampaign: false});  this.props.handleAddCampaign(this.state.tempCampaignName, this.props.user.username); this.updateSubState();}}>Create</Button>
+                    <Button variant="primary" onClick={() => {this.setState({...this.state, showAddCampaign: false});  this.props.handleNewCampaign(this.state.tempCampaignName);}}>Create</Button>
                     <Button variant="outline-danger" onClick={() => {this.setState({...this.state, showAddCampaign: false});}}>Cancel</Button>
                 </Modal.Footer>
             </Modal>     
@@ -274,7 +222,7 @@ class Notepad extends Component {
                         </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={() => {this.setState({...this.state, showAddNotepad: false});  this.props.handleAddNotepad(this.props.notesOptions.current.campaign, this.state.tempNotepadName); this.updateSubState();}}>Create</Button>
+                    <Button variant="primary" onClick={() => {this.setState({...this.state, showAddNotepad: false});  this.props.handleNewNotepad(this.props.notepads.key, this.state.tempNotepadName); }}>Create</Button>
                     <Button variant="outline-danger" onClick={() => {this.setState({...this.state, showAddNotepad: false});}}>Cancel</Button>
                 </Modal.Footer>
             </Modal>     
@@ -282,20 +230,23 @@ class Notepad extends Component {
 	}
 
 	deleteNotepad(notepad){
-		this.props.handleDeleteNotepad(this.props.notesOptions.current.campaign, Object.keys(this.props.notepads)[notepad]); 
+		this.setState({...this.state, currentNotepad: '', currentSubnotepad: ''})
+		this.props.handleDeleteNotepad(this.props.notepads.key, notepad); 
 	}
 
 	deleteSubnotepad(subnotepad){
-		this.props.handleDeleteSubnotepad(this.props.notesOptions.current.campaign, this.props.notesOptions.current.notepad, subnotepad); 
+		this.setState({...this.state, currentNotepad: '', currentSubnotepad: ''})
+		this.props.handleDeleteSubnotepad(this.props.notepads.key, this.state.currentNotepad, subnotepad); 
 	}
 
 	deleteCampaign(campaign){
-		this.props.handleDeleteCampaign(this.props.notesOptions.current.campaign, this.props.user.username);
-		setTimeout(() => {this.props.handleGrabCampaigns(this.props.user.username)}, 600);
+		this.setState({...this.state, currentNotepad: '', currentSubnotepad: ''})
+		this.props.handleDeleteCampaign(this.props.notepads.key);
+		setTimeout(() => {this.props.handleGrabCampaignOptions()}, 600);
 	}
 
-	shareCampaign(campaign, creator, user){
-		this.props.handleShareCampaign(this.props.notesOptions.current.campaign, this.props.user.username, this.state.tempShare);
+	shareCampaign(){
+		this.props.handleShareCampaign(this.props.notepads.key, this.state.tempShare);
 	}
 
 	addSubnotepad(){
@@ -316,7 +267,7 @@ class Notepad extends Component {
                         </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={() => {this.setState({...this.state, showAddSubnotepad: false}); this.props.handleAddSubnotepad(this.props.notesOptions.current.campaign, this.props.notesOptions.current.notepad, this.state.tempSubnotepadName, this.props.user.username); this.updateSubState();}}>Create</Button>
+                    <Button variant="primary" onClick={() => {this.setState({...this.state, showAddSubnotepad: false}); this.props.handleNewSubnotepad(this.props.notepads.key, this.state.currentNotepad, this.state.tempSubnotepadName); }}>Create</Button>
                     <Button variant="outline-danger" onClick={() => {this.setState({...this.state, showAddSubnotepad: false})}}>Cancel</Button>
                 </Modal.Footer>
             </Modal>     
@@ -335,21 +286,21 @@ class Notepad extends Component {
 					<Typeahead
 							id="campaignSelect"
 							labelKey="campaigns"
-							onChange={(text) => {if(this.props.notesOptions.all.includes(text[0])){this.props.handleChangeCampaign(text[0])}; this.updateSubState();}}
-							options={this.props.notesOptions.all}
-							placeholder={(this.props.notesOptions.current.campaign !== 'Placeholder Campaign') ? this.props.notesOptions.current.campaign : 'Add Campaign'}
-							value={(this.props.notesOptions.current.campaign !== 'Placeholder Campaign') ? this.props.notesOptions.current.campaign : 'Add Campaign'}
+							onChange={(text) => {if(text[0] !== undefined){this.props.handleGrabCampaign(Object.keys(this.props.notepads.options)[Object.values(this.props.notepads.options).indexOf(text[0])])}}}
+							options={Object.values(this.props.notepads.options)}
+							placeholder='Add Campaign'
+							value={(this.props.notepads.campaign.name) ? this.props.notepads.campaign.name : 'Add Campaign'}
 							style={{height: '36px'}}
 						/>
-						<GrAdd style={{borderRadius: '.25em', backgroundColor: 'lightGrey', height: '36px', width: '36px', top: '-35px', marginLeft: '163px', position: 'relative'}} onClick={() => {this.setState({...this.state, showAddCampaign: true}); this.updateSubState();}} />
+						<GrAdd style={{borderRadius: '.25em', backgroundColor: 'lightGrey', height: '36px', width: '36px', top: '-35px', marginLeft: '163px', position: 'relative'}} onClick={() => {this.setState({...this.state, showAddCampaign: true});}} />
 					</Form.Group>
 					{this.notepads()}
-				{(this.props.notesOptions.current.campaign !== 'Placeholder Campaign') ? <>
+				{(this.props.notepads.key !== '') ? <>
 				<Typeahead
 							id="campaignShare"
 							labelKey="campaignShare"
-							onChange={(text) => {if(this.props.userNames.includes(text[0])){this.setState({...this.state, tempShare: text[0]})}}}
-							options={this.props.userNames}
+							onChange={(value) => {this.setState({...this.state, tempShare: Object.keys(this.props.userNames)[Object.values(this.props.userNames).indexOf(value[0])]})}}
+							options={Object.values(this.props.userNames)}
 							placeholder='Share with...'
 							style={{height: '36px'}}
 						/>
@@ -360,13 +311,13 @@ class Notepad extends Component {
 				</div>
 				<div className="p-3" style={{backgroundColor: '#e8e9ed', zIndex: '1', position: 'absolute', left: '0', top: '100px', minHeight: '104.5%', margin: '0', width: '200px'}}>
 					<hr/>
-					{(this.props.notesOptions.current.notepad !== '') ? this.subnotepads() : <></>}
+					{(this.props.notepads.key !== '') ? this.subnotepads() : <></>}
 				</div>
             <div style={{height: '75vw', width: '75vw', position: 'flex'}}>
-				<UseDrag boxes={this.state.boxes} items={this.state.items} scale={1} accept={['0','1','2','3','4','5','6','7']} snapToGrid={false} handleUpdate={this.handleUpdate} styles={this.styles()}/>
+				<UseDrag boxes={this.handleUpdate()} scale={1} accept={['0','1','2','3','4','5','6','7']} snapToGrid={false} styles={this.styles()}/>
 				<DragLayer/>
             </div>
-				<CustomPanel handleUpdate={this.handleUpdate}/>
+				{(this.state.currentSubnotepad !== '') ? <CustomPanel notepad={this.state.currentNotepad} subnotepad={this.state.currentSubnotepad} /> : <></>}
 			</div>
 		)
 	}
@@ -375,12 +326,10 @@ class Notepad extends Component {
 const mapStateToProps = state => {
 	return{
         notepads: state.notepads,
-		notesOptions: state.notesOptions,
-		userNames: state.userNames,
-		user: state.user
+		userNames: state.userNames
 	}
 }
 
-export default connect(mapStateToProps, {handleUpdateNote, handleChangeCampaign, handleAddCampaign, handleAddNotepad, handleAddSubnotepad, 
-	handleAddNote, handleGrabCampaigns, changeNotepad, changeSubnotepad, handleDeleteNotepad, handleDeleteSubnotepad, handleDeleteCampaign,
-	handleShareCampaign})(Notepad);
+export default connect(mapStateToProps, {handleNewCampaign, handleNewNotepad, handleNewSubnotepad, handleNewNote, handleGrabCampaign, 
+	handleUpdateNote, handleDeleteNotepad, handleDeleteSubnotepad, handleDeleteCampaign,
+	handleShareCampaign, handleGrabCampaignOptions})(Notepad);

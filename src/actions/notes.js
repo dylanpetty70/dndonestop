@@ -1,204 +1,142 @@
-import * as api from '../API';
-export const CHANGE_CAMPAIGN = 'CHANGE_CAMPAIGN';
-export const ADD_CAMPAIGN = 'ADD_CAMPAIGN';
-export const ADD_NOTEPAD = 'ADD_NOTEPAD';
-export const ADD_SUBNOTEPAD = 'ADD_SUBNOTEPAD';
-export const ADD_NOTE = 'ADD_NOTE';
-export const GRAB_CAMPAIGNS = 'GRAB_CAMPAIGNS';
-export const CHANGE_SUBNOTEPAD = 'CHANGE_SUBNOTEPAD';
-export const CHANGE_NOTEPAD = 'CHANGE_NOTEPAD';
-export const UPDATE_NOTE = 'UPDATE_NOTE';
-export const DELETE_NOTE = 'DELETE_NOTE';
-export const DELETE_NOTEPAD = 'DELETE_NOTEPAD';
-export const DELETE_SUBNOTEPAD = 'DELETE_SUBNOTEPAD';
+import {dndRef} from '../firebaseAPI';
 
-function deleteNotepad(data){
-	return{
-		type: DELETE_NOTEPAD,
-		data
-	}
+export const GRAB_CAMPAIGN_OPTIONS = 'GRAB_CAMPAIGN_OPTIONS';
+export const GRAB_CAMPAIGN = 'GRAB_CAMPAIGN';
+var firebase = require("firebase/app");
+require('firebase/auth');
+
+export const handleGrabCampaignOptions = () => async dispatch => {
+	let temp = {};
+	let userId = firebase.auth().currentUser.uid;
+	await dndRef.child("users/"+userId+"/campaigns").on('value', async snapshot => {
+		if(snapshot.val()){
+			for(let i = 0; i < Object.values(snapshot.val()).length; i++){
+				await dndRef.child("campaigns/"+Object.values(snapshot.val())[i]+"/name").on('value', function(snapshot1) {
+					if(snapshot1.val()){
+						temp[String(Object.values(snapshot.val())[i])] = String(snapshot1.val());
+					} else {
+						dndRef.child("users/"+ userId + "/campaigns/"+ Object.keys(snapshot.val())[i]).remove();
+					}
+					if(i === Object.values(snapshot.val()).length - 1){
+						dispatch({
+							type: GRAB_CAMPAIGN_OPTIONS,
+							data: temp
+						})
+					}
+				})
+			}
+		}
+	})
 }
 
-function deleteSubnotepad(data){
-	return{
-		type: DELETE_SUBNOTEPAD,
-		data
-	}
-}
-
-function grabCampaigns(data){
-	return{
-		type: GRAB_CAMPAIGNS,
-		data
-	}
-}
-
-function changeCampaign(campaign, data){
-	return {
-		type: CHANGE_CAMPAIGN,
-		campaign,
-		data
-	}
-}
-
-function addCampaign(campaign, data){
-	return {
-		type: ADD_CAMPAIGN,
-		campaign,
-		data
-	}
-}
-
-function addNotepad(data, notepad){
-	return {
-		type: ADD_NOTEPAD,
-		data,
-		notepad
-	}
-}
-
-function addSubnotepad(data,subnotepad){
-	return {
-		type: ADD_SUBNOTEPAD,
-		data,
-		subnotepad
-	}
-}
-
-function addNote(data){
-	return {
-		type: ADD_NOTE,
-		data
-	}
-}
-
-function updateNote(data){
-	return {
-		type: UPDATE_NOTE,
-		data
-	}
-}
-
-function deleteNote(data){
-	return {
-		type: DELETE_NOTE,
-		data
-	}
-}
-
-export function changeNotepad(notepad, data){
-	return {
-		type: CHANGE_NOTEPAD,
-		notepad,
-		data
-	}
-}
-
-export function changeSubnotepad(subnotepad){
-	return {
-		type: CHANGE_SUBNOTEPAD,
-		subnotepad
-	}
-}
-
-export function handleGrabCampaigns(user){
-	return async (dispatch) => {
-		await api.grabCampaigns(user)
-			.then((data) => {
-				dispatch(grabCampaigns(data));
+export const handleGrabCampaign = (id) => async dispatch => {
+	await dndRef.child('campaigns/'+ id).on('value', snapshot => {
+		if(snapshot.val()){
+			dispatch({
+				type: GRAB_CAMPAIGN,
+				data: snapshot.val(),
+				id
 			})
-	}
+		} else {
+			dispatch({
+				type: GRAB_CAMPAIGN,
+				data: {},
+				id: ''
+			})
+		}
+	})
 }
 
-export function handleChangeCampaign(campaign){
-	return async (dispatch) => {
-	await api.changeCampaign(campaign)
-		.then((data) => {
-			dispatch(changeCampaign(campaign, data));
+export const handleNewCampaign = (name, creator) => async dispatch => {
+	let userId = firebase.auth().currentUser.uid;	
+	var data = {creator: userId, notepads: [], shared: [], name: name}
+	var newCampaignKey = dndRef.child("campaigns").push().key;
+
+	let campaignPath = "campaigns/"+String(newCampaignKey);
+
+	dndRef.update({[campaignPath]: data});
+	var newPostRef = dndRef.child("users/"+String(userId)+'/campaigns').push();
+	newPostRef.set(newCampaignKey);
+}
+
+export const handleDeleteCampaign = (id) => async dispatch => {
+	let userId = firebase.auth().currentUser.uid;
+	dndRef.child("campaigns/"+id+"/creator").once('value').then(function(snapshot){
+		if(snapshot.val() === userId){
+			dndRef.child("campaigns/"+id).remove();
+		}
+		dndRef.child("users/"+userId+"/campaigns").once('value').then(function(snapshot1){
+			for(var key in snapshot1.val()){
+				if(snapshot1.val()[key] === id){
+					dndRef.child("users/"+userId+"/campaigns/"+key).remove();
+				}
+			}
 		})
-	}
+	})
 }
 
-export function handleAddCampaign(campaign, user){
-	return async (dispatch) => {
-		await api.addCampaign(campaign, user)
-			.then((data) => {
-				dispatch(addCampaign(campaign, data));
+export const handleShareCampaign = (id, user) => async dispatch => {
+	dndRef.child("campaigns/"+id+"/creator").once('value').then(function(snapshot){
+		if(snapshot.val() !== user){
+			dndRef.child("users/"+user+"/campaigns").once('value').then(function(snapshot1){
+				if(snapshot1.val()){
+					if(!Object.values(snapshot1.val()).includes(id)){
+						var newPostRef = dndRef.child("users/"+user+ "/campaigns").push();
+						newPostRef.set(id);
+						var newPostRef2 = dndRef.child("campaigns/"+id+"/shared").push();
+						newPostRef2.set(user);
+					}
+				} else{
+					var newPostRef1 = dndRef.child("users/"+user+ "/campaigns").push();
+					newPostRef1.set(id);
+					var newPostRef3 = dndRef.child("campaigns/"+id+"/shared").push();
+					newPostRef3.set(user);
+				}
 			})
-	}
+		}
+	})
 }
 
-export function handleAddNotepad(campaign, notepad){
-	return async (dispatch) => {
-		await api.addNotepad(campaign, notepad)
-			.then((data) => {
-				dispatch(addNotepad(data, notepad));
-			})
-	}
+export const handleNewNotepad = (campaign, name) => async dispatch => {
+	var data = {subnotepad: [], name: name, campaign: campaign};
+	var newNotepadKey = dndRef.child("campaigns/"+campaign+"/notepads").push().key;
+
+	let notepadPath = "campaigns/"+campaign+"/notepads/"+String(newNotepadKey);
+
+	dndRef.update({[notepadPath]: data});
 }
 
-export function handleAddSubnotepad(campaign, notepad, subnotepad){
-	return async (dispatch) => {
-		await api.addSubnotepad(campaign, notepad, subnotepad)
-			.then((data) => {
-				dispatch(addSubnotepad(data, subnotepad));
-			})
-	}
+export const handleDeleteNotepad = (campaign, notepad) => async dispatch => {
+	dndRef.child("campaigns/"+campaign+"/notepads/" + notepad).remove();
 }
 
-export function handleAddNote(campaign, notepad, subnotepad, object){
-	return async (dispatch) => {
-		await api.addNote(campaign, notepad, subnotepad, object)
-			.then((data) => {
-				dispatch(addNote(data));
-			})
-	}
+export const handleNewSubnotepad = (campaign, notepad, name) => async dispatch => {
+	var data = {name: name, notes: [], campaign: campaign, notepad: notepad};
+	var newSubnotepadKey = dndRef.child("campaigns/"+campaign+"/notepads/"+notepad+"/subnotepads").push().key;
+
+	let subnotepadPath = "campaigns/"+campaign+"/notepads/"+notepad+"/subnotepads/"+String(newSubnotepadKey);
+
+	dndRef.update({[subnotepadPath]: data});
 }
 
-export function handleUpdateNote(campaign, notepad, subnotepad, note){
-	return async (dispatch) => {
-		await api.updateNote(campaign, notepad, subnotepad, note)
-			.then((data) => {
-				dispatch(updateNote(data));
-			})
-	}
+export const handleDeleteSubnotepad = (campaign, notepad, subnotepad) => async dispatch => {
+	dndRef.child("campaigns/"+campaign+"/notepads/"+notepad+"/subnotepads/"+subnotepad).remove();
 }
 
-export function handleDeleteNote(campaign, notepad, subnotepad, note){
-	return async (dispatch) => {
-		await api.deleteNote(campaign, notepad, subnotepad, note)
-			.then((data) => {
-				dispatch(deleteNote(data));
-			})
-	}
+export const handleNewNote = (campaign, notepad, subnotepad, object) => async dispatch => {
+	var data = {object: object, pLeft: '200', pTop: '200', height: '20', width: '20', title: '', body: '', campaign: campaign, notepad: notepad, subnotepad: subnotepad};
+	var newNoteKey = dndRef.child("campaigns/"+campaign+"/notepads/"+notepad+"/subnotepads/"+subnotepad+"/notes").push().key;
+
+	let notePath = "campaigns/"+campaign+"/notepads/"+notepad+"/subnotepads/"+subnotepad+"/notes/"+String(newNoteKey);
+
+	dndRef.update({[notePath]: data});
 }
 
-export function handleDeleteNotepad(campaign, notepad){
-	return async (dispatch) => {
-		await api.deleteNotepad(campaign, notepad)
-			.then((data) => {
-				dispatch(deleteNotepad(data));
-			})
-	}
+export const handleDeleteNote = (campaign, notepad, subnotepad, note) => async dispatch => {
+	dndRef.child("campaigns/"+campaign+"/notepads/"+notepad+"/subnotepads/"+subnotepad+"/notes/"+note).remove();
 }
 
-export function handleDeleteSubnotepad(campaign, notepad, subnotepad){
-	return async (dispatch) => {
-		await api.deleteSubnotepad(campaign, notepad, subnotepad)
-			.then((data) => {
-				dispatch(deleteSubnotepad(data));
-			})
-	}
-}
 
-export function handleDeleteCampaign(campaign, user){
-	return async (dispatch) => {
-		await api.deleteCampaign(campaign, user)
-	}
-}
-
-export function handleShareCampaign(campaign, creator, user){
-	return async (dispatch) => {
-		await api.shareCampaign(campaign, creator, user)
-	}
+export const handleUpdateNote = (campaign, notepad, subnotepad, note, data) => async dispatch => {
+	dndRef.child("campaigns/"+campaign+"/notepads/"+notepad+"/subnotepads/"+subnotepad+"/notes/"+note).set(data);
 }

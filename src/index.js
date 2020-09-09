@@ -17,11 +17,13 @@ import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 
+
+
 const persistConfig = {
   key: 'ruse',
   storage,
   stateReconciler: autoMergeLevel2,
-  blacklist: ['envOptions', 'draggable', 'notepads', 'notesOptions', 'editEnv', 'initiative', 'userNames']
+  blacklist: ['envOptions', 'draggable', 'notepads', 'editEnv', 'initiative', 'userNames', 'characters', 'initiative']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

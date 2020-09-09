@@ -1,19 +1,18 @@
-import {NEW_INITIATIVE, DELETE_INITIATIVE, UPDATE_INITIATIVE, GRAB_INITIATIVE, CHANGE_INITIATIVE_SHOW} from '../actions/initiative';
+import {GRAB_INITIATIVE, GRAB_INITIATIVE_OPTIONS, CHANGE_INITIATIVE_SHOW, DELETE_INITIATIVE} from '../actions/initiative';
 
 
-
-
-export default function initiative(state = {show: false, initiatives: {}}, action) {
+export default function initiative(state = {show: false, options: {}, initiative: {}, key: ''}, action) {
 	switch (action.type) {
-		case NEW_INITIATIVE:
-		case DELETE_INITIATIVE:
-		case UPDATE_INITIATIVE:
 		case GRAB_INITIATIVE:
-			state.initiatives = action.data;
-			return state;
+			return {...state, initiative: action.data, key: action.id};
+		case DELETE_INITIATIVE:
+			let temp = state.options;
+			delete temp[action.id]
+			return {...state, options: temp};
+		case GRAB_INITIATIVE_OPTIONS:
+			return {...state, options: action.data};
 		case CHANGE_INITIATIVE_SHOW:
-			state.show = !state.show;
-			return state;
+			return {...state, show: !state.show};
 		default:
 			return state;
 	}

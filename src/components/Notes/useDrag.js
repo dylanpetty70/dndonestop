@@ -2,6 +2,7 @@ import React from 'react'
 import { useDrop } from 'react-dnd'
 import DraggableBox from '../Notes/DraggableBox'
 import { connect } from 'react-redux';
+import {handleUpdateNote} from '../../actions/notes';
 
 
 const Container = (props) => {
@@ -15,17 +16,28 @@ const Container = (props) => {
       if(props.snapToGrid){
         ;[left, top] = props.snapToGrid(left, top, props.scale)
 	  }
-      let index = Number(item.id.replace('id', ''));
-        props.items[index].pLeft = left;
-        props.items[index].pTop = top;
-        props.handleUpdate(props.items)
+
+       let data = {
+                    object: item.object, 
+                    pLeft: left, 
+                    pTop: top, 
+                    height: item.height, 
+                    width: item.width, 
+                    title: item.title, 
+                    body: item.body, 
+                    campaign: item.campaign, 
+                    notepad: item.notepad, 
+                    subnotepad: item.subnotepad,
+                    key: item.key
+                    }
+       props.handleUpdateNote(data.campaign, data.notepad, data.subnotepad, data.key, data);
     },
   })
 
   return (
     <div ref={drop} style={props.styles}>
       {Object.keys(props.boxes).map((key) => {
-      return(<DraggableBox key={key} id={key} updateBoxes={props.handleUpdate} {...props.boxes[key]}/>)
+      return(<DraggableBox key={key} id={key} {...props.boxes[key]}/>)
       })}
     </div>
   )
@@ -37,4 +49,4 @@ const mapStateToProps = state => {
 }
 
 
-export default connect(mapStateToProps)(Container);
+export default connect(mapStateToProps, {handleUpdateNote})(Container);

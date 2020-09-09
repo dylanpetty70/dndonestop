@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {handleAddNote} from '../../actions/notes';
+import {handleNewNote} from '../../actions/notes';
 import colors from './Colors';
 
 class CustomPanel extends Component {
@@ -12,7 +12,6 @@ class CustomPanel extends Component {
 	}
 
 	componentDidMount(){
-		
     }
 
 	note(){
@@ -20,7 +19,8 @@ class CustomPanel extends Component {
 		for(let i = 0; i < colors.length; i++){
 			temp.push(
 				<div key={'item'+i}>
-					<img src={'/images/postit/'+colors[i]+'.png'}  style={{width: '98px', height: '98px', bottom: '0'}} alt='note'  onClick={() => {this.props.handleAddNote(this.props.notesOptions.current.campaign, this.props.notesOptions.current.notepad, this.props.notesOptions.current.subnotepad, i); this.props.handleUpdate(undefined)}}/>
+					
+					<img src={'/images/postit/'+colors[i]+'.png'}  style={{width: '98px', height: '98px', bottom: '0'}} alt='note'  onClick={() => {if(this.props.notepads.key !== '' && this.props.notepad !== '' && this.props.subnotepad !== ''){this.props.handleNewNote(this.props.notepads.key, this.props.notepad, this.props.subnotepad, i)}}}/>
 					<img src='/images/postit/thumbtack.png' style={{position: 'relative', width: '20px', height: '30px', left: '-60px', top: '-30px'}} alt="tack"/>
 				</div>
 			)
@@ -41,11 +41,10 @@ class CustomPanel extends Component {
 
 const mapStateToProps = state => {
 	return{
-        notes: state.notes,
-        notesOptions: state.notesOptions
+        notepads: state.notepads
 	}
 }
 
 export default connect(mapStateToProps, 
-	{handleAddNote}
+	{handleNewNote}
 	)(CustomPanel);

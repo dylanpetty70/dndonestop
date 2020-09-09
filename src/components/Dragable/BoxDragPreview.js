@@ -8,7 +8,7 @@ const BoxDragPreview = memo((props) => {
 
   return (
     <div style={{display: 'inline-block', transform: rotate, WebkitTransform: rotate, opacity: '.5'}}>
-      <div>{ReactHtmlParser(props.title.replace(/32/g, String(props.draggable.scale * props.scale)))}</div>
+      <div>{ReactHtmlParser(props.title.replace(/32/g, String(Number(props.draggable.environment.scale) * Number(props.scale))))}</div>
     </div>
   )
 })
