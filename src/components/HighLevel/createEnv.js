@@ -36,8 +36,8 @@ class CreateEnv extends Component {
                 {(this.state.status) ?
 				    <Environment/> :
                     <PulseLoader
-                      css={{display: 'block', margin: '0 auto', borderColor: 'red'}}
-                      size={150}
+                      css={{position: 'absolute', top: '40vh', left: '40vw'}}
+                      size={100}
                       color={"#123abc"}
                       loading={true}
                     />
