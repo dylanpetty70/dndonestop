@@ -7,6 +7,7 @@ import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import {editTokens} from '../../actions/editEnv';
+import Chat from './Chat';
 
 
 class CustomPanel extends Component {
@@ -36,7 +37,6 @@ class CustomPanel extends Component {
 		this.placeToken = this.placeToken.bind(this);
 		this.envChange = this.envChange.bind(this);
 		this.deleteEnv = this.deleteEnv.bind(this);
-		this.chat = this.chat.bind(this);
 	}
 
 	componentDidMount(){
@@ -223,51 +223,6 @@ class CustomPanel extends Component {
 		</Card>)
 	}
 
-	chat(){
-		let temp = [{}];
-		return(<Card style={{marginTop: '5px', marginBottom: '5px', marginLeft: '2px', marginRight: '2px'}}>
-			<Card.Header>
-				Chat
-			</Card.Header>
-			<Card.Body style={{maxHeight: '700px'}}>
-			<div className="chatWindow">
-				<ul className="chat" id="chatList">
-				  {temp.map(data => (
-					<div key={data}>
-					  {'' === '1' ? (
-						<li className="self">
-						  <div className="msg">
-							<p>{'uid'}</p>
-							<div className="message"> {'text'}</div>
-						  </div>
-						</li>
-					  ) : (
-						<li className="other">
-						  <div className="msg">
-							<p>{'uid'}</p>
-						   <div className="message"> {'text'} </div>
-						  </div>
-						</li>
-					  )}
-					</div>
-				  ))}
-				</ul>
-				<div className="chatInputWrapper">
-				  <form onSubmit={''}>
-					<input
-					  className="textarea input"
-					  style={{width:"100%"}}
-					  type="text"
-					  placeholder="Enter your message..."
-					  onChange={''}
-					/>
-				  </form>
-				</div>
-			 </div>
-			</Card.Body>
-		</Card>)
-	}
-
 	deleteEnv(){
 		if(this.props.draggable.key.length > 0){
 			return(
@@ -309,7 +264,7 @@ class CustomPanel extends Component {
 			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvChange: !this.state.showEnvChange})}}>Change Environment</Button> : <></>}
 			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvVar: !this.state.showEnvVar})}}>Environment Variables</Button> : <></>}
 			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.props.editTokens(!this.props.editEnv.tokens); this.setState({...this.state, showPlaceTok: !this.state.showPlaceTok})}}>Place Tokens</Button> : <></>}
-			{(false) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showChat: !this.state.showChat})}}>Chat</Button> : <></>}
+			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showChat: !this.state.showChat})}}>Chat</Button> : <></>}
 			
 		</div>
 			{(this.state.showEnvChange || this.state.showEnvVar || this.state.showPlaceTok || this.state.showChat || this.props.draggable.key.length < 1) ?
@@ -317,7 +272,7 @@ class CustomPanel extends Component {
 				{(this.state.showEnvChange || this.props.draggable.key.length < 1) ? this.envChange() : <></>}
 				{(this.state.showEnvVar) ? this.envVariables() : <></>}
 				{(this.state.showPlaceTok) ? this.placeToken() : <></>}
-				{(this.state.showChat) ? this.chat() : <></>}
+				{(this.state.showChat) ? <Chat /> : <></>}
 			</div>
 			:
 			<></>

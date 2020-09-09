@@ -57,6 +57,22 @@ export const handleUpdateCurrent = (id, data) => async dispatch => {
 	dndRef.child("environments/"+id+"/items").set(data);
 }
 
+export const handleNewMessage = (id, text) => async dispatch => {
+	let userId = firebase.auth().currentUser.uid;	
+	let date = Date.now()
+
+	var data = {creator: userId, time: date, text: text}
+	var newTextKey = dndRef.child("environments/" + id + "/chat").push().key;
+
+	let textPath = "environments/" + id + "/chat/" + String(newTextKey);
+
+	dndRef.update({[textPath]: data});
+}
+
+export const handleDeleteMessage = (env, id) => async dispatch => {
+	dndRef.child("environments/"+env+"/chat/"+id).remove();
+}
+
 export const handleNewEnvironment = (name) => async dispatch => {
 	let userId = firebase.auth().currentUser.uid;	
 	var data = {creator: userId, items: [], shared: [], name: name, scale: '30'}
