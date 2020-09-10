@@ -69,11 +69,11 @@ export const handleShareCharacter = (id, user) => async dispatch => {
 				if(snapshot1.val()){
 					if(!Object.keys(snapshot1.val()).includes(id)){
 						dndRef.update({["users/"+user+ "/characters/"+id]: true})
-						dndRef.update({["characters/"+id+"/shared"+user]: true})
+						dndRef.update({["characters/"+id+"/shared/"+user]: true})
 					}
 				} else{
 					dndRef.update({["users/"+user+ "/characters/"+id]: true})
-					dndRef.update({["characters/"+id+"/shared"+user]: true})
+					dndRef.update({["characters/"+id+"/shared/"+user]: true})
 				}
 			})
 		}

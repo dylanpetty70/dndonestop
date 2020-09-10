@@ -104,11 +104,11 @@ export const handleShareEnvironment = (id, user) => async dispatch => {
 				if(snapshot1.val()){
 					if(!Object.values(snapshot1.val()).includes(id)){
 						dndRef.update({["users/"+user+ "/environments/"+id]: true})
-						dndRef.update({["environments/"+id+"/shared"+user]: true})
+						dndRef.update({["environments/"+id+"/shared/"+user]: true})
 					}
 				} else{
 					dndRef.update({["users/"+user+ "/environments/"+id]: true})
-					dndRef.update({["environments/"+id+"/shared"+user]: true})
+					dndRef.update({["environments/"+id+"/shared/"+user]: true})
 				}
 			})
 		}

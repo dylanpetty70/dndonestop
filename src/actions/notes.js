@@ -73,11 +73,11 @@ export const handleShareCampaign = (id, user) => async dispatch => {
 				if(snapshot1.val()){
 					if(!Object.values(snapshot1.val()).includes(id)){
 						dndRef.update({["users/"+user+ "/campaigns/"+id]: true})
-						dndRef.update({["campaigns/"+id+"/shared"+user]: true})
+						dndRef.update({["campaigns/"+id+"/shared/"+user]: true})
 					}
 				} else{
 					dndRef.update({["users/"+user+ "/campaigns/"+id]: true})
-					dndRef.update({["campaigns/"+id+"/shared"+user]: true})
+					dndRef.update({["campaigns/"+id+"/shared/"+user]: true})
 				}
 			})
 		}
