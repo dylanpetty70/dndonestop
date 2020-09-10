@@ -146,7 +146,7 @@ class TrackInitiative extends Component {
 								labelKey="initiatives"
 								onChange={(value) => {if(value.length !== 0) {this.handleChangeIni(value[0], Object.keys(this.props.initiative.options)[Object.values(this.props.initiative.options).indexOf(value[0])])}}}
 								options={Object.values(this.props.initiative.options)}
-								placeholder={(this.props.initiative.initiative) ? this.props.initiative.initiative.name : 'Choose initiative...'}
+								placeholder={'Choose initiative...'}
 								ref={ref}
 						> 
 						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref.current.clear()}}/>
@@ -217,7 +217,7 @@ class TrackInitiative extends Component {
 
 						{this.rows()}
 						<Row>
-							{(this.state.currentInitiative !== 'Choose an initiative name...') ?<><GrAdd onClick={() => {this.props.handleUpdateInitiative(this.props.initiative.key, this.newIni())}} />
+							{(this.state.currentInitiative !== 'Choose an initiative name...') ?<><GrAdd style={{cursor: 'pointer'}} onClick={() => {this.props.handleUpdateInitiative(this.props.initiative.key, this.newIni())}} />
 							<p style={{paddingLeft: '5px'}}>Add Player</p></>
 							: <></>}
 						</Row>

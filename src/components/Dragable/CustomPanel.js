@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {handleGrabDraggable, handleUpdateCurrent, handleNewEnvironment, handleGrabOptions, handleChangeGrid, handleChangeScale, handleDeleteEnvironment, handleShareEnvironment} from '../../actions/draggable';
+import {handleChangeBackground, handleGrabDraggable, handleUpdateCurrent, handleNewEnvironment, handleGrabOptions, handleChangeGrid, handleChangeScale, handleDeleteEnvironment, handleShareEnvironment} from '../../actions/draggable';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -33,7 +33,8 @@ class CustomPanel extends Component {
 						showEnvChange: false,
 						showDelete: false,
 						showChat: false,
-						tempShare: ''
+						tempShare: '',
+						tempBackground: ''
 						}
 		this.addToken = this.addToken.bind(this)
 		this.objectItems = this.objectItems.bind(this);
@@ -82,10 +83,6 @@ class CustomPanel extends Component {
 		}
 	}
 
-	changeGrid(text){
-		this.props.handleChangeGrid({color: text});
-	}
-
 	envVariables(){
 		return(<Card style={{marginTop: '5px', marginBottom: '5px', marginLeft: '2px', marginRight: '2px'}}>
 			<Card.Header>
@@ -105,7 +102,7 @@ class CustomPanel extends Component {
 					<Typeahead
 							id="gridColor"
 							labelKey="gridColor"
-							onChange={(text) => {this.changeGrid(text[0])}}
+							onChange={(text) => {this.props.handleChangeGrid(text[0]);}}
 							options={['black', 'white', 'none']}
 							placeholder={this.props.envOptions.color}
 							ref={ref}
@@ -113,6 +110,13 @@ class CustomPanel extends Component {
 						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref.current.clear()}}/>
 						</Typeahead>
 					</Form.Group>
+				</Form>
+				<Form>
+				<Card.Title  style={{fontSize: '16px', marginTop: '30px'}}>Background Hex Color</Card.Title>
+					<Form.Group>
+						<Form.Control value={this.state.tempBackground} placeholder={'Example: #63c900'} style={{width: '170px', float: 'left'}} onKeyPress={(event) => {if(event.charCode===13){event.preventDefault(); (this.state.tempBackground[0] === '#') ? this.props.handleChangeBackground({background: this.state.tempBackground}) : this.setState({...this.state, tempBackground: ''})}}} onChange={(text) => {if(text.target.value !== '' && text.target.value[0] === '#' && text.target.value.length < 8){this.setState({...this.state, tempBackground: text.target.value})}}}/>
+					</Form.Group>
+					<Button variant="outline-primary" style={{marginLeft: '30px', float: 'left'}} onClick={() => {(this.state.tempBackground[0] === '#') ? this.props.handleChangeBackground(this.state.tempBackground) : this.setState({...this.state, tempBackground: ''})}}>Change Background</Button>
 				</Form>
 			</Card.Body>
 		</Card>)
@@ -316,5 +320,5 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, 
 	{handleGrabDraggable, handleUpdateCurrent, handleNewEnvironment, handleGrabOptions, 
 	handleChangeGrid, handleChangeScale, handleDeleteEnvironment, handleShareEnvironment,
-	editTokens}
+	editTokens, handleChangeBackground}
 	)(CustomPanel);

@@ -14,7 +14,10 @@ class GridLayer extends Component {
 		let totalHeight = .8 * document.documentElement.clientHeight;
 		let temp = [];
 		let scale = this.props.draggable.environment.scale + 'px';
-
+		temp.push(
+			<div key='background' style={{backgroundColor: this.props.envOptions.background, position: 'absolute', width: '98vw', height: '80vh', left: '11px', top: '156px'}}>
+			</div>
+		)
 		for(let i = Number(this.props.draggable.environment.scale); i < totalWidth; i += Number(this.props.draggable.environment.scale)){
 			let variableLeft = String(i + 11 - Number(this.props.draggable.environment.scale)) + 'px';
 			const styleBottom ={

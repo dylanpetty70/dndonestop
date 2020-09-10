@@ -2,6 +2,7 @@ import {dndRef} from '../firebaseAPI';
 export const GRAB_DRAGGABLE = 'GRAB_DRAGGABLE';
 export const GRAB_OPTIONS = 'GRAB_OPTIONS';
 export const CHANGE_GRID = 'CHANGE_GRID';
+export const CHANGE_BACKGROUND = 'CHANGE_BACKGROUND';
 export const GRAB_ALL_OPTIONS = 'GRAB_ALL_OPTIONS';
 var firebase = require("firebase/app");
 require('firebase/auth');
@@ -132,6 +133,13 @@ export const handleShareEnvironment = (id, user) => async dispatch => {
 export const handleChangeGrid = (input) => async dispatch => {
 	dispatch({
 		type: CHANGE_GRID,
+		data: input
+	})
+}
+
+export const handleChangeBackground = (input) => async dispatch => {
+	dispatch({
+		type: CHANGE_BACKGROUND,
 		data: input
 	})
 }
