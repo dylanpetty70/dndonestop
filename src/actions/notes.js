@@ -10,14 +10,12 @@ export const handleGrabCampaignOptions = () => async dispatch => {
 	let userId = firebase.auth().currentUser.uid;
 	await dndRef.child("users/"+userId+"/campaigns").on('value', async snapshot => {
 		if(snapshot.val()){
-			for(let i = 0; i < Object.values(snapshot.val()).length; i++){
-				await dndRef.child("campaigns/"+Object.values(snapshot.val())[i]+"/name").on('value', function(snapshot1) {
+			for(let i = 0; i < Object.keys(snapshot.val()).length; i++){
+				await dndRef.child("campaigns/"+Object.keys(snapshot.val())[i]+"/name").on('value', function(snapshot1) {
 					if(snapshot1.val()){
-						temp[String(Object.values(snapshot.val())[i])] = String(snapshot1.val());
-					} else {
-						dndRef.child("users/"+ userId + "/campaigns/"+ Object.keys(snapshot.val())[i]).remove();
+						temp[String(Object.keys(snapshot.val())[i])] = String(snapshot1.val());
 					}
-					if(i === Object.values(snapshot.val()).length - 1){
+					if(i === Object.keys(snapshot.val()).length - 1){
 						dispatch({
 							type: GRAB_CAMPAIGN_OPTIONS,
 							data: temp
@@ -53,10 +51,9 @@ export const handleNewCampaign = (name, creator) => async dispatch => {
 	var newCampaignKey = dndRef.child("campaigns").push().key;
 
 	let campaignPath = "campaigns/"+String(newCampaignKey);
-
+	
+	dndRef.update({["users/"+userId+ "/campaigns/"+String(newCampaignKey)]: true});
 	dndRef.update({[campaignPath]: data});
-	var newPostRef = dndRef.child("users/"+String(userId)+'/campaigns').push();
-	newPostRef.set(newCampaignKey);
 }
 
 export const handleDeleteCampaign = (id) => async dispatch => {
@@ -65,13 +62,7 @@ export const handleDeleteCampaign = (id) => async dispatch => {
 		if(snapshot.val() === userId){
 			dndRef.child("campaigns/"+id).remove();
 		}
-		dndRef.child("users/"+userId+"/campaigns").once('value').then(function(snapshot1){
-			for(var key in snapshot1.val()){
-				if(snapshot1.val()[key] === id){
-					dndRef.child("users/"+userId+"/campaigns/"+key).remove();
-				}
-			}
-		})
+		dndRef.child("users/"+userId+"/campaigns/"+id).remove();
 	})
 }
 
@@ -81,16 +72,12 @@ export const handleShareCampaign = (id, user) => async dispatch => {
 			dndRef.child("users/"+user+"/campaigns").once('value').then(function(snapshot1){
 				if(snapshot1.val()){
 					if(!Object.values(snapshot1.val()).includes(id)){
-						var newPostRef = dndRef.child("users/"+user+ "/campaigns").push();
-						newPostRef.set(id);
-						var newPostRef2 = dndRef.child("campaigns/"+id+"/shared").push();
-						newPostRef2.set(user);
+						dndRef.update({["users/"+user+ "/campaigns/"+id]: true})
+						dndRef.update({["campaigns/"+id+"/shared"+user]: true})
 					}
 				} else{
-					var newPostRef1 = dndRef.child("users/"+user+ "/campaigns").push();
-					newPostRef1.set(id);
-					var newPostRef3 = dndRef.child("campaigns/"+id+"/shared").push();
-					newPostRef3.set(user);
+					dndRef.update({["users/"+user+ "/campaigns/"+id]: true})
+					dndRef.update({["campaigns/"+id+"/shared"+user]: true})
 				}
 			})
 		}
