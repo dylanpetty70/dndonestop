@@ -240,7 +240,7 @@ class GameInfo extends Component {
 								placeholder={"Choose a "+ this.state.placeholder + "..."}
 								ref={ref}
 						> 
-						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref.current.clear()}}/>
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref.current.clear(); this.setState({...this.state, tempSearch: ''});}}/>
 						</Typeahead>: <></>}
 					</Form.Group>
 					{(this.state.page === 'spells') ? 
@@ -255,7 +255,7 @@ class GameInfo extends Component {
 								placeholder={"Choose a filter..."}
 								ref={ref1}
 						> 
-						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref1.current.clear()}}/>
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref1.current.clear(); this.setState({...this.state, spellLevelFilter: ''});}}/>
 						</Typeahead>: <></>}
 					</Form.Group>
 					</>
@@ -272,7 +272,7 @@ class GameInfo extends Component {
 								placeholder={"Choose a filter..."}
 								ref={ref2}
 						> 
-						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref1.current.clear()}}/>
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref2.current.clear(); this.setState({...this.state, spellClassFilter: ''});}}/>
 						</Typeahead>: <></>}
 					</Form.Group>
 					</>
@@ -289,7 +289,7 @@ class GameInfo extends Component {
 								placeholder={"Choose a filter..."}
 								ref={ref3}
 						> 
-						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref1.current.clear()}}/>
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref3.current.clear(); this.setState({...this.state, monsterTypeFilter: ''});}}/>
 						</Typeahead>: <></>}
 					</Form.Group>
 					</>
@@ -306,7 +306,7 @@ class GameInfo extends Component {
 								placeholder={"Choose a filter..."}
 								ref={ref4}
 						> 
-						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref1.current.clear()}}/>
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref4.current.clear(); this.setState({...this.state, monsterCRFilter: ''});}}/>
 						</Typeahead>: <></>}
 					</Form.Group>
 					</>
