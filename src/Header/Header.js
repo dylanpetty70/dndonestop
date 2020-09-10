@@ -9,12 +9,13 @@ import {changeInitiativeShow} from '../actions/initiative';
 import Initiative from '../components/TrackInitiative';
 import Ambiance from '../components/ambiance';
 import ReactModal from 'react-modal-resizable-draggable';
+import {AiFillCloseCircle} from 'react-icons/ai';
 
 class Header extends Component {
 
 	constructor(props){
 		super(props);
-        this.state = {showDice: false, showInitiative: false, name: ''};
+        this.state = {showDice: false, showInitiative: false, name: '', showAmbiance: false};
 		this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
 	}
@@ -68,11 +69,13 @@ class Header extends Component {
 				<ReactModal 
 					onRequestClose={() => this.closeModal()}
 					isOpen={this.state.showInitiative}>
+					<h3 style={{position: 'absolute', zIndex: 3, top: '-6px', right: '2px', cursor: 'pointer'}}><AiFillCloseCircle onClick={() => {this.setState({...this.state, showInitiative: false})}}/></h3>
 					<Initiative />
 				</ReactModal>
 				<ReactModal 
-					onRequestClose={() => this.setState({showAmbiance: false})}
+					onRequestClose={() => this.setState({...this.state, showAmbiance: false})}
 					isOpen={this.state.showAmbiance}>
+					<h3 style={{position: 'absolute', zIndex: 3, top: '-6px', right: '2px', cursor: 'pointer'}}><AiFillCloseCircle onClick={() => {this.setState({...this.state, showAmbiance: false})}}/></h3>
 					<Ambiance />
 				</ReactModal>
 			</div>

@@ -19,6 +19,13 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import {handleGrab5e} from '../actions/5eInfo';
+import {RiCloseLine} from 'react-icons/ri';
+
+const ref = React.createRef();
+const ref1 = React.createRef();
+const ref2 = React.createRef();
+const ref3 = React.createRef();
+const ref4 = React.createRef();
 
 class GameInfo extends Component {
 
@@ -231,7 +238,10 @@ class GameInfo extends Component {
 								onChange={(text) => {this.setState({...this.state, tempSearch: text[0]})}}
 								options={this.options(this.state.page)}
 								placeholder={"Choose a "+ this.state.placeholder + "..."}
-						/> : <></>}
+								ref={ref}
+						> 
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref.current.clear()}}/>
+						</Typeahead>: <></>}
 					</Form.Group>
 					{(this.state.page === 'spells') ? 
 					<>
@@ -243,8 +253,10 @@ class GameInfo extends Component {
 								onChange={(text) => {this.setState({...this.state, spellLevelFilter: text[0]})}}
 								options={this.filterOptions('spells', 'level')}
 								placeholder={"Choose a filter..."}
-						/>
-					: <></>}
+								ref={ref1}
+						> 
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref1.current.clear()}}/>
+						</Typeahead>: <></>}
 					</Form.Group>
 					</>
 					: <></>}
@@ -258,8 +270,10 @@ class GameInfo extends Component {
 								onChange={(text) => {this.setState({...this.state, spellClassFilter: text[0]})}}
 								options={this.filterOptions('spells', 'classes')}
 								placeholder={"Choose a filter..."}
-						/>
-					: <></>}
+								ref={ref2}
+						> 
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref1.current.clear()}}/>
+						</Typeahead>: <></>}
 					</Form.Group>
 					</>
 					: <></>}
@@ -273,8 +287,10 @@ class GameInfo extends Component {
 								onChange={(text) => {this.setState({...this.state, monsterTypeFilter: text[0]})}}
 								options={this.filterOptions('monsters', 'type')}
 								placeholder={"Choose a filter..."}
-						/>
-					: <></>}
+								ref={ref3}
+						> 
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref1.current.clear()}}/>
+						</Typeahead>: <></>}
 					</Form.Group>
 					</>
 					: <></>}
@@ -288,8 +304,10 @@ class GameInfo extends Component {
 								onChange={(text) => {this.setState({...this.state, monsterCRFilter: text[0]})}}
 								options={this.filterOptions('monsters', 'challenge_rating')}
 								placeholder={"Choose a filter..."}
-						/>
-					: <></>}
+								ref={ref4}
+						> 
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref1.current.clear()}}/>
+						</Typeahead>: <></>}
 					</Form.Group>
 					</>
 					: <></>}

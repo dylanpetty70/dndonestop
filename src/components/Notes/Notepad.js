@@ -13,6 +13,10 @@ import Button from 'react-bootstrap/Button';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import {GrAdd} from 'react-icons/gr';
 import {MdDelete} from 'react-icons/md';
+import {RiCloseLine} from 'react-icons/ri';
+
+const ref = React.createRef();
+const ref1 = React.createRef();
 
 class Notepad extends Component {
 
@@ -291,7 +295,10 @@ class Notepad extends Component {
 							placeholder='Add Campaign'
 							value={(this.props.notepads.campaign.name) ? this.props.notepads.campaign.name : 'Add Campaign'}
 							style={{height: '36px'}}
-						/>
+							ref={ref}
+						> 
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '38px', top: '10px'}} onClick={() => {ref.current.clear()}}/>
+						</Typeahead>
 						<GrAdd style={{borderRadius: '.25em', backgroundColor: 'lightGrey', height: '36px', width: '36px', top: '-35px', marginLeft: '163px', position: 'relative'}} onClick={() => {this.setState({...this.state, showAddCampaign: true});}} />
 					</Form.Group>
 					{this.notepads()}
@@ -303,7 +310,10 @@ class Notepad extends Component {
 							options={Object.values(this.props.userNames)}
 							placeholder='Share with...'
 							style={{height: '36px'}}
-						/>
+							ref={ref1}
+						> 
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref1.current.clear()}}/>
+						</Typeahead>
 				<Button variant ="outline-secondary" style={{float: 'right', marginRight: '10px'}} onClick={() => {this.shareCampaign()}}>Share Campaign</Button>
 				<Button variant="danger" style={{float: 'right', marginRight: '20px'}} onClick={() => {this.deleteCampaign()}}>Delete Campaign</Button></>
 				: <></>}

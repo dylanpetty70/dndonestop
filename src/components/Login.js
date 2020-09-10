@@ -110,7 +110,7 @@ class Login extends Component {
 
                       <Form.Group controlId="formBasicPassword">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" onChange={(text) => {this.setState({...this.state, newPassword: text.target.value})}}/>
+                        <Form.Control type="password" placeholder="Password" onKeyPress={(event) => {if(event.charCode===13){event.preventDefault(); this.createUser()}}} onChange={(text) => {this.setState({...this.state, newPassword: text.target.value})}}/>
                       </Form.Group>
 
                     </Form>
@@ -180,7 +180,7 @@ class Login extends Component {
 
                   <Form.Group controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" onChange={(text) => {this.setState({...this.state, password: text.target.value})}}/>
+                    <Form.Control type="password" placeholder="Password" onKeyPress={(event) => {if(event.charCode===13){event.preventDefault(); this.signIn()}}} onChange={(text) => {this.setState({...this.state, password: text.target.value})}}/>
                   </Form.Group>
                   <Button variant="primary" onClick={() => {this.signIn()}}>
                     Login

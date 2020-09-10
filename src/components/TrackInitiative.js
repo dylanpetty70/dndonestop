@@ -11,6 +11,10 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import {GrAdd} from 'react-icons/gr';
 import {MdDelete} from 'react-icons/md';
 import {AiOutlineArrowUp} from 'react-icons/ai';
+import {RiCloseLine} from 'react-icons/ri';
+
+const ref = React.createRef();
+const ref1 = React.createRef();
 
 class TrackInitiative extends Component {
 
@@ -143,7 +147,10 @@ class TrackInitiative extends Component {
 								onChange={(value) => {if(value.length !== 0) {this.handleChangeIni(value[0], Object.keys(this.props.initiative.options)[Object.values(this.props.initiative.options).indexOf(value[0])])}}}
 								options={Object.values(this.props.initiative.options)}
 								placeholder={(this.props.initiative.initiative) ? this.props.initiative.initiative.name : 'Choose initiative...'}
-								/>
+								ref={ref}
+						> 
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref.current.clear()}}/>
+						</Typeahead>
 							<Button variant="outline-danger" style={{float: 'left'}} onClick={() => {this.props.handleDeleteInitiative(this.props.initiative.key);}}>
 								Delete
 							</Button>
@@ -166,7 +173,10 @@ class TrackInitiative extends Component {
 									onChange={(value) => {this.setState({...this.state, tempShare: Object.keys(this.props.userNames)[Object.values(this.props.userNames).indexOf(value[0])]})}}
 									options={Object.values(this.props.userNames)}
 									placeholder={"Share with..."}
-								/>
+									ref={ref1}
+								> 
+								<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref1.current.clear()}}/>
+								</Typeahead>
 							<Button variant="outline-primary" onClick={() => {this.props.handleShareInitiative(this.props.initiative.key, this.state.tempShare)}}>
 								Share
 							</Button>

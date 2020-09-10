@@ -8,7 +8,13 @@ import Modal from 'react-bootstrap/Modal';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import {editTokens} from '../../actions/editEnv';
 import Chat from './Chat';
+import {RiCloseLine} from 'react-icons/ri';
 
+const ref = React.createRef();
+const ref1 = React.createRef();
+const ref2 = React.createRef();
+const ref3 = React.createRef();
+const ref4 = React.createRef();
 
 class CustomPanel extends Component {
 
@@ -89,7 +95,7 @@ class CustomPanel extends Component {
 			<Card.Title style={{fontSize: '16px'}}>Grid Scale</Card.Title>
 				<Form inline='true' style={{marginLeft: '10px'}}>
 					<Form.Group>
-						<Form.Control placeholder={this.props.draggable.environment.scale} style={{width: '70px'}} onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempScale: text.target.value}) : this.setState({...this.state, tempScale: this.props.draggable.scale})}} />
+						<Form.Control placeholder={this.props.draggable.environment.scale} style={{width: '70px'}} onKeyPress={(event) => {if(event.charCode===13){event.preventDefault(); (this.state.tempScale !== '' & !isNaN(Number(this.state.tempScale))) ? this.props.handleChangeScale(this.props.draggable.key, this.state.tempScale) : this.setState({...this.state, scaleError: true})}}} onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempScale: text.target.value}) : this.setState({...this.state, tempScale: this.props.draggable.scale})}} />
 					</Form.Group>
 					<Button variant="outline-primary" style={{marginLeft: '30px'}} onClick={() => {(this.state.tempScale !== '' & !isNaN(Number(this.state.tempScale))) ? this.props.handleChangeScale(this.props.draggable.key, this.state.tempScale) : this.setState({...this.state, scaleError: true})}}>Change Scale</Button>
 				</Form>
@@ -102,7 +108,10 @@ class CustomPanel extends Component {
 							onChange={(text) => {this.changeGrid(text[0])}}
 							options={['black', 'white', 'none']}
 							placeholder={this.props.envOptions.color}
-						/>
+							ref={ref}
+						> 
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref.current.clear()}}/>
+						</Typeahead>
 					</Form.Group>
 				</Form>
 			</Card.Body>
@@ -123,7 +132,10 @@ class CustomPanel extends Component {
 						onChange={(text) => {this.setState({...this.state, tempToken: {...this.state.tempToken, players: text[0]}})}}
 						options={this.objectItems('players')}
 						placeholder="Choose a player token..."
-					/>
+						ref={ref1}
+						> 
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref1.current.clear()}}/>
+						</Typeahead>
 				</Form.Group>
 				<Form.Label style={{float: 'left', paddingRight: '5px'}}>Scale</Form.Label>
 				<Form.Group>
@@ -143,7 +155,10 @@ class CustomPanel extends Component {
 						onChange={(text) => {this.setState({...this.state, tempToken: {...this.state.tempToken, creature: text[0]}})}}
 						options={this.objectItems('creature')}
 						placeholder="Choose a creature token..."
-					/>
+						ref={ref2}
+						> 
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref2.current.clear()}}/>
+						</Typeahead>
 				</Form.Group>
 				<Form.Label style={{float: 'left', paddingRight: '5px'}}>Scale</Form.Label>
 				<Form.Group>
@@ -163,7 +178,10 @@ class CustomPanel extends Component {
 						onChange={(text) => {this.setState({...this.state, tempToken: {...this.state.tempToken, scene: text[0]}})}}
 						options={this.objectItems('scene')}
 						placeholder="Choose a scene token..."
-					/>
+						ref={ref3}
+						> 
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref3.current.clear()}}/>
+						</Typeahead>
 				</Form.Group>
 				<Form.Label style={{float: 'left', paddingRight: '5px'}}>Scale</Form.Label>
 				<Form.Group>
@@ -193,7 +211,7 @@ class CustomPanel extends Component {
 				<Card.Title style={{fontSize: '16px', marginTop: '75px'}}>New Environment</Card.Title>
 				<Form style={{margin: '5px'}}>
 					<Form.Group>
-						<Form.Control placeholder='Name' style={{width: '250px'}} onChange={(text) => {this.setState({...this.state, tempNewEnv: text.target.value})}} />
+						<Form.Control placeholder='Name' style={{width: '250px'}} onKeyPress={(event) => {if(event.charCode===13){event.preventDefault(); this.props.handleNewEnvironment(this.state.tempNewEnv); this.setState({...this.state, tempEnv: this.state.tempNewEnv});}}} onChange={(text) => {this.setState({...this.state, tempNewEnv: text.target.value})}} />
 					</Form.Group>
 					<Button variant="outline-primary" style={{ float: 'right'}} onClick={() => {this.props.handleNewEnvironment(this.state.tempNewEnv); this.setState({...this.state, tempEnv: this.state.tempNewEnv});}}>Create new Environment</Button>
 				</Form>
@@ -208,7 +226,10 @@ class CustomPanel extends Component {
 						onChange={(value) => {this.setState({...this.state, tempShare: Object.keys(this.props.userNames)[Object.values(this.props.userNames).indexOf(value[0])]})}}
 						options={Object.values(this.props.userNames)}
 						placeholder={"Share with..."}
-					/>
+						ref={ref4}
+						> 
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref4.current.clear()}}/>
+						</Typeahead>
 				</Form.Group>
                 <Button variant="outline-primary" style={{ float: 'right', marginTop: '10px'}} onClick={() => {this.props.handleShareEnvironment(this.props.draggable.key, this.state.tempShare)}}>
                     Share Environment 
@@ -260,7 +281,7 @@ class CustomPanel extends Component {
 		<div>
 		{this.deleteEnv()}
 		<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '55px', minWidth: '100%', margin: '0'}}>
-			<h2 style={{paddingLeft: '25px', paddingRight: '25px', float: 'left'}}>{this.props.envOptions.current}</h2>
+			<h2 style={{paddingLeft: '25px', paddingRight: '25px', float: 'left'}}>{this.props.draggable.environment.name}</h2>
 			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvChange: !this.state.showEnvChange})}}>Change Environment</Button> : <></>}
 			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvVar: !this.state.showEnvVar})}}>Environment Variables</Button> : <></>}
 			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.props.editTokens(!this.props.editEnv.tokens); this.setState({...this.state, showPlaceTok: !this.state.showPlaceTok})}}>Place Tokens</Button> : <></>}
@@ -268,11 +289,11 @@ class CustomPanel extends Component {
 			
 		</div>
 			{(this.state.showEnvChange || this.state.showEnvVar || this.state.showPlaceTok || this.state.showChat || this.props.draggable.key.length < 1) ?
-			<div style={{width: '22vw', position: 'absolute', right: '10px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', minHeight: '80%'}}>
+			<div style={{width: '23vw', position: 'absolute', right: '10px', top: '135px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', minHeight: '80%', opacity: '.9'}}>
+				{(this.state.showChat) ? <Chat /> : <></>}
 				{(this.state.showEnvChange || this.props.draggable.key.length < 1) ? this.envChange() : <></>}
 				{(this.state.showEnvVar) ? this.envVariables() : <></>}
 				{(this.state.showPlaceTok) ? this.placeToken() : <></>}
-				{(this.state.showChat) ? <Chat /> : <></>}
 			</div>
 			:
 			<></>

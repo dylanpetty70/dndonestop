@@ -49,8 +49,8 @@ class Chat extends Component {
 					)) : <></>}
 			</div>
 				<Form inline style={{width: '100%', border: '1px solid', borderColor: 'lightGrey', borderRadius: '.25em'}}>
-				<Form.Control style={{width:'85%'}} className="textarea input" as='textarea' onChange={(text) => {this.setState({...this.state, newMessage: text.target.value})}} placeholder="Enter your message..." />
-				<BiSend size={30} color='#55cdfc' onClick={() => {if(this.state.newMessage !== ''){this.props.handleNewMessage(this.props.draggable.key, this.state.newMessage); this.setState({...this.state, newMessage: ''})}}}/>
+				<Form.Control style={{width:'85%'}} className="textarea input" value={this.state.newMessage} as='textarea' onKeyPress={(event) => {if(event.charCode===13){event.preventDefault(); if(this.state.newMessage !== ''){this.props.handleNewMessage(this.props.draggable.key, this.state.newMessage); setTimeout(() => {document.getElementById('scroll').scrollTop = document.getElementById('scroll').scrollHeight}, 500); this.setState({...this.state, newMessage: ''})}}}} onChange={(text) => {this.setState({...this.state, newMessage: text.target.value})}} placeholder="Enter your message..." />
+				<BiSend size={30} color='#55cdfc' onClick={() => {if(this.state.newMessage !== ''){this.props.handleNewMessage(this.props.draggable.key, this.state.newMessage); setTimeout(() => {document.getElementById('scroll').scrollTop = document.getElementById('scroll').scrollHeight}, 500); this.setState({...this.state, newMessage: ''})}}}/>
 				</Form>
 			</Card.Body>
 		</Card>

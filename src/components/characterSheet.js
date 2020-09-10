@@ -14,6 +14,9 @@ import {MdDelete} from 'react-icons/md';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import {handleSaveCharacter, handleDeleteCharacter, handleShareCharacter,handleGrabCharacterOptions} from '../actions/characters';
 import BaseInformation from './Information';
+import {RiCloseLine} from 'react-icons/ri';
+
+const ref = React.createRef();
 
 
 
@@ -767,7 +770,10 @@ class CharacterSheet extends Component {
 							options={Object.values(this.props.userNames)}
                             value={Object.keys(this.props.userNames)}
 							placeholder={"Share with..."}
-						/>
+							ref={ref}
+						> 
+						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref.current.clear()}}/>
+						</Typeahead>
 					</Form.Group>
                     <Button variant="outline-secondary" style={{margin: '10px'}} onClick={() => {this.props.handleShareCharacter(this.props.characters.key, this.state.tempShare)}}>
                         Share Character 

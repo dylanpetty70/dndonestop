@@ -79,7 +79,7 @@ class Ambiance extends Component {
 		)
 	}
 }
-//encodeURI()
+
 const mapStateToProps = state => {
 	return{
 	}
