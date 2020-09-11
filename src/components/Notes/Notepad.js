@@ -290,7 +290,7 @@ class Notepad extends Component {
 					<Typeahead
 							id="campaignSelect"
 							labelKey="campaigns"
-							onChange={(text) => {if(text[0] !== undefined){this.props.handleGrabCampaign(Object.keys(this.props.notepads.options)[Object.values(this.props.notepads.options).indexOf(text[0])])}}}
+							onChange={(text) => {if(text[0] !== undefined){this.setState({...this.state, currentNotepad: '', currentSubnotepad: ''});this.props.handleGrabCampaign(Object.keys(this.props.notepads.options)[Object.values(this.props.notepads.options).indexOf(text[0])])}}}
 							options={Object.values(this.props.notepads.options)}
 							placeholder='Add Campaign'
 							value={(this.props.notepads.campaign.name) ? this.props.notepads.campaign.name : 'Add Campaign'}
