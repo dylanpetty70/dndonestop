@@ -284,7 +284,7 @@ class Notepad extends Component {
 				{this.addNotepad()}
 				{this.addSubnotepad()}
 				{this.addCampaign()}
-				<div className="p-3" style={{backgroundColor: '#e8e9ed', zIndex: '2', position: 'absolute', height: '70px', left: '0', top: '57px', width: '100vw', margin: '0'}}>
+				<div className="p-3" style={{backgroundColor: '#e8e9ed', zIndex: '2', position: 'absolute', height: '70px', left: '0', top: '77px', width: '100vw', margin: '0'}}>
 				<Form inline={true}>
 				<Form.Group style={{maxWidth: '200px', maxHeight: '36px'}}>
 					<Typeahead

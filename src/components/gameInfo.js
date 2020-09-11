@@ -222,12 +222,12 @@ class GameInfo extends Component {
 	render(){
 		return(
             <div>
-			<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '55px', minHeight: '100%', margin: '0'}}>
+			<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '75px', minHeight: '100%', margin: '0'}}>
 				<h2>Categories</h2>
 					<hr/>
 				{this.navTabs()}
 			</div>
-			<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '55px', minWidth: '100%', margin: '0' , marginLeft: '225px'}}>
+			<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '75px', minWidth: '100%', margin: '0' , marginLeft: '225px'}}>
 			<div style={{display: 'flex', width: '100%', marginLeft: '20px'}}>
 				<Form inline={true}>
 					<Form.Label style={{fontSize: '16px', marginRight: '30px'}}>{'Search ' + this.state.searchLabel}</Form.Label>

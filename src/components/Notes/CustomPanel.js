@@ -30,7 +30,7 @@ class CustomPanel extends Component {
 
 	render(){
 		return(
-			<div style={{zIndex: '99', alignText: 'center',padding: '30px', width: '180px', border: '1px solid', backgroundColor: 'lightGrey', position: 'absolute', right: '5px', top: '127px'}}>
+			<div style={{zIndex: '99', alignText: 'center',padding: '30px', width: '180px', border: '1px solid', backgroundColor: 'lightGrey', position: 'absolute', right: '5px', top: '147px'}}>
 				<h5>Click to add</h5>
 				<hr/>
 				{this.note()}

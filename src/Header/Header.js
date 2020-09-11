@@ -35,7 +35,7 @@ class Header extends Component {
 		return(
 			<div className="App">
 				<Navbar collapseOnSelect expand="lg" style={{backgroundColor: '#8b3a3a', zIndex: 1}}>
-                  <Navbar.Brand href="/" style={{color: 'white'}}>DND One Stop</Navbar.Brand>
+                  <Navbar.Brand href="/" style={{color: 'white'}}><img src='/images/title/logo.png' alt='logo' style={{width: '147px', height: '50px', padding: '0', margin: '0'}}/></Navbar.Brand>
                   <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                   <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="mr-auto">
@@ -43,7 +43,7 @@ class Header extends Component {
                       {(this.props.userStatus) ? <Nav.Link href="/createenv" style={{color: 'white'}}>Create Environment</Nav.Link> : <></>}
                       {(this.props.userStatus) ? <Nav.Link href="/characterinfo" style={{color: 'white'}}>Character Info</Nav.Link> : <></>}
                       {(this.props.userStatus) ? <Nav.Link href="/campaigndetails" style={{color: 'white'}}>Campaign Details</Nav.Link> : <></>}
-                       {(this.props.userStatus) ? <ButtonGroup toggle className="mb-2" style={{color: 'white', position: 'absolute', top: '10px', left: '675px'}}>
+                       {(this.props.userStatus) ? <ButtonGroup toggle className="mb-2" style={{color: 'white', position: 'absolute', top: '17px', left: '685px'}}>
 							<ToggleButton
 							  type="checkbox"
 							  variant="secondary"

@@ -284,7 +284,7 @@ class CustomPanel extends Component {
 		return(
 		<div>
 		{this.deleteEnv()}
-		<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '55px', minWidth: '100%', margin: '0'}}>
+		<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '75px', minWidth: '100%', margin: '0'}}>
 			<h2 style={{paddingLeft: '25px', paddingRight: '25px', float: 'left'}}>{this.props.draggable.environment.name}</h2>
 			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvChange: !this.state.showEnvChange})}}>Change Environment</Button> : <></>}
 			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvVar: !this.state.showEnvVar})}}>Environment Variables</Button> : <></>}
@@ -293,7 +293,7 @@ class CustomPanel extends Component {
 			
 		</div>
 			{(this.state.showEnvChange || this.state.showEnvVar || this.state.showPlaceTok || this.state.showChat || this.props.draggable.key.length < 1) ?
-			<div style={{width: '23vw', position: 'absolute', right: '10px', top: '135px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', minHeight: '80%', opacity: '.9'}}>
+			<div style={{width: '23vw', position: 'absolute', right: '10px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', minHeight: '80%', opacity: '.9'}}>
 				{(this.state.showChat) ? <Chat /> : <></>}
 				{(this.state.showEnvChange || this.props.draggable.key.length < 1) ? this.envChange() : <></>}
 				{(this.state.showEnvVar) ? this.envVariables() : <></>}

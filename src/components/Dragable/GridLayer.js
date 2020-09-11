@@ -15,7 +15,7 @@ class GridLayer extends Component {
 		let temp = [];
 		let scale = this.props.draggable.environment.scale + 'px';
 		temp.push(
-			<div key='background' style={{backgroundColor: this.props.envOptions.background, position: 'absolute', width: '98vw', height: '80vh', left: '11px', top: '156px'}}>
+			<div key='background' style={{backgroundColor: this.props.envOptions.background, position: 'absolute', width: '98vw', height: '80vh', left: '11px', top: '176px'}}>
 			</div>
 		)
 		for(let i = Number(this.props.draggable.environment.scale); i < totalWidth; i += Number(this.props.draggable.environment.scale)){
@@ -27,7 +27,7 @@ class GridLayer extends Component {
 				border: (this.props.envOptions.color === 'none') ? '0' : '1px solid',
 				borderColor: (this.props.envOptions.color) ? this.props.envOptions.color : 'black',
 				left: variableLeft,
-				top: '156px',
+				top: '176px',
 				opacity: .25,
 				zIndex: 1000,
 				pointerEvents: 'none'
@@ -41,7 +41,7 @@ class GridLayer extends Component {
 			)
 		}
 		for(let i = Number(this.props.draggable.environment.scale); i < totalHeight; i += Number(this.props.draggable.environment.scale)){
-			let variableTop = String(i + 156 - Number(this.props.draggable.environment.scale)) + 'px';
+			let variableTop = String(i + 176 - Number(this.props.draggable.environment.scale)) + 'px';
 			const styleTop ={
 				position: 'absolute',
 				width: '98vw',
