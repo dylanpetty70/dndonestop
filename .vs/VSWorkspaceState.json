@@ -1,13 +1,12 @@
 {
   "ExpandedNodes": [
     "",
-    "\\public",
     "\\public\\images",
-    "\\public\\images\\title",
     "\\src",
     "\\src\\components",
-    "\\src\\components\\Notes",
-    "\\src\\Header"
+    "\\src\\components\\Dragable",
+    "\\src\\components\\GameInfo"
   ],
+  "SelectedNode": "\\src\\components\\Chatbot.js",
   "PreviewInSolutionExplorer": false
 }

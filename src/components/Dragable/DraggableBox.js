@@ -6,8 +6,11 @@ import {GrRotateRight, GrRotateLeft} from 'react-icons/gr';
 import {AiOutlineArrowUp, AiOutlineArrowDown} from 'react-icons/ai';
 import {connect} from 'react-redux';
 import {handleUpdateCurrent} from '../../actions/draggable';
+import {handleUpdateBox} from '../../actions/box';
 import {editTokens} from '../../actions/editEnv';
 import ReactHtmlParser from 'react-html-parser';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 function getStyles(left, top, isDragging) {
   const transform = `translate3d(${left}px, ${top}px, 0)`
@@ -24,9 +27,9 @@ function getStyles(left, top, isDragging) {
 
 
 const DraggableBox = (props) => {
-  const { id, left, top, object, scale, rotation } = props
+  const { id, left, top, object, scale, rotation, conditions } = props
   const [{ isDragging }, drag, preview] = useDrag({
-    item: { type: object, id: id, left, top, title: object, scale: scale, rotation: rotation },
+    item: { type: object, id: id, left, top, title: object, scale: scale, rotation: rotation, conditions },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -82,13 +85,38 @@ const DraggableBox = (props) => {
     function1(props.draggable.key, temp);
   }
 
+  const tooltip = () => {
+        let temp = [];
+      for(var key in props.conditions){
+            temp.push(
+                <p style={{textAlign: 'left'}}><strong>{key+ ': '}</strong>{props.conditions[key]}</p>
+			)
+	  }
+      return temp;
+  }
+
   if(props.draggableItems){
         let width = String(Number(props.draggable.environment.scale) * Number(props.scale));
         return (
         <div ref={drag} style={getStyles(left, top, isDragging)}>
-          <div style={style()}>
+        {(props.conditions) ? <OverlayTrigger
+            key={props.object+'overlay'}
+            placement={'top'}
+            overlay={
+                <Tooltip id={'tooltip'+props.object}>
+                    {tooltip()}
+                </Tooltip>
+            }
+        >
+          <div style={style()} onClick={() => {props.handleUpdateBox({id: Number(props.id.replace('id', '')), rotation: props.rotation, object: props.object, scale: props.scale})}}>
           {ReactHtmlParser(props.draggableItems[object].title.replace(/32/g, String(Number(props.draggable.environment.scale) * Number(props.scale))))}
           </div>
+        </OverlayTrigger> 
+        :
+          <div style={style()} onClick={() => {props.handleUpdateBox({id: Number(props.id.replace('id', '')), rotation: props.rotation, object: props.object, scale: props.scale})}}>
+          {ReactHtmlParser(props.draggableItems[object].title.replace(/32/g, String(Number(props.draggable.environment.scale) * Number(props.scale))))}
+          </div>
+          }
 	      {(props.editEnv.tokens) ? <>
           <div style={{width: {width}}}>
           <MdDelete style={{position: 'relative', top: '0'}} onClick={() => {props.handleUpdateCurrent(props.draggable.key, props.draggable.environment.items.filter((x,i) => i !== Number(props.id.replace('id',''))))}}/>
@@ -118,4 +146,4 @@ const mapStateToProps = state => ({
     draggableItems: state.draggableItems
 });
 
-export default connect(mapStateToProps,{handleUpdateCurrent, editTokens})(DraggableBox)
+export default connect(mapStateToProps,{handleUpdateCurrent, editTokens, handleUpdateBox})(DraggableBox)

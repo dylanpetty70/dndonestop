@@ -32,7 +32,7 @@ class Environment extends Component {
 
 	changeState(){
 		setTimeout(() => {
-			this.handleGrabOptions();
+			this.props.handleGrabOptions();
 		}, 500)
 		setTimeout(() => {
 			if(this.props.draggable.options.length !== 0){

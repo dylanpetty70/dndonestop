@@ -9,6 +9,10 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import {editTokens} from '../../actions/editEnv';
 import Chat from './Chat';
 import {RiCloseLine} from 'react-icons/ri';
+import ReactModal from 'react-modal-resizable-draggable';
+import {AiFillCloseCircle} from 'react-icons/ai';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
 
 const ref = React.createRef();
 const ref1 = React.createRef();
@@ -34,7 +38,13 @@ class CustomPanel extends Component {
 						showDelete: false,
 						showChat: false,
 						tempShare: '',
-						tempBackground: ''
+						tempBackground: '',
+						showEdit: false,
+						tempConditions: '',
+						tempName: '',
+						tempHP: '',
+						tempAC: '',
+						tempOther: ''
 						}
 		this.addToken = this.addToken.bind(this)
 		this.objectItems = this.objectItems.bind(this);
@@ -44,6 +54,9 @@ class CustomPanel extends Component {
 		this.placeToken = this.placeToken.bind(this);
 		this.envChange = this.envChange.bind(this);
 		this.deleteEnv = this.deleteEnv.bind(this);
+		this.coverBack = this.coverBack.bind(this);
+		this.editPopup = this.editPopup.bind(this);
+		this.checkConditions = this.checkConditions.bind(this);
 	}
 
 	componentDidMount(){
@@ -54,6 +67,39 @@ class CustomPanel extends Component {
 			let current = (this.props.draggable.environment.items) ? this.props.draggable.environment.items : [];
 			current.push({item: this.state.tempToken[tag], pLeft: 80, pTop: 20, scale: this.state.tempTokenScale[tag], rotation: 0});
 			this.props.handleUpdateCurrent(this.props.draggable.key, current); 
+		}
+	}
+
+	coverBack(){
+		if(this.state.tempToken['scene'] !== '' & this.state.tempToken['scene'] !== 'Select One' & this.state.tempToken['scene'] !== undefined){
+			let current = (this.props.draggable.environment.items) ? this.props.draggable.environment.items : [];
+			let temp = [];
+			for(let i = 0; i < current.length; i++){
+				if(!current[i].back){
+					temp.push(current[i]);
+				}
+			}
+			let temp1 = [];
+
+			let totalWidth = .98 * document.documentElement.clientWidth;
+			let totalHeight = .8 * document.documentElement.clientHeight;
+
+			for(let i = (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']); i < totalWidth + (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']); i += (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene'])){
+				for(let j = (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']); j < totalHeight + (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']); j += (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene'])){
+					temp1.push(
+						{item: this.state.tempToken['scene'], 
+						pLeft: i - (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']), 
+						pTop: j - (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']) -1, 
+						scale: this.state.tempTokenScale['scene'], 
+						rotation: 0,
+						back: true
+						}
+					)
+				}
+			}
+			let temp3 = [...temp1, ...temp]
+			console.log(temp3)
+			this.props.handleUpdateCurrent(this.props.draggable.key, temp3); 
 		}
 	}
 
@@ -192,6 +238,10 @@ class CustomPanel extends Component {
 				<Form.Control placeholder={this.state.tempTokenScale.scene} style={{float: 'left', width: '50px'}} custom onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, scene: text.target.value}}) : this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, scene: '1'}})}}/>
 				</Form.Group>
 				<Button variant="outline-primary" style={{float: 'right', width: '100px'}} onClick={() => {this.addToken('scene')}}>Add Item</Button>
+				<Button variant="outline-primary" style={{float: 'right', width: '250px', marginTop: '5px'}} onClick={() => {this.coverBack('scene')}}>Cover Background</Button>
+				<div style={{display: 'inline-block'}}>
+					<p style={{color: 'red', fontSize: '12px'}}>Covering the background with too many tokens may slow performance.</p>
+				</div>
 				</Form>
 			</Card.Body>
 		</Card>)
@@ -215,7 +265,7 @@ class CustomPanel extends Component {
 				<Card.Title style={{fontSize: '16px', marginTop: '75px'}}>New Environment</Card.Title>
 				<Form style={{margin: '5px'}}>
 					<Form.Group>
-						<Form.Control placeholder='Name' style={{width: '250px'}} onKeyPress={(event) => {if(event.charCode===13){event.preventDefault(); this.props.handleNewEnvironment(this.state.tempNewEnv); this.setState({...this.state, tempEnv: this.state.tempNewEnv});}}} onChange={(text) => {this.setState({...this.state, tempNewEnv: text.target.value})}} />
+						<Form.Control placeholder='Name' style={{width: '250px'}} onKeyPress={(event) => {if(event.charCode===13 & event.target.value !== ''){event.preventDefault(); this.props.handleNewEnvironment(this.state.tempNewEnv); this.setState({...this.state, tempEnv: this.state.tempNewEnv});}}} onChange={(text) => {if(text.target.value !== ''){this.setState({...this.state, tempNewEnv: text.target.value})}}} />
 					</Form.Group>
 					<Button variant="outline-primary" style={{ float: 'right'}} onClick={() => {this.props.handleNewEnvironment(this.state.tempNewEnv); this.setState({...this.state, tempEnv: this.state.tempNewEnv});}}>Create new Environment</Button>
 				</Form>
@@ -280,16 +330,107 @@ class CustomPanel extends Component {
 
 	}
 
+	checkConditions(id){
+		let temp = this.props.draggable.environment.items;
+		if(!temp[id].conditions){
+			temp[id].conditions = {};
+		}
+		return temp;
+	}
+	
+	editPopup(){
+		return(<div style={{marginTop: '25px', paddingBottom: '25px', height: '100%', opacity: '.9'}}>
+			<Card style={{padding: '20px', height: '100%', overflowY: 'scroll'}}>
+				<Card.Title style={{textAlign: 'center'}}>Select Token to Edit Tooltip</Card.Title>
+				  <InputGroup size="sm" className="mb-3">
+					<InputGroup.Prepend>
+					  <InputGroup.Text id="inputGroup-sizing-sm">Object</InputGroup.Text>
+					</InputGroup.Prepend>
+					<FormControl disabled value={this.props.box.object} />
+				  </InputGroup>
+
+				  <InputGroup className="mb-3">
+					<FormControl
+					  defaultValue={(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`Player Name`] : 'Enter player name...'}
+					  onChange={(text) => {this.setState({...this.state, tempName: text.target.value})}}
+					/>
+					<InputGroup.Append>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Player Name`] = this.state.tempName; this.props.handleUpdateCurrent(this.props.draggable.key, temp)}}>Save Player Name</Button>
+					</InputGroup.Append>
+				  </InputGroup>
+
+				  <InputGroup className="mb-3">
+					<FormControl
+					  defaultValue={(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`HP`] : 'Enter HP...'}
+					  onChange={(text) => {this.setState({...this.state, tempHP: text.target.value})}}
+					/>
+					<InputGroup.Append>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`HP`] = this.state.tempHP; this.props.handleUpdateCurrent(this.props.draggable.key, temp)}}>Save HP</Button>
+					</InputGroup.Append>
+				  </InputGroup>
+
+				  <InputGroup className="mb-3">
+					<FormControl
+					  defaultValue={(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`Armor Class`] : 'Enter armor class..'}
+					  onChange={(text) => {this.setState({...this.state, tempAC: text.target.value})}}
+					/>
+					<InputGroup.Append>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Armor Class`] = this.state.tempAC; this.props.handleUpdateCurrent(this.props.draggable.key, temp)}}>Save Armor Class</Button>
+					</InputGroup.Append>
+				  </InputGroup>
+
+				  <InputGroup className="mb-3">
+					<FormControl
+					  defaultValue={(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`Conditions`] : 'Enter conditions...'}
+					  onChange={(text) => {this.setState({...this.state, tempConditions: text.target.value})}}
+					/>
+					<InputGroup.Append>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Conditions`] = this.state.tempConditions; this.props.handleUpdateCurrent(this.props.draggable.key, temp)}}>Save Conditions</Button>
+					</InputGroup.Append>
+				  </InputGroup>
+
+				  <InputGroup className="mb-3">
+					<FormControl
+					  defaultValue={(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`Notes`] : "Enter other notes..."}
+					  onChange={(text) => {this.setState({...this.state, tempOther: text.target.value})}}
+					/>
+					<InputGroup.Append>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Notes`] = this.state.tempOther; this.props.handleUpdateCurrent(this.props.draggable.key, temp)}}>Save Notes</Button>
+					</InputGroup.Append>
+				  </InputGroup>
+			</Card>
+		</div>)
+	}
+
 	render(){
 		return(
 		<div>
+		
+			<ReactModal 
+				onRequestClose={() => this.setState({...this.state, showEdit: false})}
+				isOpen={this.state.showEdit}
+				initHeight='400px'
+				top='200px'>
+				<h3 style={{position: 'absolute', zIndex: 3, top: '-6px', right: '2px', cursor: 'pointer'}}><AiFillCloseCircle onClick={() => {this.props.editTokens(!this.props.editEnv.tokens); this.setState({...this.state, showEdit: false})}}/></h3>
+				{(this.props.draggable.environment.items && Object.keys(this.props.box).length > 0) ? this.editPopup() : 
+				
+				<div style={{marginTop: '25px', width: '100%', height: '100%', paddingBottom: '25px'}}>
+					<Card style={{height: '100%',padding: '20px'}}>
+						<Card.Title style={{textAlign: 'center'}}>Select Token to Edit Tooltip</Card.Title>
+					</Card>
+				</div>
+				
+				}
+			</ReactModal>
+
 		{this.deleteEnv()}
 		<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '75px', minWidth: '100%', margin: '0'}}>
 			<h2 style={{paddingLeft: '25px', paddingRight: '25px', float: 'left'}}>{this.props.draggable.environment.name}</h2>
 			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvChange: !this.state.showEnvChange})}}>Change Environment</Button> : <></>}
 			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvVar: !this.state.showEnvVar})}}>Environment Variables</Button> : <></>}
-			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.props.editTokens(!this.props.editEnv.tokens); this.setState({...this.state, showPlaceTok: !this.state.showPlaceTok})}}>Place Tokens</Button> : <></>}
+			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showPlaceTok: !this.state.showPlaceTok})}}>Place Tokens</Button> : <></>}
 			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showChat: !this.state.showChat})}}>Chat</Button> : <></>}
+			{(this.props.draggable.environment.items) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.props.editTokens(!this.props.editEnv.tokens); this.setState({...this.state, showEdit: !this.state.showEdit})}}>Edit Tokens</Button> : <></>}
 			
 		</div>
 			{(this.state.showEnvChange || this.state.showEnvVar || this.state.showPlaceTok || this.state.showChat || this.props.draggable.key.length < 1) ?
@@ -313,7 +454,8 @@ const mapStateToProps = state => {
 		envOptions: state.envOptions,
 		userNames: state.userNames,
 		editEnv: state.editEnv,
-		draggableItems: state.draggableItems
+		draggableItems: state.draggableItems,
+		box: state.box
 	}
 }
 

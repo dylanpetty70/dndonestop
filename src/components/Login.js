@@ -157,7 +157,7 @@ class Login extends Component {
                 this.props.handleUserStatus(true);
                 this.setState({...this.state, showSuccess: true})
             })
-            .catch(function(error) {
+            .catch((error) => {
                 var errorMessage = error.message;
                 alert(errorMessage);
             });

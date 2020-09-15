@@ -23,7 +23,7 @@ const Container = (props) => {
       if(Object.keys(props.draggable.environment.items).length > 0){
           for(let i = 0; i < Object.keys(props.draggable.environment.items).length; i++){
             let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.draggable.environment.items[i].item) : [];
-            temp[['id' + i]] = {id: 'id'+i, top: props.draggable.environment.items[i].pTop, left: props.draggable.environment.items[i].pLeft, object: temp1, scale: props.draggable.environment.items[i].scale, rotation: props.draggable.environment.items[i].rotation};
+            temp[['id' + i]] = {id: 'id'+i, top: props.draggable.environment.items[i].pTop, left: props.draggable.environment.items[i].pLeft, object: temp1, scale: props.draggable.environment.items[i].scale, rotation: props.draggable.environment.items[i].rotation, conditions: props.draggable.environment.items[i].conditions};
           }
         } else {
             temp = {};  
@@ -53,7 +53,7 @@ const Container = (props) => {
           if(Object.keys(props.draggable.environment.items).length > 0){
               for(let i = 0; i < Object.keys(props.draggable.environment.items).length; i++){
                 let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.draggable.environment.items[i].item) : [];
-                temp[['id' + i]] = {id: 'id'+i, top: props.draggable.environment.items[i].pTop, left: props.draggable.environment.items[i].pLeft, object: temp1, scale: props.draggable.environment.items[i].scale, rotation: props.draggable.environment.items[i].rotation};
+                temp[['id' + i]] = {id: 'id'+i, top: props.draggable.environment.items[i].pTop, left: props.draggable.environment.items[i].pLeft, object: temp1, scale: props.draggable.environment.items[i].scale, rotation: props.draggable.environment.items[i].rotation, conditions: props.draggable.environment.items[i].conditions};
               }
           } else {
                 temp = {};  
@@ -70,7 +70,7 @@ const Container = (props) => {
       if(Object.keys(props.draggable.environment.items).length > 0){
           for(let i = 0; i < Object.keys(props.draggable.environment.items).length; i++){
             let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.draggable.environment.items[i].item) : [];
-            temp[['id' + i]] = {id: 'id'+i, top: props.draggable.environment.items[i].pTop, left: props.draggable.environment.items[i].pLeft, object: temp1, scale: props.draggable.environment.items[i].scale, rotation: props.draggable.environment.items[i].rotation};
+            temp[['id' + i]] = {id: 'id'+i, top: props.draggable.environment.items[i].pTop, left: props.draggable.environment.items[i].pLeft, object: temp1, scale: props.draggable.environment.items[i].scale, rotation: props.draggable.environment.items[i].rotation, conditions: props.draggable.environment.items[i].conditions};
           }
         } else {
             temp = {};  

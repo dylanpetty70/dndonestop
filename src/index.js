@@ -20,10 +20,10 @@ import {HTML5Backend} from 'react-dnd-html5-backend';
 
 
 const persistConfig = {
-  key: 'ruse',
+  key: 'dndonestop',
   storage,
   stateReconciler: autoMergeLevel2,
-  blacklist: ['envOptions', 'draggable', 'notepads', 'editEnv', 'initiative', 'userNames', 'characters', 'initiative']
+  blacklist: ['envOptions', 'draggable', 'notepads', 'editEnv', 'initiative', 'userNames', 'characters', 'initiative', 'box']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

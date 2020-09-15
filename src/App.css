@@ -60,6 +60,7 @@
   right:0;
   cursor:move;
   border-radius: .15em;
+  max-height: 30px;
 }
 
 .chatWindow {
