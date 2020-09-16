@@ -44,6 +44,7 @@ class Login extends Component {
             onHide={() => {this.setState({showSuccess: false})}}
             backdrop="static"
             keyboard={false}
+			style={{top: String(window.innerHeight/4) + 'px'}}
             >
             <Modal.Header>
                 <Modal.Title>Yay!</Modal.Title>
@@ -65,6 +66,7 @@ class Login extends Component {
             onHide={() => {this.setState({showFail: false})}}
             backdrop="static"
             keyboard={false}
+			style={{top: String(window.innerHeight/4) + 'px'}}
             >
             <Modal.Header>
                 <Modal.Title>Boo!</Modal.Title>
@@ -87,6 +89,7 @@ class Login extends Component {
                 onHide={() => {this.setState({showNew: false})}}
                 backdrop="static"
                 keyboard={false}
+				style={{top: String(window.innerHeight/4) + 'px'}}
                 >
                 <Modal.Header>
                     <Modal.Title>New User</Modal.Title>
