@@ -134,7 +134,8 @@ class Login extends Component {
          this.setState({showNew: false}); 
          firebase.auth().createUserWithEmailAndPassword(this.state.newEmail, this.state.newPassword)
             .then((result) => {
-                this.props.handleFirebaseCreateUser(result.user.uid, this.state.newFirstName);
+                let name = this.state.newFirstName + ' ' + this.state.newLastName;
+                this.props.handleFirebaseCreateUser(result.user.uid, name);
                 firebase.auth().signInWithEmailAndPassword(this.state.newEmail, this.state.newPassword)
                 this.props.handleUserStatus(true);
                 this.setState({...this.state, showSuccess: true})

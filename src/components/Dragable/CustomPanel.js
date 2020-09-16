@@ -236,9 +236,11 @@ class CustomPanel extends Component {
 				<Form.Label style={{float: 'left', paddingRight: '5px'}}>Scale</Form.Label>
 				<Form.Group>
 				<Form.Control placeholder={this.state.tempTokenScale.scene} style={{float: 'left', width: '50px'}} custom onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, scene: text.target.value}}) : this.setState({...this.state, tempTokenScale: {...this.state.tempTokenScale, scene: '1'}})}}/>
-				</Form.Group>
 				<Button variant="outline-primary" style={{float: 'right', width: '100px'}} onClick={() => {this.addToken('scene')}}>Add Item</Button>
-				<Button variant="outline-primary" style={{float: 'right', width: '250px', marginTop: '5px'}} onClick={() => {this.coverBack('scene')}}>Cover Background</Button>
+				</Form.Group>
+				<div style={{display: 'inline-block', width: '100%'}}>
+				<Button variant="outline-primary" style={{float: 'right', width: '200px', marginTop: '10px'}} onClick={() => {this.coverBack('scene')}}>Cover Background</Button>
+				</div>
 				<div style={{display: 'inline-block'}}>
 					<p style={{color: 'red', fontSize: '12px'}}>Covering the background with too many tokens may slow performance.</p>
 				</div>
@@ -339,6 +341,8 @@ class CustomPanel extends Component {
 	}
 	
 	editPopup(){
+
+
 		return(<div style={{marginTop: '25px', paddingBottom: '25px', height: '100%', opacity: '.9'}}>
 			<Card style={{padding: '20px', height: '100%', overflowY: 'scroll'}}>
 				<Card.Title style={{textAlign: 'center'}}>Select Token to Edit Tooltip</Card.Title>
@@ -350,8 +354,11 @@ class CustomPanel extends Component {
 				  </InputGroup>
 
 				  <InputGroup className="mb-3">
+					<InputGroup.Prepend>
+					  <InputGroup.Text id="inputGroup-sizing-sm">{(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`Player Name`] : 'Player Name'}</InputGroup.Text>
+					</InputGroup.Prepend>
 					<FormControl
-					  defaultValue={(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`Player Name`] : 'Enter player name...'}
+					  placeholder={(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`Player Name`] : 'Enter player name...'}
 					  onChange={(text) => {this.setState({...this.state, tempName: text.target.value})}}
 					/>
 					<InputGroup.Append>
@@ -360,8 +367,11 @@ class CustomPanel extends Component {
 				  </InputGroup>
 
 				  <InputGroup className="mb-3">
+					<InputGroup.Prepend>
+					  <InputGroup.Text id="inputGroup-sizing-sm">{(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`HP`] : 'HP'}</InputGroup.Text>
+					</InputGroup.Prepend>
 					<FormControl
-					  defaultValue={(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`HP`] : 'Enter HP...'}
+					  placeholder={(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`HP`] : 'Enter HP...'}
 					  onChange={(text) => {this.setState({...this.state, tempHP: text.target.value})}}
 					/>
 					<InputGroup.Append>
@@ -370,8 +380,11 @@ class CustomPanel extends Component {
 				  </InputGroup>
 
 				  <InputGroup className="mb-3">
+					<InputGroup.Prepend>
+					  <InputGroup.Text id="inputGroup-sizing-sm">{(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`Armor Class`] : 'Armor Class'}</InputGroup.Text>
+					</InputGroup.Prepend>
 					<FormControl
-					  defaultValue={(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`Armor Class`] : 'Enter armor class..'}
+					  placeholder={(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`Armor Class`] : 'Enter armor class..'}
 					  onChange={(text) => {this.setState({...this.state, tempAC: text.target.value})}}
 					/>
 					<InputGroup.Append>
@@ -380,8 +393,11 @@ class CustomPanel extends Component {
 				  </InputGroup>
 
 				  <InputGroup className="mb-3">
+					<InputGroup.Prepend>
+					  <InputGroup.Text id="inputGroup-sizing-sm">{(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`Conditions`] : 'Conditions'}</InputGroup.Text>
+					</InputGroup.Prepend>
 					<FormControl
-					  defaultValue={(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`Conditions`] : 'Enter conditions...'}
+					  placeholder={(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`Conditions`] : 'Enter conditions...'}
 					  onChange={(text) => {this.setState({...this.state, tempConditions: text.target.value})}}
 					/>
 					<InputGroup.Append>
@@ -390,8 +406,11 @@ class CustomPanel extends Component {
 				  </InputGroup>
 
 				  <InputGroup className="mb-3">
+					<InputGroup.Prepend>
+					  <InputGroup.Text id="inputGroup-sizing-sm">{(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`Notes`] : "Other Notes"}</InputGroup.Text>
+					</InputGroup.Prepend>
 					<FormControl
-					  defaultValue={(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`Notes`] : "Enter other notes..."}
+					  placeholder={(this.props.draggable.environment.items[this.props.box.id].conditions) ? this.props.draggable.environment.items[this.props.box.id].conditions[`Notes`] : "Enter other notes..."}
 					  onChange={(text) => {this.setState({...this.state, tempOther: text.target.value})}}
 					/>
 					<InputGroup.Append>
