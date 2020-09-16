@@ -274,6 +274,7 @@ class Chatbot extends Component {
 			onHide={() => {this.setState({...this.state, showInfo: false})}}
 			keyboard={false}
 			size="lg"
+			style={{top: String(window.innerHeight/4) + 'px'}}
 			>
 			<Modal.Header>
 				<Modal.Title>{(!flag) ? this.state.specificKey : "Possible Items You Meant To Search"}</Modal.Title>
