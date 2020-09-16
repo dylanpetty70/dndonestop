@@ -1,10 +1,14 @@
 {
   "ExpandedNodes": [
     "",
+    "\\public",
+    "\\public\\images",
+    "\\public\\images\\title",
     "\\src",
-    "\\src\\actions",
     "\\src\\components",
-    "\\src\\components\\Dragable"
+    "\\src\\components\\Dragable",
+    "\\src\\components\\Notes",
+    "\\src\\Header"
   ],
   "PreviewInSolutionExplorer": false
 }

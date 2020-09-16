@@ -87,15 +87,15 @@ class CustomPanel extends Component {
 			}
 			let temp1 = [];
 
-			let totalWidth = .98 * document.documentElement.clientWidth;
-			let totalHeight = .8 * document.documentElement.clientHeight;
+			let totalWidth = 1890;
+			let totalHeight = 780;
 
 			for(let i = (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']); i < totalWidth + (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']); i += (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene'])){
 				for(let j = (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']); j < totalHeight + (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']); j += (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene'])){
 					temp1.push(
 						{item: this.state.tempToken['scene'], 
 						pLeft: i - (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']), 
-						pTop: j - (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']) -1, 
+						pTop: j - (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']), 
 						scale: this.state.tempTokenScale['scene'], 
 						rotation: 0,
 						back: true
