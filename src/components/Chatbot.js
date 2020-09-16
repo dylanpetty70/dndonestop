@@ -274,12 +274,12 @@ class Chatbot extends Component {
 			onHide={() => {this.setState({...this.state, showInfo: false})}}
 			keyboard={false}
 			size="lg"
-			style={{top: String(window.innerHeight/4) + 'px'}}
+			style={{top: '50px', height: '85%'}}
 			>
 			<Modal.Header>
 				<Modal.Title>{(!flag) ? this.state.specificKey : "Possible Items You Meant To Search"}</Modal.Title>
 			</Modal.Header>
-			<Modal.Body>
+			<Modal.Body style={{overflowY: 'auto'}}>
 						{(temp.length === 1) ? temp[0] : temp}
 			</Modal.Body>
 			<Modal.Footer>
