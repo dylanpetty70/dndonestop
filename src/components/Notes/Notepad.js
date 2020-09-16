@@ -14,9 +14,15 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import {GrAdd} from 'react-icons/gr';
 import {MdDelete} from 'react-icons/md';
 import {RiCloseLine} from 'react-icons/ri';
+import {useMediaQuery} from 'react-responsive';
 
 const ref = React.createRef();
 const ref1 = React.createRef();
+
+const ShowAll = ({children}) => {
+	const isLarge = useMediaQuery({ minWidth: 1335 });
+	return isLarge ? children : null;
+}
 
 class Notepad extends Component {
 
@@ -190,6 +196,7 @@ class Notepad extends Component {
                 onHide={() => {this.setState({...this.state, showAddCampaign: false})}}
                 backdrop="static"
                 keyboard={false}
+				style={{top: String(window.innerHeight/4) + 'px'}}
                 >
                 <Modal.Header>
                     <Modal.Title>Add Campaign</Modal.Title>
@@ -201,7 +208,7 @@ class Notepad extends Component {
                         </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={() => {this.setState({...this.state, showAddCampaign: false});  this.props.handleNewCampaign(this.state.tempCampaignName);}}>Create</Button>
+                    <Button variant="primary" onClick={() => {this.setState({...this.state, showAddCampaign: false});  this.props.handleNewCampaign(this.state.tempCampaignName); alert(this.state.tempCampaignName + ' Created!')}}>Create</Button>
                     <Button variant="outline-danger" onClick={() => {this.setState({...this.state, showAddCampaign: false});}}>Cancel</Button>
                 </Modal.Footer>
             </Modal>     
@@ -215,6 +222,7 @@ class Notepad extends Component {
                 onHide={() => {this.setState({...this.state, showAddNotepad: false})}}
                 backdrop="static"
                 keyboard={false}
+				style={{top: String(window.innerHeight/4) + 'px'}}
                 >
                 <Modal.Header>
                     <Modal.Title>Add Notepad</Modal.Title>
@@ -247,10 +255,12 @@ class Notepad extends Component {
 		this.setState({...this.state, currentNotepad: '', currentSubnotepad: ''})
 		this.props.handleDeleteCampaign(this.props.notepads.key);
 		setTimeout(() => {this.props.handleGrabCampaignOptions()}, 600);
+		alert('Deleted!')
 	}
 
 	shareCampaign(){
 		this.props.handleShareCampaign(this.props.notepads.key, this.state.tempShare);
+		alert('Shared!')
 	}
 
 	addSubnotepad(){
@@ -260,6 +270,7 @@ class Notepad extends Component {
                 onHide={() => {this.setState({...this.state, showAddSubnotepad: false})}}
                 backdrop="static"
                 keyboard={false}
+				style={{top: String(window.innerHeight/4) + 'px'}}
                 >
                 <Modal.Header>
                     <Modal.Title>Add Note</Modal.Title>
@@ -302,7 +313,7 @@ class Notepad extends Component {
 						<GrAdd style={{borderRadius: '.25em', backgroundColor: 'lightGrey', height: '36px', width: '36px', top: '-35px', marginLeft: '163px', position: 'relative'}} onClick={() => {this.setState({...this.state, showAddCampaign: true});}} />
 					</Form.Group>
 					{this.notepads()}
-				{(this.props.notepads.key !== '') ? <>
+				{(this.props.notepads.key !== '') ? <ShowAll>
 				<Typeahead
 							id="campaignShare"
 							labelKey="campaignShare"
@@ -315,7 +326,7 @@ class Notepad extends Component {
 						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref1.current.clear()}}/>
 						</Typeahead>
 				<Button variant ="outline-secondary" style={{float: 'right', marginRight: '10px'}} onClick={() => {this.shareCampaign()}}>Share Campaign</Button>
-				<Button variant="danger" style={{float: 'right', marginRight: '20px'}} onClick={() => {this.deleteCampaign()}}>Delete Campaign</Button></>
+				<Button variant="danger" style={{float: 'right', marginRight: '20px'}} onClick={() => {this.deleteCampaign()}}>Delete Campaign</Button></ShowAll>
 				: <></>}
 				</Form>
 				</div>

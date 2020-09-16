@@ -8,8 +8,8 @@ import {handleGrabDraggable, handleUpdateCurrent} from '../../actions/draggable'
 
 
 const styles = {
-  height: '80vh', 
-  width: '98vw',
+  height: '780px', 
+  width: '1890px',
   border: '1px solid black',
   position: 'relative',
   margin: '5px'

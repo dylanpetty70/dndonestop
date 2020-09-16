@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+
+
+
 class GridLayer extends Component {
 
 	constructor(props){
@@ -10,12 +13,12 @@ class GridLayer extends Component {
 	}
 
 	createGrid(){
-		let totalWidth = .98 * document.documentElement.clientWidth;
-		let totalHeight = .8 * document.documentElement.clientHeight;
+		let totalWidth = 1890;
+		let totalHeight = 780;
 		let temp = [];
 		let scale = this.props.draggable.environment.scale + 'px';
 		temp.push(
-			<div key='background' style={{backgroundColor: this.props.envOptions.background, position: 'absolute', width: '98vw', height: '80vh', left: '11px', top: '176px'}}>
+			<div key='background' style={{backgroundColor: this.props.envOptions.background, position: 'fixed', width: '1890px', height: '780px', left: '11px', top: '176px'}}>
 			</div>
 		)
 		for(let i = Number(this.props.draggable.environment.scale); i < totalWidth; i += Number(this.props.draggable.environment.scale)){
@@ -23,7 +26,7 @@ class GridLayer extends Component {
 			const styleBottom ={
 				position: 'absolute',
 				width: scale,
-				height: '80vh',
+				height: '780px',
 				border: (this.props.envOptions.color === 'none') ? '0' : '1px solid',
 				borderColor: (this.props.envOptions.color) ? this.props.envOptions.color : 'black',
 				left: variableLeft,
@@ -44,7 +47,7 @@ class GridLayer extends Component {
 			let variableTop = String(i + 176 - Number(this.props.draggable.environment.scale)) + 'px';
 			const styleTop ={
 				position: 'absolute',
-				width: '98vw',
+				width: '1890px',
 				height: scale,
 				border: (this.props.envOptions.color === 'none') ? '0' : '1px solid',
 				borderColor: (this.props.envOptions.color) ? this.props.envOptions.color : 'black',

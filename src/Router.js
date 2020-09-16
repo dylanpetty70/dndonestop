@@ -22,8 +22,6 @@ class Router extends Component {
 	}
 
 	componentDidMount(){
-        
-
         setTimeout(() => {if(!firebase.auth().currentUser){
             this.props.handleUserStatus(false);
         } else {

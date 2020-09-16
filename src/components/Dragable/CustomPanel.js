@@ -13,12 +13,18 @@ import ReactModal from 'react-modal-resizable-draggable';
 import {AiFillCloseCircle} from 'react-icons/ai';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
+import {useMediaQuery} from 'react-responsive';
 
 const ref = React.createRef();
 const ref1 = React.createRef();
 const ref2 = React.createRef();
 const ref3 = React.createRef();
 const ref4 = React.createRef();
+
+const ShowAll = ({children}) => {
+	const isLarge = useMediaQuery({ minWidth: 1150 });
+	return isLarge ? children : null;
+}
 
 class CustomPanel extends Component {
 
@@ -257,7 +263,7 @@ class CustomPanel extends Component {
 			<Card.Body>
 			<Card.Title style={{fontSize: '16px'}}>Change Environment</Card.Title>
 				<Form style={{margin: '5px'}}>
-					<Form.Control value={this.state.tempEnv} as="select" style={{float: 'left', width: '250px'}} onChange={(text) => {this.setState({...this.state, tempEnv: text.target.value})}}>
+					<Form.Control value={this.state.tempEnv} as="select" style={{float: 'left', width: '200px'}} onChange={(text) => {this.setState({...this.state, tempEnv: text.target.value})}}>
 						<option value='Select One'>Select One</option>
 						{this.envOptions()}
 					</Form.Control>
@@ -267,9 +273,9 @@ class CustomPanel extends Component {
 				<Card.Title style={{fontSize: '16px', marginTop: '75px'}}>New Environment</Card.Title>
 				<Form style={{margin: '5px'}}>
 					<Form.Group>
-						<Form.Control placeholder='Name' style={{width: '250px'}} onKeyPress={(event) => {if(event.charCode===13 & event.target.value !== ''){event.preventDefault(); this.props.handleNewEnvironment(this.state.tempNewEnv); this.setState({...this.state, tempEnv: this.state.tempNewEnv});}}} onChange={(text) => {if(text.target.value !== ''){this.setState({...this.state, tempNewEnv: text.target.value})}}} />
+						<Form.Control placeholder='Name' style={{width: '200px'}} onKeyPress={(event) => {if(event.charCode===13 & event.target.value !== ''){event.preventDefault(); this.props.handleNewEnvironment(this.state.tempNewEnv); this.setState({...this.state, tempEnv: this.state.tempNewEnv});}}} onChange={(text) => {if(text.target.value !== ''){this.setState({...this.state, tempNewEnv: text.target.value})}}} />
 					</Form.Group>
-					<Button variant="outline-primary" style={{ float: 'right'}} onClick={() => {this.props.handleNewEnvironment(this.state.tempNewEnv); this.setState({...this.state, tempEnv: this.state.tempNewEnv});}}>Create new Environment</Button>
+					<Button variant="outline-primary" style={{ float: 'right'}} onClick={() => {this.props.handleNewEnvironment(this.state.tempNewEnv); this.setState({...this.state, tempEnv: this.state.tempNewEnv}); alert(this.state.tempNewEnv + ' Created!')}}>Create new Environment</Button>
 				</Form>
 				{(this.props.draggable.key.length > 0) ?
 				<>
@@ -287,7 +293,7 @@ class CustomPanel extends Component {
 						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref4.current.clear()}}/>
 						</Typeahead>
 				</Form.Group>
-                <Button variant="outline-primary" style={{ float: 'right', marginTop: '10px'}} onClick={() => {this.props.handleShareEnvironment(this.props.draggable.key, this.state.tempShare)}}>
+                <Button variant="outline-primary" style={{ float: 'right', marginTop: '10px'}} onClick={() => {this.props.handleShareEnvironment(this.props.draggable.key, this.state.tempShare); alert('Shared!')}}>
                     Share Environment 
                 </Button>
 			</Form>
@@ -308,6 +314,7 @@ class CustomPanel extends Component {
 					onHide={() => {this.setState({showDelete: false})}}
 					backdrop="static"
 					keyboard={false}
+					style={{top: String(window.innerHeight/4) + 'px'}}
 					>
 					<Modal.Header>
 						<Modal.Title>Delete Enivronment</Modal.Title>
@@ -316,7 +323,7 @@ class CustomPanel extends Component {
 						<Form.Label>Are you sure you want to delete {this.props.draggable.environment.name}?</Form.Label>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button variant="danger" onClick={() => {this.setState({showDelete: false}); this.props.handleDeleteEnvironment(this.props.draggable.key); setTimeout(() => {this.props.handleGrabOptions()}, 1000)}}>
+						<Button variant="danger" onClick={() => {this.setState({showDelete: false}); this.props.handleDeleteEnvironment(this.props.draggable.key); setTimeout(() => {this.props.handleGrabOptions()}, 1000); alert('Deleted!')}}>
 							Delete
 						</Button>
 						<Button variant="secondary" onClick={() => {this.setState({showDelete: false})}}>
@@ -443,21 +450,24 @@ class CustomPanel extends Component {
 			</ReactModal>
 
 		{this.deleteEnv()}
-		<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '75px', minWidth: '100%', margin: '0'}}>
+		<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '75px', width: '1895px', margin: '0'}}>
 			<h2 style={{paddingLeft: '25px', paddingRight: '25px', float: 'left'}}>{this.props.draggable.environment.name}</h2>
-			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvChange: !this.state.showEnvChange})}}>Change Environment</Button> : <></>}
-			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvVar: !this.state.showEnvVar})}}>Environment Variables</Button> : <></>}
-			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showPlaceTok: !this.state.showPlaceTok})}}>Place Tokens</Button> : <></>}
-			{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showChat: !this.state.showChat})}}>Chat</Button> : <></>}
-			{(this.props.draggable.environment.items) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.props.editTokens(!this.props.editEnv.tokens); this.setState({...this.state, showEdit: !this.state.showEdit})}}>Edit Tokens</Button> : <></>}
-			
+			<ShowAll>
+				{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvChange: !this.state.showEnvChange})}}>Change Environment</Button> : <></>}
+				{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvVar: !this.state.showEnvVar})}}>Environment Variables</Button> : <></>}
+				{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showPlaceTok: !this.state.showPlaceTok})}}>Place Tokens</Button> : <></>}
+				{(!this.props.draggable.key.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showChat: !this.state.showChat})}}>Chat</Button> : <></>}
+				{(this.props.draggable.environment.items) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.props.editTokens(!this.props.editEnv.tokens); this.setState({...this.state, showEdit: !this.state.showEdit})}}>Edit Tokens</Button> : <></>}
+			</ShowAll>
 		</div>
 			{(this.state.showEnvChange || this.state.showEnvVar || this.state.showPlaceTok || this.state.showChat || this.props.draggable.key.length < 1) ?
 			<div style={{width: '23vw', position: 'absolute', right: '10px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', minHeight: '80%', opacity: '.9'}}>
-				{(this.state.showChat) ? <Chat /> : <></>}
 				{(this.state.showEnvChange || this.props.draggable.key.length < 1) ? this.envChange() : <></>}
+				<ShowAll>
+				{(this.state.showChat) ? <Chat /> : <></>}
 				{(this.state.showEnvVar) ? this.envVariables() : <></>}
 				{(this.state.showPlaceTok) ? this.placeToken() : <></>}
+			</ShowAll>
 			</div>
 			:
 			<></>

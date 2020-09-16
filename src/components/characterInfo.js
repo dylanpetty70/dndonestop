@@ -18,7 +18,7 @@ class CharacterInfo extends Component {
                         };
         this.updateChar = this.updateChar.bind(this);
 	}
-
+    
     newCharacter(){
          return(
               <Modal
@@ -26,6 +26,7 @@ class CharacterInfo extends Component {
                 onHide={() => {this.setState({showNew: false})}}
                 backdrop="static"
                 keyboard={false}
+				style={{top: String(window.innerHeight/4) + 'px'}}
                 >
                 <Modal.Header>
                     <Modal.Title>New Character</Modal.Title>
@@ -39,7 +40,7 @@ class CharacterInfo extends Component {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={() => {this.setState({showNew: false}); this.props.handleUpdateNewCharacter(this.state.characterName);}}>
+                    <Button variant="primary" onClick={() => {this.setState({showNew: false}); this.props.handleUpdateNewCharacter(this.state.characterName); alert(this.state.characterName + ' Created!')}}>
                         Create
                     </Button>
                     <Button variant="secondary" onClick={() => {this.setState({showNew: false})}}>

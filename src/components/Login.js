@@ -165,6 +165,17 @@ class Login extends Component {
           
 	}
 
+    resetPassword(){
+        firebase.auth().sendPasswordResetEmail(this.state.email)
+            .then(function() {
+                alert('Email Sent')
+            })
+            .catch(function(error) {
+                var errorMessage = error.message;
+                alert(errorMessage);
+            });
+    }
+
 
 	render(){
 		return(
@@ -188,6 +199,9 @@ class Login extends Component {
                   </Button>
                   <Button variant="outline-dark" style={{marginLeft: '30px'}} onClick={() => {this.setState({showNew: true})}}>
                     New User
+                  </Button>
+                  <Button variant="outline-danger" style={{marginLeft: '30px'}} onClick={() => {this.resetPassword()}}>
+                    Email Password Reset
                   </Button>
                 </Form>
 			</div>

@@ -20,12 +20,19 @@ import Card from 'react-bootstrap/Card';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import {handleGrab5e} from '../actions/5eInfo';
 import {RiCloseLine} from 'react-icons/ri';
+import {useMediaQuery} from 'react-responsive';
 
 const ref = React.createRef();
 const ref1 = React.createRef();
 const ref2 = React.createRef();
 const ref3 = React.createRef();
 const ref4 = React.createRef();
+
+const ShowFilter = ({children}) => {
+	const isLarge = useMediaQuery({ minWidth: 1335 });
+	return isLarge ? children : null;
+}
+
 
 class GameInfo extends Component {
 
@@ -40,7 +47,7 @@ class GameInfo extends Component {
 					spellLevelFilter: '',
 					spellClassFilter: '',
 					monsterCRFilter: '',
-					monsterTypeFilter: ''
+					monsterTypeFilter: '',
 					};
 		this.navTabs = this.navTabs.bind(this);
 		this.switchStatement = this.switchStatement.bind(this);
@@ -222,13 +229,13 @@ class GameInfo extends Component {
 	render(){
 		return(
             <div>
-			<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '75px', minHeight: '100%', margin: '0'}}>
+			<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '75px', margin: '0', maxHeight: '92%', overflowY: 'auto', zIndex: '2'}}>
 				<h2>Categories</h2>
 					<hr/>
 				{this.navTabs()}
 			</div>
-			<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '75px', minWidth: '100%', margin: '0' , marginLeft: '225px'}}>
-			<div style={{display: 'flex', width: '100%', marginLeft: '20px'}}>
+			<div className="p-3 bg-secondary text-white" style={{position: 'absolute', left: '0', top: '75px', width: '100%', margin: '0', zIndex: '1'}}>
+			<div style={{display: 'flex', marginLeft: '245px'}}>
 				<Form inline={true}>
 					<Form.Label style={{fontSize: '16px', marginRight: '30px'}}>{'Search ' + this.state.searchLabel}</Form.Label>
 					<Form.Group>
@@ -244,7 +251,7 @@ class GameInfo extends Component {
 						</Typeahead>: <></>}
 					</Form.Group>
 					{(this.state.page === 'spells') ? 
-					<>
+					<ShowFilter>
 					<Form.Label style={{fontSize: '16px', marginRight: '30px', marginLeft: '50px'}}>Filter Level</Form.Label>
 					<Form.Group>
 						{(Object.keys(this.props.dndInfo).length > 0) ? <Typeahead
@@ -258,10 +265,10 @@ class GameInfo extends Component {
 						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref1.current.clear(); this.setState({...this.state, spellLevelFilter: ''});}}/>
 						</Typeahead>: <></>}
 					</Form.Group>
-					</>
+					</ShowFilter>
 					: <></>}
 					{(this.state.page === 'spells') ? 
-					<>
+					<ShowFilter>
 					<Form.Label style={{fontSize: '16px', marginRight: '30px', marginLeft: '50px'}}>Filter Class</Form.Label>
 					<Form.Group>
 						{(Object.keys(this.props.dndInfo).length > 0) ? <Typeahead
@@ -275,10 +282,10 @@ class GameInfo extends Component {
 						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref2.current.clear(); this.setState({...this.state, spellClassFilter: ''});}}/>
 						</Typeahead>: <></>}
 					</Form.Group>
-					</>
+					</ShowFilter>
 					: <></>}
 					{(this.state.page === 'monsters') ? 
-					<>
+					<ShowFilter>
 					<Form.Label style={{fontSize: '16px', marginRight: '30px', marginLeft: '50px'}}>Filter Type</Form.Label>
 					<Form.Group>
 						{(Object.keys(this.props.dndInfo).length > 0) ? <Typeahead
@@ -292,10 +299,10 @@ class GameInfo extends Component {
 						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref3.current.clear(); this.setState({...this.state, monsterTypeFilter: ''});}}/>
 						</Typeahead>: <></>}
 					</Form.Group>
-					</>
+					</ShowFilter>
 					: <></>}
 					{(this.state.page === 'monsters') ? 
-					<>
+					<ShowFilter>
 					<Form.Label style={{fontSize: '16px', marginRight: '30px', marginLeft: '50px'}}>Filter CR</Form.Label>
 					<Form.Group>
 						{(Object.keys(this.props.dndInfo).length > 0) ? <Typeahead
@@ -309,7 +316,7 @@ class GameInfo extends Component {
 						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref4.current.clear(); this.setState({...this.state, monsterCRFilter: ''});}}/>
 						</Typeahead>: <></>}
 					</Form.Group>
-					</>
+					</ShowFilter>
 					: <></>}
 				</Form>
 			</div>

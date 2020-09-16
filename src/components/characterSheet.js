@@ -290,6 +290,7 @@ class CharacterSheet extends Component {
         };
 
         this.props.handleSaveCharacter(this.props.characters.key, temp);
+        alert('Saved!')
 
 	}
 
@@ -461,6 +462,7 @@ class CharacterSheet extends Component {
                 onHide={() => {this.setState({...this.state, showProf: false})}}
                 backdrop="static"
                 keyboard={false}
+				style={{top: String(window.innerHeight/4) + 'px'}}
                 >
                 <Modal.Header>
                     <Modal.Title>Add Proficiency</Modal.Title>
@@ -491,6 +493,7 @@ class CharacterSheet extends Component {
                 onHide={() => {this.setState({...this.state, showLang: false})}}
                 backdrop="static"
                 keyboard={false}
+				style={{top: String(window.innerHeight/4) + 'px'}}
                 >
                 <Modal.Header>
                     <Modal.Title>Add Language</Modal.Title>
@@ -521,6 +524,7 @@ class CharacterSheet extends Component {
                 onHide={() => {this.setState({...this.state, showAttacks: false})}}
                 backdrop="static"
                 keyboard={false}
+				style={{top: String(window.innerHeight/4) + 'px'}}
                 >
                 <Modal.Header>
                     <Modal.Title>Add Custom Attack</Modal.Title>
@@ -571,6 +575,7 @@ class CharacterSheet extends Component {
                 onHide={() => {this.setState({...this.state, showEquip: false})}}
                 backdrop="static"
                 keyboard={false}
+				style={{top: String(window.innerHeight/4) + 'px'}}
                 >
                 <Modal.Header>
                     <Modal.Title>Add Equipment</Modal.Title>
@@ -611,6 +616,7 @@ class CharacterSheet extends Component {
                 onHide={() => {this.setState({...this.state, showFeat: false})}}
                 backdrop="static"
                 keyboard={false}
+				style={{top: String(window.innerHeight/4) + 'px'}}
                 >
                 <Modal.Header>
                     <Modal.Title>Add Feature</Modal.Title>
@@ -642,6 +648,7 @@ class CharacterSheet extends Component {
                 onHide={() => {this.setState({...this.state, showTrait: false})}}
                 backdrop="static"
                 keyboard={false}
+				style={{top: String(window.innerHeight/4) + 'px'}}
                 >
                 <Modal.Header>
                     <Modal.Title>Add Trait</Modal.Title>
@@ -681,6 +688,7 @@ class CharacterSheet extends Component {
                 onHide={() => {this.setState({...this.state, showSpell: [false, 0]})}}
                 backdrop="static"
                 keyboard={false}
+				style={{top: String(window.innerHeight/4) + 'px'}}
                 >
                 <Modal.Header>
                     <Modal.Title>Add Spell Level {this.state.showSpell[1]}</Modal.Title>
@@ -725,6 +733,7 @@ class CharacterSheet extends Component {
                 onHide={() => {this.setState({showDelete: false})}}
                 backdrop="static"
                 keyboard={false}
+				style={{top: String(window.innerHeight/4) + 'px'}}
                 >
                 <Modal.Header>
                     <Modal.Title>Delete Character</Modal.Title>
@@ -733,7 +742,7 @@ class CharacterSheet extends Component {
                     <Form.Label>Are you sure you want to delete {this.props.name}?</Form.Label>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={() => {this.setState({showDelete: false}); this.props.handleDeleteCharacter(this.props.characters.key); setTimeout(() => {this.props.handleGrabCharacterOptions()}, 1000)}}>
+                    <Button variant="danger" onClick={() => {this.setState({showDelete: false}); this.props.handleDeleteCharacter(this.props.characters.key); setTimeout(() => {this.props.handleGrabCharacterOptions()}, 1000); alert('Deleted!')}}>
                         Delete
                     </Button>
                     <Button variant="secondary" onClick={() => {this.setState({showDelete: false})}}>
@@ -746,7 +755,7 @@ class CharacterSheet extends Component {
 
 	render(){
 		return(
-            <div style={{margin: '20px'}}>
+            <div style={{margin: '5px'}}>
                 {this.addProficiencies()}
                 {this.addLanguages()}
                 {this.addAttack()}
@@ -775,7 +784,7 @@ class CharacterSheet extends Component {
 						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref.current.clear()}}/>
 						</Typeahead>
 					</Form.Group>
-                    <Button variant="outline-secondary" style={{margin: '10px'}} onClick={() => {this.props.handleShareCharacter(this.props.characters.key, this.state.tempShare)}}>
+                    <Button variant="outline-secondary" style={{margin: '10px'}} onClick={() => {this.props.handleShareCharacter(this.props.characters.key, this.state.tempShare); alert('Shared!')}}>
                         Share Character 
                     </Button>
 				</Form>

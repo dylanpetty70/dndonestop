@@ -127,14 +127,14 @@ class TrackInitiative extends Component {
 
 	handleAddNew(){
 		this.props.handleNewInitiative(this.state.tempNew)
-		
+		alert(this.state.tempNew + ' Created!')
 	}
 
 	refresh(){
 		this.setState({...this.state, tempInitiative: [], currentInitiative: 'Choose an initiative name...'});
 		setTimeout(() => {this.setState({...this.state, currentInitiative: this.state.tempNew, tempInitiative: []})}, 500)
 	}
-
+	
 	cardView(){
 		return(
 			<Card style={{height: '100%'}}>
@@ -151,7 +151,7 @@ class TrackInitiative extends Component {
 						> 
 						<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref.current.clear()}}/>
 						</Typeahead>
-							<Button variant="outline-danger" style={{float: 'left'}} onClick={() => {this.props.handleDeleteInitiative(this.props.initiative.key);}}>
+							<Button variant="outline-danger" style={{float: 'left'}} onClick={() => {this.props.handleDeleteInitiative(this.props.initiative.key); alert('Initiative Deleted!')}}>
 								Delete
 							</Button>
 						</Form.Group>
@@ -177,7 +177,7 @@ class TrackInitiative extends Component {
 								> 
 								<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref1.current.clear()}}/>
 								</Typeahead>
-							<Button variant="outline-primary" onClick={() => {this.props.handleShareInitiative(this.props.initiative.key, this.state.tempShare)}}>
+							<Button variant="outline-primary" onClick={() => {this.props.handleShareInitiative(this.props.initiative.key, this.state.tempShare); alert('Shared!')}}>
 								Share
 							</Button>
 							<Button variant="outline-success" style={{marginLeft: '10px', marginRight: '10px'}} onClick={() => {this.props.handleUpdateInitiative(this.props.initiative.key, this.state.tempInitiative)}}>

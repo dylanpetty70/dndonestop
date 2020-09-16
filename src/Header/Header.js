@@ -34,29 +34,18 @@ class Header extends Component {
 	render(){
 		return(
 			<div className="App">
-				<Navbar collapseOnSelect expand="lg" style={{backgroundColor: '#8b3a3a', zIndex: 1}}>
+				<Navbar collapseOnSelect expand="lg" style={{backgroundColor: '#8b3a3a', zIndex: 99999}}>
                   <Navbar.Brand href="/" style={{color: 'white'}}><img src='/images/title/logo.png' alt='logo' style={{width: '147px', height: '50px', padding: '0', margin: '0'}}/></Navbar.Brand>
                   <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                   <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="mr-auto">
                       {(this.props.userStatus) ? <Nav.Link href="/" style={{color: 'white'}}>Game Info</Nav.Link> : <></>}
-                      {(this.props.userStatus) ? <Nav.Link href="/createenv" style={{color: 'white'}}>Create Environment</Nav.Link> : <></>}
-                      {(this.props.userStatus) ? <Nav.Link href="/characterinfo" style={{color: 'white'}}>Character Info</Nav.Link> : <></>}
-                      {(this.props.userStatus) ? <Nav.Link href="/campaigndetails" style={{color: 'white'}}>Campaign Details</Nav.Link> : <></>}
-                       {(this.props.userStatus) ? <ButtonGroup toggle className="mb-2" style={{color: 'white', position: 'absolute', top: '17px', left: '685px'}}>
-							<ToggleButton
-							  type="checkbox"
-							  variant="secondary"
-							  checked={this.state.showDice}
-							  value='1'
-							  onChange={() => this.setState({...this.state, showDice: !this.state.showDice})}
-							>
-							  Toggle Dice Roller
-							</ToggleButton>
-						</ButtonGroup>
-						: <></>}
+                      {(this.props.userStatus) ? <Nav.Link href="/createenv" style={{color: 'white'}}>Playable Grid</Nav.Link> : <></>}
+                      {(this.props.userStatus) ? <Nav.Link href="/characterinfo" style={{color: 'white'}}>Character Sheet</Nav.Link> : <></>}
+                      {(this.props.userStatus) ? <Nav.Link href="/campaigndetails" style={{color: 'white'}}>Campaign Notes</Nav.Link> : <></>}
                     </Nav>
                     <Nav>
+						{(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} onClick={() => {this.setState({...this.state, showDice: !this.state.showDice})}}>Dice Roller</Nav.Link> : <></>}
 						{(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} onClick={() => {this.setState({...this.state, showAmbiance: !this.state.showAmbiance})}}>Ambiance</Nav.Link> : <></>}
 						{(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} onClick={() => {this.props.changeInitiativeShow(); this.setState({...this.state, showInitiative: !this.state.showInitiative})}}>Initiatives</Nav.Link> : <></>}
 						<Nav.Link href="/login" style={{color: 'white'}}>{(this.props.userStatus) ? 'Log Out' : 'Log In'}</Nav.Link>
