@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav';
 import Roller from '../components/roller';
-import ToggleButton from 'react-bootstrap/ToggleButton';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import {changeInitiativeShow} from '../actions/initiative';
 import Initiative from '../components/TrackInitiative';
 import Ambiance from '../components/ambiance';
