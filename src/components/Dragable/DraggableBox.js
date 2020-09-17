@@ -89,10 +89,10 @@ const DraggableBox = (props) => {
         let temp = [];
       for(var key in props.conditions){
             temp.push(
-                <p style={{textAlign: 'left'}} key={key}><strong>{key+ ': '}</strong>{props.conditions[key]}</p>
+                <><strong>{key+ ': '}</strong>{props.conditions[key]}<br/></>
 			)
 	  }
-      return temp;
+      return (<p style={{textAlign: 'left'}} key={key}>{temp.map((l) => {return l})}</p>);
   }
 
   if(props.draggableItems){
