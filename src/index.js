@@ -23,7 +23,7 @@ const persistConfig = {
   key: 'dndonestop',
   storage,
   stateReconciler: autoMergeLevel2,
-  blacklist: ['envOptions', 'draggable', 'notepads', 'editEnv', 'initiative', 'userNames', 'characters', 'initiative', 'box']
+  blacklist: ['envOptions', 'draggable', 'notepads', 'editEnv', 'initiative', 'userNames', 'characters', 'initiative', 'box', 'module']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

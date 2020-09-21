@@ -11,6 +11,7 @@ import editEnv from './editEnv';
 import initiative from './initiative';
 import draggableItems from './draggableItems';
 import box from './box';
+import module from './module';
 
 export default combineReducers({
 	userStatus,
@@ -23,5 +24,6 @@ export default combineReducers({
 	editEnv,
 	initiative,
 	draggableItems,
-	box
+	box,
+	module
 })

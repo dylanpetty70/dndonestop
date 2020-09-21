@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import {withRouter} from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav';
 import Roller from '../components/roller';
@@ -41,6 +42,7 @@ class Header extends Component {
                       {(this.props.userStatus) ? <Nav.Link href="/createenv" style={{color: 'white'}}>Playable Grid</Nav.Link> : <></>}
                       {(this.props.userStatus) ? <Nav.Link href="/characterinfo" style={{color: 'white'}}>Character Sheet</Nav.Link> : <></>}
                       {(this.props.userStatus) ? <Nav.Link href="/campaigndetails" style={{color: 'white'}}>Campaign Notes</Nav.Link> : <></>}
+                      {(this.props.userStatus) ? <Nav.Link href="/createmodules" style={{color: 'white'}}>Create Modules</Nav.Link> : <></>}
                     </Nav>
                     <Nav>
 						{(this.props.userStatus) ? <Nav.Link style={{color: 'white'}} onClick={() => {this.setState({...this.state, showDice: !this.state.showDice})}}>Dice Roller</Nav.Link> : <></>}
@@ -78,4 +80,4 @@ const mapStateToProps = state => {
 	}
 }
 
-export default connect(mapStateToProps, {changeInitiativeShow})(Header);
+export default withRouter(connect(mapStateToProps, {changeInitiativeShow})(Header));

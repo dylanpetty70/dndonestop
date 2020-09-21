@@ -95,7 +95,7 @@ class CustomPanel extends Component {
 					temp1.push(
 						{item: this.state.tempToken['scene'], 
 						pLeft: i - (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']), 
-						pTop: j - (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']), 
+						pTop: j - (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']) - 2, 
 						scale: this.state.tempTokenScale['scene'], 
 						rotation: 0,
 						back: true
@@ -176,7 +176,7 @@ class CustomPanel extends Component {
 
 	placeToken(){
 		return(<Card style={{marginTop: '5px', marginBottom: '5px', marginLeft: '2px', marginRight: '2px'}}>
-			<Card.Header>Edit Tokens</Card.Header>
+			<Card.Header>Place Tokens</Card.Header>
 			<Card.Body>
 			<Card.Title style={{fontSize: '16px'}}>Player Tokens</Card.Title>
 				<Form>
@@ -349,7 +349,7 @@ class CustomPanel extends Component {
 	
 	editPopup(){
 
-
+		if(this.props.draggable.environment.items[this.props.box.id]){
 		return(<div style={{marginTop: '25px', paddingBottom: '25px', height: '100%', opacity: '.9'}}>
 			<Card style={{padding: '20px', height: '100%', overflowY: 'scroll'}}>
 				<Card.Title style={{textAlign: 'center'}}>Select Token to Edit Tooltip</Card.Title>
@@ -426,6 +426,15 @@ class CustomPanel extends Component {
 				  </InputGroup>
 			</Card>
 		</div>)
+		} else {
+			return (
+				<div style={{marginTop: '25px', width: '100%', height: '100%', paddingBottom: '25px'}}>
+					<Card style={{height: '100%',padding: '20px'}}>
+						<Card.Title style={{textAlign: 'center'}}>Select Token to Edit Tooltip</Card.Title>
+					</Card>
+				</div>
+			)
+		}
 	}
 
 	render(){

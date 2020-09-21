@@ -1,15 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\public",
-    "\\public\\images",
     "\\public\\images\\title",
     "\\src",
-    "\\src\\components",
-    "\\src\\components\\Dragable",
-    "\\src\\components\\Notes",
-    "\\src\\Header"
+    "\\src\\components"
   ],
-  "SelectedNode": "\\src\\components\\Dragable\\DraggableBox.js",
   "PreviewInSolutionExplorer": false
 }

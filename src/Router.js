@@ -6,6 +6,9 @@ import RedirectPage from "./components/404";
 import CampaignDetails from './components/HighLevel/campaignDetails';
 import CharacterInfo from './components/HighLevel/characterHigh';
 import CreateEnv from './components/HighLevel/createEnv';
+import CreateModules from './components/HighLevel/createModules';
+import ViewModules from './components/HighLevel/viewModules';
+import {withRouter} from 'react-router-dom';
 import GameInfo from './components/HighLevel/gameHigh';
 import { handleGrab5e } from './actions/5eInfo';
 import {handleUserStatus, handleGrabNames} from './actions/user';
@@ -44,6 +47,8 @@ class Router extends Component {
                 <Route exact path="/createenv"><CreateEnv/></Route>
                 <Route exact path="/characterInfo"><CharacterInfo/></Route>
                 <Route exact path="/campaigndetails"><CampaignDetails/></Route>
+                <Route exact path="/createmodules"><CreateModules/></Route>
+                <Route exact path="/viewmodules/:key"><ViewModules/></Route>
                 <Route exact path="/login" component={Login} /> 
                 <Route path="*"> 
                     <RedirectPage/>
@@ -53,6 +58,7 @@ class Router extends Component {
                 : 
                 <> 
                 <Switch>
+                <Route exact path="/viewmodules/:key"><ViewModules/></Route>
                 <Route exact path="/login" component={Login} /> 
                 <Redirect from="*" to="/login" />
                 </Switch>
@@ -72,4 +78,4 @@ const mapStateToProps = state => {
 	}
 }
 
-export default connect(mapStateToProps, {handleGrab5e, handleUserStatus, handleGrabNames})(Router);
+export default withRouter(connect(mapStateToProps, {handleGrab5e, handleUserStatus, handleGrabNames})(Router));
