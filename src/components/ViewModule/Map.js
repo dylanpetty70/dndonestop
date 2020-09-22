@@ -8,7 +8,7 @@ const styleMap = {
   position: 'absolute',
   marginLeft: '1000px',
   backgroundColor: 'lightGrey',
-  top: '245px'
+  top: '305px'
 }
 
 const styleClicks = {
@@ -19,7 +19,7 @@ const styleClicks = {
   margin: '5px',
   marginLeft: '1000px',
   backgroundColor: 'lightGrey',
-  top: '90px',
+  top: '150px',
   padding: '10px'
 }
 
@@ -28,30 +28,32 @@ const styleBlock = [
 		backgroundColor: 'white', zIndex: '2'
 	},
 	{
-		borderColor: '#dfe4e1', border: '1px solid', backgroundColor: 'white', boxShadow: '1px 1px 1px 1px grey', zIndex: '3'
+		border: '.25px solid rgba(0, 0, 0, .4)', backgroundColor: 'white', boxShadow: '1px 1px 1px 1px grey', zIndex: '3'
 	},
 	{
 		backgroundColor: '#afcef2'
 	},
 	{
-		borderColor: '#dfe4e1', border: '1px solid', backgroundColor: 'white', boxShadow: '1px 1px 1px 1px grey', zIndex: '3', borderRadius: '25px'
+		border: '.25px solid rgba(0, 0, 0, .6)', backgroundColor: 'white', boxShadow: '1px 1px 1px 1px grey', zIndex: '3', borderRadius: '25px'
 	},
 	{
-		borderColor: '#dfe4e1', border: '1px solid', backgroundColor: 'white', boxShadow: '1px 1px 1px 1px grey', zIndex: '3', borderRadius: '.25em'
+		border: '.25px solid rgba(0, 0, 0, .6)', backgroundColor: 'white', boxShadow: '1px 1px 1px 1px grey', zIndex: '3', borderRadius: '.25em'
 	},
 	{
-		borderColor: '#dfe4e1', border: '1px dotted', backgroundColor: 'white', boxShadow: '1px 1px 1px 1px grey', zIndex: '3'
+		border: '.25px dotted rgba(0, 0, 0, .6)', backgroundColor: 'white', boxShadow: '1px 1px 1px 1px grey', zIndex: '3'
 	},
 	{
-		borderColor: '#dfe4e1', border: '1px', backgroundColor: 'white', boxShadow: '1px 1px 1px 1px grey', zIndex: '3', borderStyle: 'dashed solid'
+		border: '.25px rgba(0, 0, 0, .6)', backgroundColor: 'white', boxShadow: '1px 1px 1px 1px grey', zIndex: '3', borderStyle: 'dashed solid'
 	},
 	{
-		borderColor: '#dfe4e1', border: '1px', backgroundColor: 'white', boxShadow: '1px 1px 1px 1px grey', zIndex: '3', borderStyle: 'solid dashed'
+		border: '.25px rgba(0, 0, 0, .6)', backgroundColor: 'white', boxShadow: '1px 1px 1px 1px grey', zIndex: '3', borderStyle: 'solid dashed'
 	},
 	{
-		border: '5px solid rgba(255,255,255,1)', backgroundColor: 'red', borderRadius: '15px'
+		border: '3px solid rgba(0, 0, 0, 0)', backgroundColor: 'red', borderRadius: '15px'
+	},
+	{
+		backgroundColor: 'black'
 	}
-
 ]
 
 class Map extends Component {
@@ -188,6 +190,8 @@ class Map extends Component {
 						<div style={{float: 'left', width: '20px', height: '20px', margin: '10px', borderColor: 'black', border: '1px', borderStyle: 'solid dashed'}} onClick={() => {this.setState({...this.state, tempSelect: 7})}}>
 						</div>
 						<div style={{float: 'left', width: '20px', height: '20px', margin: '10px', border: '5px solid rgba(255,255,255,1)', backgroundColor: 'red', borderRadius: '15px'}} onClick={() => {this.setState({...this.state, tempSelect: 8})}}>
+						</div>
+						<div style={{float: 'left', width: '20px', height: '20px', margin: '10px', backgroundColor: 'black'}} onClick={() => {this.setState({...this.state, tempSelect: 9})}}>
 						</div>
 					</div>
 				</div>

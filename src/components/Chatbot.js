@@ -17,6 +17,8 @@ import Races from './GameInfo/races';
 import Spells from './GameInfo/spells';
 import Traits from './GameInfo/traits';
 import WeaponProperties from './GameInfo/weaponProperties';
+var wizard  = '/images/title/wizard.png';
+var userAvatar  = '/images/title/userAvatar.png';
 
 
 class Chatbot extends Component {
@@ -293,9 +295,9 @@ class Chatbot extends Component {
 					<ChatBot 
 						handleEnd={this.handleEnd}
 						floating={true} 
-						botAvatar={'images/title/wizard.png'}
+						botAvatar={wizard}
 						headerTitle='DnD Help Bot'
-						userAvatar={'images/title/userAvatar.png'}
+						userAvatar={userAvatar}
 						floatingStyle={{zIndex: 40000}}
 						style={{zIndex: 40000}}
 						steps={options}

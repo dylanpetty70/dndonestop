@@ -94,9 +94,9 @@ class Environment extends Component {
 					<h4 style={{fontSize: '16px', marginTop: '20px'}}>Create New Module</h4>
 					<Form inline='true'>
 						<Form.Group>
-							<Form.Control style={{width: '250px'}} onKeyPress={(event) => {if(event.charCode===13){event.preventDefault(); (this.state.tempNewModule !== '') ? this.props.handleNewModule(this.state.tempNewModule) : this.setState({...this.state, tempNewModule: this.state.tempNewModule})}}} onChange={(text) => {this.setState({...this.state, tempNewModule: text.target.value})}} />
+							<Form.Control style={{width: '250px'}} onKeyPress={(event) => {if(event.charCode===13){event.preventDefault(); (this.state.tempNewModule !== '') ? this.props.handleNewModule(this.state.tempNewModule) : this.setState({...this.state, tempNewModule: this.state.tempNewModule}); alert('Module ' + this.state.tempNewModule + ' Created!');}}} onChange={(text) => {this.setState({...this.state, tempNewModule: text.target.value})}} />
 						</Form.Group>
-						<Button variant="outline-primary" style={{marginLeft: '30px'}} onClick={() => {(this.state.tempNewModule !== '') ? this.props.handleNewModule(this.state.tempNewModule) : this.setState({...this.state, tempNewModule: this.state.tempNewModule})}}>Create Module</Button>
+						<Button variant="outline-primary" style={{marginLeft: '30px'}} onClick={() => {(this.state.tempNewModule !== '') ? this.props.handleNewModule(this.state.tempNewModule) : this.setState({...this.state, tempNewModule: this.state.tempNewModule}); alert('Module ' + this.state.tempNewModule + ' Created!');}}>Create Module</Button>
 					</Form>
 				</Modal.Body>
                 </Modal>     
