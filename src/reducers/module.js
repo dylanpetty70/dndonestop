@@ -1,4 +1,4 @@
-import {GRAB_MODULE_ENV, GRAB_MODULE_OPTIONS, GRAB_MODULE_ENV_OPTIONS, GRAB_MODULE_PLAYERS, SET_MODULE, GRAB_MAPS} from '../actions/modules';
+import {GRAB_MODULE_ENV, GRAB_MODULE_OPTIONS, GRAB_MODULE_ENV_OPTIONS, GRAB_MODULE_PLAYERS, SET_MODULE, GRAB_MAPS, GRAB_MAP_CURRENT} from '../actions/modules';
 
 export default function module(state = {envOptions: [], environment: {name: ''}, key: '', envKey: '', moduleOptions: [], players: {}, name: '', maps: {}}, action) {
 	switch (action.type) {
@@ -14,6 +14,8 @@ export default function module(state = {envOptions: [], environment: {name: ''},
 			return {...state, key: action.id};
 		case GRAB_MAPS:
 			return {...state, maps: action.data};
+		case GRAB_MAP_CURRENT:
+			return {...state, currentMap: action.data};
 		default:
 			return state;
 	}

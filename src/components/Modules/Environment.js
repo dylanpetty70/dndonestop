@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Container from './Container';
 import DragLayer from './CustomDragLayer';
 import { connect } from 'react-redux';
-import {handleGrabModuleEnv, handleUpdateModuleCurrent, handleGrabModuleOptions,handleGrabModuleEnvOptions, handleNewModule, handleSetModule} from '../../actions/modules';
+import {handleGrabModuleEnv, handleUpdateModuleCurrent, handleGrabModuleOptions,handleGrabModuleEnvOptions, handleNewModule, handleSetModule, handleDeleteModule} from '../../actions/modules';
 import { handleGrabDraggableItems } from '../../actions/draggable';
 import CustomPanel from './CustomPanel';
 import GridLayer from './GridLayer';
@@ -13,6 +13,7 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import {RiCloseLine} from 'react-icons/ri';
 
 const ref = React.createRef();
+const ref1 = React.createRef();
 
 class Environment extends Component {
 
@@ -20,6 +21,7 @@ class Environment extends Component {
 		super(props);
 		this.state = {showModule: true,
 						tempNewModule: '',
+						tempDelete: '',
 						}
 		this.chooseModule = this.chooseModule.bind(this);
 		this.chosenModule = this.chosenModule.bind(this);
@@ -54,7 +56,7 @@ class Environment extends Component {
                     <Modal.Title>Choose Module</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-					{(Object.values(this.props.module.moduleOptions).length > 0) ? <Form>
+					{(Object.values(this.props.module.moduleOptions).length > 0) ? <><Form>
 					<h6  style={{fontSize: '16px', marginTop: '10px', alignText: 'center'}}>
 					Modules are your opportunity to create a collection of interconnected playable grids while customizing how your players can interact with them and what they see at any given moment.
 					</h6>
@@ -72,8 +74,24 @@ class Environment extends Component {
 							</Typeahead>
 						</Form.Group>
 					</Form>
+					
+					<h4  style={{fontSize: '16px', marginTop: '20px'}}>Delete Module</h4>
+					<Form inline='true'>
+						<Form.Group>
+						<Typeahead
+								id="delete"
+								labelKey="delete"
+								onChange={(text) => {this.setState({...this.state, tempDelete: Object.keys(this.props.module.moduleOptions)[Object.values(this.props.module.moduleOptions).indexOf(text[0])]})}}
+								options={Object.values(this.props.module.moduleOptions)}
+								ref={ref1}
+							> 
+							<RiCloseLine color='black' size={22} style={{position: 'absolute', right: '3px', top: '10px'}} onClick={() => {ref1.current.clear()}}/>
+							</Typeahead>
+						</Form.Group>
+						<Button variant="outline-primary" style={{marginLeft: '30px'}} onClick={() => {(this.state.tempDelete !== '') ? this.props.handleDeleteModule(this.state.tempDelete) : this.setState({...this.state, tempDelete: this.state.tempDelete})}}>Delete Module</Button>
+					</Form></>
 					: <></>}
-					<h4 style={{fontSize: '16px'}}>Create New Module</h4>
+					<h4 style={{fontSize: '16px', marginTop: '20px'}}>Create New Module</h4>
 					<Form inline='true'>
 						<Form.Group>
 							<Form.Control style={{width: '250px'}} onKeyPress={(event) => {if(event.charCode===13){event.preventDefault(); (this.state.tempNewModule !== '') ? this.props.handleNewModule(this.state.tempNewModule) : this.setState({...this.state, tempNewModule: this.state.tempNewModule})}}} onChange={(text) => {this.setState({...this.state, tempNewModule: text.target.value})}} />
@@ -109,4 +127,4 @@ const mapStateToProps = state => {
 	}
 }
 
-export default connect(mapStateToProps, {handleGrabModuleEnv, handleUpdateModuleCurrent, handleGrabModuleOptions, handleGrabDraggableItems, handleGrabModuleEnvOptions, handleNewModule, handleSetModule})(Environment);
+export default connect(mapStateToProps, {handleGrabModuleEnv, handleUpdateModuleCurrent, handleGrabModuleOptions, handleGrabDraggableItems, handleGrabModuleEnvOptions, handleNewModule, handleSetModule, handleDeleteModule})(Environment);

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {handleGrabModuleEnv, handleGrabModuleEnvOptions, handleGrabMaps, handleUpdateMaps, handleNewMap, handleUpdateModuleOther, handleSetCurrentModuleEnv, handleUpdateModuleCurrent, handleNewModuleEnvironment, handleChangeModuleEnvScale, handleDeleteModuleEnvironment, handleDeleteModule, handleGrabModulePlayers} from '../../actions/modules';
+import {handleGrabModuleEnv, handleChangeMapScale, handleSetCurrentModuleMap, handleGrabModuleEnvOptions, handleGrabMaps, handleUpdateMaps, handleNewMap, handleUpdateModuleOther, handleSetCurrentModuleEnv, handleUpdateModuleCurrent, handleNewModuleEnvironment, handleChangeModuleEnvScale, handleDeleteModuleEnvironment, handleDeleteModule, handleGrabModulePlayers} from '../../actions/modules';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -14,6 +14,7 @@ import {AiFillCloseCircle} from 'react-icons/ai';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import {useMediaQuery} from 'react-responsive';
+import Map from './Map';
 import {MdDelete} from 'react-icons/md';
 
 const ref = React.createRef();
@@ -60,6 +61,7 @@ class CustomPanel extends Component {
 						tempMap: '',
 						tempAddMap: '',
 						tempMaptoEnv: '',
+						tempMapScale: 30,
 						}
 		this.addToken = this.addToken.bind(this)
 		this.objectItems = this.objectItems.bind(this);
@@ -377,7 +379,7 @@ class CustomPanel extends Component {
 			<Card.Header>Map Organization</Card.Header>
 			<Card.Body>
 			<Card.Title style={{fontSize: '16px'}}>Module Maps</Card.Title>
-			<Card.Subtitle className="mb-2 text-muted">These maps are purely for your organization of environments.</Card.Subtitle>
+			<Card.Subtitle className="mb-2 text-muted">Your players will see the current map visual, but adding the environments is simply for organization's sake.</Card.Subtitle>
 				<Card.Title style={{fontSize: '16px'}}>Create Map</Card.Title>
 				<Form style={{margin: '5px'}} inline>
 					<Form.Group>
@@ -389,9 +391,9 @@ class CustomPanel extends Component {
 
 
 				<Card.Title  style={{fontSize: '16px', marginTop: '10px'}}>Maps</Card.Title>
-				<Card.Subtitle className="mb-2 text-muted">Choose a map to see the environments it contains</Card.Subtitle>
+				<Card.Subtitle className="mb-2 text-muted">Choose a map to see the environments it contains. Your players will also be able to see and edit this map.</Card.Subtitle>
 				<Form style={{margin: '5px'}}>
-					<Form.Control value={this.state.tempMap} as="select" style={{float: 'left', width: '200px'}} onChange={(text) => {this.setState({...this.state, tempMap: text.target.value})}}>
+					<Form.Control value={this.state.tempMap} as="select" style={{float: 'left', width: '200px'}} onChange={(text) => {this.setState({...this.state, tempMap: text.target.value}); this.props.handleSetCurrentModuleMap(this.props.module.key, text.target.value)}}>
 						<option value='Select One'>Select One</option>
 						{Object.keys(this.props.module.maps).map((l) =>{
 							return(<option value={l} key={l}>{this.props.module.maps[l].name}</option>)
@@ -411,6 +413,8 @@ class CustomPanel extends Component {
 					}) : <></>}
 				</div> : <></>}
 				
+				{(this.props.module.maps[this.state.tempMap]) ? 
+				<div>
 				<Card.Title  style={{fontSize: '16px', marginTop: '30px'}}>Add Environment to Map</Card.Title>
 				<Card.Subtitle className="mb-2 text-muted">Add an environment to the currently selected map</Card.Subtitle>
 				<Form style={{margin: '5px'}}>
@@ -423,6 +427,21 @@ class CustomPanel extends Component {
 					<Button variant="outline-primary" style={{ float: 'right'}} onClick={() => {this.addEnvtoMap()}}>Add Environment</Button>
 				</Form>
 				<br/>
+				</div>
+				: <></>}
+				{(this.props.module.maps[this.state.tempMap]) ? 
+				<div>
+				<Card.Title  style={{fontSize: '16px', marginTop: '30px'}}>Change Scale of Map</Card.Title>
+				<Card.Subtitle className="mb-2 text-muted">Max scale of 75</Card.Subtitle>
+				<Form style={{margin: '5px'}} inline>
+					<Form.Group>
+						<Form.Control placeholder={this.props.module.maps[this.state.tempMap].scale} style={{width: '200px'}} onChange={(text) => {if(text.target.value !== '' && !isNaN(text.target.value) && text.target.value !== 0 && text.target.value < 76){this.setState({...this.state, tempMapScale: text.target.value})}}} />
+					</Form.Group>
+					<Button variant="outline-primary" style={{marginLeft: '10px'}} onClick={() => {this.props.handleChangeMapScale(this.props.module.key, this.state.tempMap, this.state.tempMapScale)}}>Change Scale</Button>
+				</Form>
+				<br/>
+				</div>
+				: <></>}
 
 			</Card.Body>
 		</Card>)
@@ -676,23 +695,24 @@ class CustomPanel extends Component {
 		</div>
 			{(this.state.showEnvChange || this.state.showEnvVar || this.state.showPlaceTok || this.state.showPlayers || this.state.showMaps || this.props.module.envKey.length < 1) ?
 			<>
-			<div style={{width: '450px', position: 'absolute', right: '10px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', minHeight: '80%', opacity: '.9'}}>
 				<ShowAll>
+			{(this.state.showPlayers || this.state.showMaps) ? <div style={{width: '450px', position: 'absolute', right: '10px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', minHeight: '80%', opacity: '.9'}}>
 				{(this.state.showPlayers) ? this.playerPanel() : <></>}
 				{(this.state.showMaps) ? this.maps() : <></>}
+			</div> : <></>}
 			</ShowAll>
-			</div>
-			<div style={{width: '450px', position: 'absolute', right: '475px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', minHeight: '80%', opacity: '.9'}}>
+			<ShowAll>
+			{(this.state.showEnvChange || this.state.showEnvVar || this.state.showPlaceTok || this.props.module.envKey.length < 1) ? <div style={{width: '450px', position: 'absolute', right: '475px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', minHeight: '80%', opacity: '.9'}}>
 				{(this.state.showEnvChange || this.props.module.envKey.length < 1) ? this.envChange() : <></>}
-				<ShowAll>
 				{(this.state.showEnvVar) ? this.envVariables() : <></>}
 				{(this.state.showPlaceTok) ? this.placeToken() : <></>}
+			</div> : <></>}
 			</ShowAll>
-			</div>
 			</>
 			:
 			<></>
 			}
+			{(this.state.showMaps) ? <Map /> : <></>}
 		</div>
 		)
 	}
@@ -711,6 +731,6 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps, 
-	{handleGrabMaps, handleUpdateMaps, editTokens, handleChangeGrid, handleNewMap,
+	{handleGrabMaps, handleUpdateMaps, editTokens, handleChangeGrid, handleNewMap, handleSetCurrentModuleMap, handleChangeMapScale,
 	handleGrabModuleEnv, handleGrabModuleEnvOptions, handleUpdateModuleOther, handleSetCurrentModuleEnv, handleUpdateModuleCurrent, handleNewModuleEnvironment, handleChangeModuleEnvScale, handleDeleteModuleEnvironment, handleDeleteModule, handleGrabModulePlayers}
 	)(CustomPanel);

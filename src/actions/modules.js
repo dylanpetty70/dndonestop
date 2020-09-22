@@ -5,6 +5,7 @@ export const GRAB_MODULE_ENV_OPTIONS = 'GRAB_MODULE_ENV_OPTIONS';
 export const GRAB_MODULE_PLAYERS = 'GRAB_MODULE_PLAYERS';
 export const SET_MODULE = 'SET_MODULE';
 export const GRAB_MAPS = 'GRAB_MAPS';
+export const GRAB_MAP_CURRENT = 'GRAB_MAP_CURRENT';
 var firebase = require("firebase/app");
 require('firebase/auth');
 
@@ -122,12 +123,28 @@ export const handleGrabMaps = (module) => async dispatch => {
 	})
 }
 
+export const handleGrabMapCurrent = (module) => async dispatch => {
+	await dndRef.child('modules/' + module + '/currentMap').on('value', snapshot => {
+		if(snapshot.val()){
+			dispatch({
+				type: GRAB_MAP_CURRENT,
+				data: snapshot.val()
+			})
+		} else {
+			dispatch({
+				type: GRAB_MAP_CURRENT,
+				data: ''
+			})
+		}
+	})
+}
+
 export const handleUpdateMaps = (module, map, data) => async dispatch => {
 	dndRef.child("modules/" + module + "/maps/" + map).set(data);
 }
 
 export const handleNewMap = (module, name) => async dispatch => {
-	var data = {name: name}
+	var data = {name: name, scale: 30}
 	var newMapsKey = dndRef.child("modules/" + module + "/maps").push().key;
 
 	let mapPath = "modules/" + module + "/maps/"+String(newMapsKey);
@@ -137,6 +154,14 @@ export const handleNewMap = (module, name) => async dispatch => {
 
 export const handleSetCurrentModuleEnv = (module, id) => async dispatch => {
 	dndRef.child("modules/" + module).update({currentEnv: id});
+}
+
+export const handleSetCurrentModuleMap = (module, id) => async dispatch => {
+	dndRef.child("modules/" + module).update({currentMap: id});
+}
+
+export const handleChangeMapScale = (module, map, scale) => async dispatch => {
+	dndRef.child("modules/" + module + "/maps/" + map).update({scale: scale});
 }
 
 export const handleNewModuleEnvironment = (module, name) => async dispatch => {
