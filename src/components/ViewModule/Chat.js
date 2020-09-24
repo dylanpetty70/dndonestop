@@ -37,7 +37,7 @@ class Chat extends Component {
 			height: '500px',
 			right: '10px',
 			bottom: '100px',
-			visibility: "visible"
+			visibility: "hidden"
 			},
 			showFullscreenButton: true
 		});
