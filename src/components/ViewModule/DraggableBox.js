@@ -1,4 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDrag } from 'react-dnd'
+import { getEmptyImage } from 'react-dnd-html5-backend';
+import {MdDelete} from 'react-icons/md';
+import {GrRotateRight, GrRotateLeft} from 'react-icons/gr';
 import {connect} from 'react-redux';
 import {handleUpdateModuleCurrent} from '../../actions/modules';
 import {handleUpdateBox} from '../../actions/box';
@@ -6,6 +10,7 @@ import {editTokens} from '../../actions/editEnv';
 import ReactHtmlParser from 'react-html-parser';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import {withRouter} from 'react-router-dom';
 
 function getStyles(left, top) {
   const transform = `translate3d(${left}px, ${top}px, 0)`
@@ -20,8 +25,16 @@ function getStyles(left, top) {
 
 
 const DraggableBox = (props) => {
-  const { left, top, object, rotation } = props
-
+  const { id, left, top, object, scale, rotation, conditions, player} = props
+    const [{ isDragging }, drag, preview] = useDrag({
+    item: { type: String(player), id: id, left, top, title: object, scale: scale, rotation: rotation, conditions },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  })
+  useEffect(() => {
+    preview(getEmptyImage(), { captureDraggingState: true })
+  })
 
   const style = () => {
     let rotate = 'rotate('+ Number(rotation) + 'deg)';
@@ -31,16 +44,26 @@ const DraggableBox = (props) => {
 	}
   }
 
+  const rotateItem = (all, object, function1, amount) => {
+    for(let i = 0; i < all.length; i++){
+      if(i === Number(props.id.replace('id',''))){
+        all[i].rotation = Number(all[i].rotation) + amount;
+	  }
+	}
+
+    function1(props.match.params.key, props.module.envKey, all);
+  }
+
 
   const tooltip = () => {
         let temp = [];
       if(props.conditions){
               for(var key in props.conditions){
                 temp.push(
-                    <><strong>{key+ ': '}</strong>{props.conditions[key]}<br/></>
+                    <p key={key}><strong>{key+ ': '}</strong>{props.conditions[key]}<br/></p>
 			    )
 	      }
-          return (<p style={{textAlign: 'left'}} key={key}>{temp.map((l) => {return l})}</p>);
+          return (<div style={{textAlign: 'left'}} key={key}>{temp.map((l) => {return l})}</div>);
       } else {
             return (<></>);
       }
@@ -48,8 +71,9 @@ const DraggableBox = (props) => {
   }
 
   if(props.draggableItems && props.link === '' ){
+        let width = String(Number(props.module.environment.scale) * Number(props.scale));
         return (
-        <div style={getStyles(left, top, props.cover)}>
+        <div ref={drag} style={getStyles(left, top, isDragging, props.cover)}>
         {(props.conditions && props.player) ? <OverlayTrigger
             key={props.object+'overlay'}
             placement={'top'}
@@ -59,15 +83,23 @@ const DraggableBox = (props) => {
                 </Tooltip>
             }
         >
-          <div style={style()} onClick={() => {props.handleUpdateBox({id: Number(props.id.replace('id', '')), rotation: props.rotation, object: props.object, scale: props.scale})}}>
+          <div key={props.id} style={style()} onClick={() => {props.handleUpdateBox({id: Number(props.id.replace('id', '')), rotation: props.rotation, object: props.object, scale: props.scale, player: props.player})}}>
           {ReactHtmlParser(props.draggableItems[object].title.replace(/32/g, String(Number(props.module.environment.scale) * Number(props.scale))))}
           </div>
         </OverlayTrigger> 
         :
-          <div style={style()} onClick={() => {props.handleUpdateBox({id: Number(props.id.replace('id', '')), rotation: props.rotation, object: props.object, scale: props.scale})}}>
+          <div key={props.id} style={style()} onClick={() => {props.handleUpdateBox({id: Number(props.id.replace('id', '')), rotation: props.rotation, object: props.object, scale: props.scale, player: props.player})}}>
           {ReactHtmlParser(props.draggableItems[object].title.replace(/32/g, String(Number(props.module.environment.scale) * Number(props.scale))))}
           </div>
           }
+          {(props.editEnv.tokens && props.player) ? <>
+          <div style={{width: {width}}}>
+          <MdDelete color={props.envOptions.color} style={{position: 'relative', top: '0'}} onClick={() => {props.handleUpdateModuleCurrent(props.match.params.key, props.module.envKey, props.module.environment.items.filter((x,i) => i !== Number(props.id.replace('id',''))))}}/>
+          <GrRotateRight color={props.envOptions.color} style={{position: 'relative', top: '0'}} onClick={() => {rotateItem(props.module.environment.items, object, props.handleUpdateModuleCurrent, 45)}}/>
+          <GrRotateLeft color={props.envOptions.color} style={{position: 'relative', top: '0px'}} onClick={() => {rotateItem(props.module.environment.items, object, props.handleUpdateModuleCurrent, -45)}}/>
+          </div>
+          </>:
+          <></>}
 	      
         </div>
       )
@@ -88,4 +120,4 @@ const mapStateToProps = state => ({
     module: state.module
 });
 
-export default connect(mapStateToProps,{handleUpdateModuleCurrent, editTokens, handleUpdateBox})(DraggableBox)
+export default withRouter(connect(mapStateToProps,{handleUpdateModuleCurrent, editTokens, handleUpdateBox})(DraggableBox));

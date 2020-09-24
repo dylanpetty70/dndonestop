@@ -28,9 +28,9 @@ function getStyles(left, top, isDragging, cover) {
 
 
 const DraggableBox = (props) => {
-  const { id, left, top, object, scale, rotation, conditions } = props
+  const { id, left, top, object, scale, rotation, conditions, player } = props
   const [{ isDragging }, drag, preview] = useDrag({
-    item: { type: object, id: id, left, top, title: object, scale: scale, rotation: rotation, conditions },
+    item: { type: object, id: id, left, top, title: object, scale: scale, rotation: rotation, conditions, player },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -91,10 +91,10 @@ const DraggableBox = (props) => {
       if(props.conditions){
               for(var key in props.conditions){
                 temp.push(
-                    <><strong>{key+ ': '}</strong>{props.conditions[key]}<br/></>
+                    <p key={key}><strong>{key+ ': '}</strong>{props.conditions[key]}<br/></p>
 			    )
 	      }
-          return (<p style={{textAlign: 'left'}} key={key}>{temp.map((l) => {return l})}</p>);
+          return (<div style={{textAlign: 'left'}} key={key}>{temp.map((l) => {return l})}</div>);
       } else {
             return (<></>);
       }
@@ -116,23 +116,23 @@ const DraggableBox = (props) => {
                 </Tooltip>
             }
         >
-          <div style={style()} onClick={() => {props.handleUpdateBox({id: Number(props.id.replace('id', '')), rotation: props.rotation, object: props.object, scale: props.scale})}}>
+          <div key={props.id} style={style()} onClick={() => {props.handleUpdateBox({id: Number(props.id.replace('id', '')), rotation: props.rotation, object: props.object, scale: props.scale, player: props.player})}}>
           {ReactHtmlParser(props.draggableItems[object].title.replace(/32/g, String(Number(props.module.environment.scale) * Number(props.scale))))}
           </div>
         </OverlayTrigger> 
         :
-          <div style={style()} onClick={() => {props.handleUpdateBox({id: Number(props.id.replace('id', '')), rotation: props.rotation, object: props.object, scale: props.scale})}}>
+          <div key={props.id} style={style()} onClick={() => {props.handleUpdateBox({id: Number(props.id.replace('id', '')), rotation: props.rotation, object: props.object, scale: props.scale, player: props.player})}}>
           {ReactHtmlParser(props.draggableItems[object].title.replace(/32/g, String(Number(props.module.environment.scale) * Number(props.scale))))}
           </div>
           }
           {(props.link !== '') ? <p style={{fontSize: '12px', position: 'relative', top: topLink, overflowX: 'auto', width: widthLink, backgroundColor: '#E0D3AF', margin: 'auto', display: 'block'}}>{props.link}</p> : <></>}
 	      {(props.editEnv.tokens) ? <>
           <div style={{width: {width}}}>
-          <MdDelete style={{position: 'relative', top: '0'}} onClick={() => {props.handleUpdateModuleCurrent(props.module.key, props.module.envKey, props.module.environment.items.filter((x,i) => i !== Number(props.id.replace('id',''))))}}/>
-          <GrRotateRight style={{position: 'relative', top: '0'}} onClick={() => {rotateItem(props.module.environment.items, object, props.handleUpdateModuleCurrent, 45)}}/>
-          <GrRotateLeft style={{position: 'relative', top: '0px'}} onClick={() => {rotateItem(props.module.environment.items, object, props.handleUpdateModuleCurrent, -45)}}/>
-          <AiOutlineArrowUp style={{position: 'relative', top: '0px'}} onClick={() => {zIndexItem(props.module.environment.items, object, props.handleUpdateModuleCurrent, 'up')}}/>
-          <AiOutlineArrowDown style={{position: 'relative', top: '0px'}} onClick={() => {zIndexItem(props.module.environment.items, object, props.handleUpdateModuleCurrent, 'down')}}/>
+          <MdDelete color={props.envOptions.color} style={{position: 'relative', top: '0'}} onClick={() => {props.handleUpdateModuleCurrent(props.module.key, props.module.envKey, props.module.environment.items.filter((x,i) => i !== Number(props.id.replace('id',''))))}}/>
+          <GrRotateRight color={props.envOptions.color} style={{position: 'relative', top: '0'}} onClick={() => {rotateItem(props.module.environment.items, object, props.handleUpdateModuleCurrent, 45)}}/>
+          <GrRotateLeft color={props.envOptions.color} style={{position: 'relative', top: '0px'}} onClick={() => {rotateItem(props.module.environment.items, object, props.handleUpdateModuleCurrent, -45)}}/>
+          <AiOutlineArrowUp color={props.envOptions.color} style={{position: 'relative', top: '0px'}} onClick={() => {zIndexItem(props.module.environment.items, object, props.handleUpdateModuleCurrent, 'up')}}/>
+          <AiOutlineArrowDown color={props.envOptions.color} style={{position: 'relative', top: '0px'}} onClick={() => {zIndexItem(props.module.environment.items, object, props.handleUpdateModuleCurrent, 'down')}}/>
           </div>
           </>:
           <></>}

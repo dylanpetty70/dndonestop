@@ -6,6 +6,7 @@ export const GRAB_MODULE_PLAYERS = 'GRAB_MODULE_PLAYERS';
 export const SET_MODULE = 'SET_MODULE';
 export const GRAB_MAPS = 'GRAB_MAPS';
 export const GRAB_MAP_CURRENT = 'GRAB_MAP_CURRENT';
+export const GRAB_MODULE_CHAT = 'GRAB_MODULE_CHAT';
 var firebase = require("firebase/app");
 require('firebase/auth');
 
@@ -73,20 +74,24 @@ export const handleGrabModuleEnvOptions = (module) => async dispatch => {
 
 export const handlePlayerGrabModuleEnv = (module) => async dispatch => {
 	await dndRef.child('modules/' + module + '/currentEnv').on('value', async snapshot => {
-		await dndRef.child('modules/' + module + '/environments/'+ snapshot.val()).on('value', snapshot1 => {
-			if(snapshot1.val()){
-			dispatch({
-				type: GRAB_MODULE_ENV,
-				data: snapshot1.val(),
-				id: snapshot.val()
+		await dndRef.child('modules/' + module + '/environments/'+ snapshot.val()).on('value', async snapshot1 => {
+			await dndRef.child('modules/' + module + '/currentEnv').once('value', snapshot2 => {
+				if(snapshot.val() === snapshot2.val()){
+					if(snapshot1.val()){
+					dispatch({
+						type: GRAB_MODULE_ENV,
+						data: snapshot1.val(),
+						id: snapshot.val()
+					})
+					} else {
+						dispatch({
+							type: GRAB_MODULE_ENV,
+							data: {},
+							id: ''
+						})
+					}
+				}
 			})
-		} else {
-			dispatch({
-				type: GRAB_MODULE_ENV,
-				data: {},
-				id: ''
-			})
-		}
 		})
 	})
 }
@@ -105,6 +110,38 @@ export const handleUpdateModuleOther = (module, id, data) => async dispatch => {
 			dndRef.child("modules/" + module + "/environments/"+id+"/items").set(data);
 		}
 	})
+}
+
+export const handleGrabModuleChat = (module) => async dispatch => {
+	await dndRef.child('modules/' + module + '/chat').on('value', async snapshot => {
+		if(snapshot.val()){
+		dispatch({
+			type: GRAB_MODULE_CHAT,
+			data: snapshot.val()
+		})
+		} else {
+			dispatch({
+				type: GRAB_MODULE_CHAT,
+				data: {}
+			})
+		}
+	})
+}
+
+export const handleNewMessage = (id, text) => async dispatch => {
+	let userId = firebase.auth().currentUser.uid;	
+	let date = Date.now()
+
+	var data = {creator: userId, time: date, text: text}
+	var newTextKey = dndRef.child("modules/" + id + "/chat").push().key;
+
+	let textPath = "modules/" + id + "/chat/" + String(newTextKey);
+
+	dndRef.update({[textPath]: data});
+}
+
+export const handleDeleteMessage = (mod, id) => async dispatch => {
+	dndRef.child("modules/"+mod+"/chat/"+id).remove();
 }
 
 export const handleGrabMaps = (module) => async dispatch => {

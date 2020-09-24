@@ -124,11 +124,11 @@ const DraggableBox = (props) => {
           }
 	      {(props.editEnv.tokens) ? <>
           <div style={{width: {width}}}>
-          <MdDelete style={{position: 'relative', top: '0'}} onClick={() => {props.handleUpdateCurrent(props.draggable.key, props.draggable.environment.items.filter((x,i) => i !== Number(props.id.replace('id',''))))}}/>
-          <GrRotateRight style={{position: 'relative', top: '0'}} onClick={() => {rotateItem(props.draggable.environment.items, object, props.handleUpdateCurrent, 45)}}/>
-          <GrRotateLeft style={{position: 'relative', top: '0px'}} onClick={() => {rotateItem(props.draggable.environment.items, object, props.handleUpdateCurrent, -45)}}/>
-          <AiOutlineArrowUp style={{position: 'relative', top: '0px'}} onClick={() => {zIndexItem(props.draggable.environment.items, object, props.handleUpdateCurrent, 'up')}}/>
-          <AiOutlineArrowDown style={{position: 'relative', top: '0px'}} onClick={() => {zIndexItem(props.draggable.environment.items, object, props.handleUpdateCurrent, 'down')}}/>
+          <MdDelete color={props.envOptions.color} style={{position: 'relative', top: '0'}} onClick={() => {props.handleUpdateCurrent(props.draggable.key, props.draggable.environment.items.filter((x,i) => i !== Number(props.id.replace('id',''))))}}/>
+          <GrRotateRight color={props.envOptions.color} style={{position: 'relative', top: '0'}} onClick={() => {rotateItem(props.draggable.environment.items, object, props.handleUpdateCurrent, 45)}}/>
+          <GrRotateLeft color={props.envOptions.color} style={{position: 'relative', top: '0px'}} onClick={() => {rotateItem(props.draggable.environment.items, object, props.handleUpdateCurrent, -45)}}/>
+          <AiOutlineArrowUp color={props.envOptions.color} style={{position: 'relative', top: '0px'}} onClick={() => {zIndexItem(props.draggable.environment.items, object, props.handleUpdateCurrent, 'up')}}/>
+          <AiOutlineArrowDown color={props.envOptions.color} style={{position: 'relative', top: '0px'}} onClick={() => {zIndexItem(props.draggable.environment.items, object, props.handleUpdateCurrent, 'down')}}/>
           </div>
           </>:
           <></>}

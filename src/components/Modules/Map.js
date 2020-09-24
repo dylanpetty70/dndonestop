@@ -56,12 +56,46 @@ const styleBlock = [
 	}
 ]
 
+const styleBlockPlayer = [
+	{
+		backgroundColor: 'transparent', zIndex: '4'
+	},
+	{
+		backgroundColor: 'red', borderRadius: '25px', zIndex: '4'
+	},
+	{
+		backgroundColor: 'orange', borderRadius: '25px', zIndex: '4'
+	},
+	{
+		backgroundColor: 'yellow', borderRadius: '25px', zIndex: '4'
+	},
+	{
+		backgroundColor: 'green', borderRadius: '25px', zIndex: '4'
+	},
+	{
+		backgroundColor: 'cyan', borderRadius: '25px', zIndex: '4'
+	},
+	{
+		backgroundColor: 'blue', borderRadius: '25px', zIndex: '4'
+	},
+	{
+		backgroundColor: 'purple', borderRadius: '25px', zIndex: '4'
+	},
+	{
+		backgroundColor: 'gray', borderRadius: '25px', zIndex: '4'
+	},
+	{
+		backgroundColor: 'brown', borderRadius: '25px', zIndex: '4'
+	}
+]
+
 class Map extends Component {
 
 	constructor(props){
 		super(props);
 		this.state = {tempSelect: 0,}
 		this.mapItems = this.mapItems.bind(this);
+		this.mapPlayerItems = this.mapPlayerItems.bind(this);
 		this.changeItem = this.changeItem.bind(this);
 	}
 
@@ -156,6 +190,93 @@ class Map extends Component {
 		}
 	}
 
+	mapPlayerItems(){
+		let temp = [];
+		if(this.props.module.currentMap){
+			if(this.props.module.maps[this.props.module.currentMap].playerItems){
+				if(this.props.module.maps[this.props.module.currentMap].playerItems.length === this.props.module.maps[this.props.module.currentMap].scale){
+					temp = this.props.module.maps[this.props.module.currentMap].playerItems;
+				} else if(this.props.module.maps[this.props.module.currentMap].playerItems.length < this.props.module.maps[this.props.module.currentMap].scale){
+					let scale = this.props.module.maps[this.props.module.currentMap].scale;
+					let map = this.props.module.maps[this.props.module.currentMap].playerItems;
+					for(let i = 0; i < scale; i++){
+						for(let j = 0; j < scale; j++){
+							if(map[i]){
+								if(map[i][j]){
+									if(temp[i]){
+										temp[i][j] = map[i][j];
+									} else {
+										temp[i] = [];
+										temp[i][j] = 0;
+									}
+								} else {
+									if(temp[i]){
+										temp[i][j] = 0;
+									} else {
+										temp[i] = [];
+										temp[i][j] = 0;
+									}
+								}
+							} else {
+								if(temp[i]){
+									temp[i].push(0);
+								} else {
+									temp.push([]);
+									temp[i].push(0);
+								}
+							}
+						}
+					}
+				} else {
+					let scale = this.props.module.maps[this.props.module.currentMap].scale;
+					let map = this.props.module.maps[this.props.module.currentMap].playerItems;
+					for(let i = 0; i < scale; i++){
+						for(let j = 0; j < scale; j++){
+							if(temp[i]){
+								temp[i][j] = map[i][j];
+							} else {
+								temp[i] = [];
+								temp[i][j] = map[i][j];
+							}
+						}
+					}
+				}
+			} else if(this.props.module.maps[this.props.module.currentMap].scale){
+				let scale = this.props.module.maps[this.props.module.currentMap].scale;
+				for(let i = 0; i < scale; i++){
+					for(let j = 0; j < scale; j++){
+						if(temp[i]){
+							temp[i][j] = 0;
+						} else {
+							temp[i] = [];
+							temp[i][j] = 0;
+						}
+					}
+				}
+			}
+			if(temp !== this.props.module.maps[this.props.module.currentMap].playerItems){
+				let data = this.props.module.maps[this.props.module.currentMap];
+				data['playerItems'] = temp;
+				this.props.handleUpdateMaps(this.props.match.params.key, this.props.module.currentMap, data)
+			}
+			//this is where the grid is rendered using temp
+			let tempRender = [];
+			let scale = this.props.module.maps[this.props.module.currentMap].scale;
+			let tempWidth = String(Math.floor(630/this.props.module.maps[this.props.module.currentMap].scale)/2) + 'px';
+			for(let i = 0; i < scale; i++){
+				for(let j = 0; j < scale; j++){
+					let left = j * Math.floor(630/this.props.module.maps[this.props.module.currentMap].scale)  +( Math.floor(630/this.props.module.maps[this.props.module.currentMap].scale)/4);
+					let top = i * Math.floor(630/this.props.module.maps[this.props.module.currentMap].scale)  + (Math.floor(630/this.props.module.maps[this.props.module.currentMap].scale)/4);
+					let style = styleBlockPlayer[temp[i][j]];
+					tempRender.push(
+						<div onClick={() => {this.changeItem(i, j)}} key={String(i)+String(j)+String(i*j)+String(j)+'2'} style={{width: tempWidth, height: tempWidth, left: left, top: top, position: 'absolute', ...style}}></div>
+					)
+				}
+			}
+			return tempRender;
+		}
+	}
+
 	changeItem(i , j){
 		let data = this.props.module.maps[this.props.module.currentMap];
 		data['items'][i][j] = this.state.tempSelect;
@@ -197,6 +318,7 @@ class Map extends Component {
 				</div>
 				<div style={{...styleMap, width: width, height: width}}>
 					{this.mapItems()}
+					{this.mapPlayerItems()}
 				</div>
 			</div>
 		)

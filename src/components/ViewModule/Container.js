@@ -5,6 +5,7 @@ import {snapToGrid} from './snapToGrid'
 import update from 'immutability-helper'
 import { connect } from 'react-redux';
 import {handleGrabModuleEnv, handleUpdateModuleCurrent} from '../../actions/modules';
+import {withRouter} from 'react-router-dom';
 
 
 const styles = {
@@ -13,7 +14,8 @@ const styles = {
   border: '1px solid black',
   position: 'relative',
   margin: '5px',
-  marginLeft: '100px'
+  marginLeft: '20px',
+  overflow: 'hidden'
 }
 function renderBox(item, key, updateBoxes) {
   return <DraggableBox key={key} id={key} updateBoxes={updateBoxes} {...item} />
@@ -83,7 +85,7 @@ const Container = (props) => {
   };
 
   const [, drop] = useDrop({
-    accept: (props.draggableItems) ? [...Object.keys(props.draggableItems)] : [],
+    accept: ['true'],
     drop(item, monitor) {
       const delta = monitor.getDifferenceFromInitialOffset()
       let left = Math.round(item.left + delta.x)
@@ -95,7 +97,7 @@ const Container = (props) => {
       if(current[index]){
           current[index].pLeft = left;
           current[index].pTop = top;
-          props.handleUpdateModuleCurrent(props.module.key, props.module.envKey, current)
+          props.handleUpdateModuleCurrent(props.match.params.key, props.module.envKey, current)
 	  } else {
        updateBoxes1();
 	  }
@@ -120,4 +122,4 @@ const mapStateToProps = state => {
 	}
 }
 
-export default connect(mapStateToProps, {handleGrabModuleEnv, handleUpdateModuleCurrent})(Container);
+export default withRouter(connect(mapStateToProps, {handleGrabModuleEnv, handleUpdateModuleCurrent})(Container));

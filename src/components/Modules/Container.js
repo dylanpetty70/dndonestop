@@ -13,7 +13,8 @@ const styles = {
   border: '1px solid black',
   position: 'relative',
   margin: '5px',
-  marginLeft: '10px'
+  marginLeft: '10px',
+  overflow: 'hidden'
 }
 function renderBox(item, key, updateBoxes) {
   return <DraggableBox key={key} id={key} updateBoxes={updateBoxes} {...item} />
@@ -24,7 +25,7 @@ const Container = (props) => {
       if(Object.keys(props.module.environment.items).length > 0){
           for(let i = 0; i < Object.keys(props.module.environment.items).length; i++){
             let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.module.environment.items[i].item) : [];
-            temp[['id' + i]] = {id: 'id'+i, top: props.module.environment.items[i].pTop, left: props.module.environment.items[i].pLeft, object: temp1, scale: props.module.environment.items[i].scale, rotation: props.module.environment.items[i].rotation, conditions: props.module.environment.items[i].conditions, cover: props.module.environment.items[i].cover, link: props.module.environment.items[i].link};
+            temp[['id' + i]] = {id: 'id'+i, top: props.module.environment.items[i].pTop, left: props.module.environment.items[i].pLeft, object: temp1, scale: props.module.environment.items[i].scale, rotation: props.module.environment.items[i].rotation, conditions: props.module.environment.items[i].conditions, cover: props.module.environment.items[i].cover, link: props.module.environment.items[i].link, player: props.module.environment.items[i].player};
           }
         } else {
             temp = {};  
@@ -54,7 +55,7 @@ const Container = (props) => {
           if(Object.keys(props.module.environment.items).length > 0){
               for(let i = 0; i < Object.keys(props.module.environment.items).length; i++){
                 let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.module.environment.items[i].item) : [];
-                temp[['id' + i]] = {id: 'id'+i, top: props.module.environment.items[i].pTop, left: props.module.environment.items[i].pLeft, object: temp1, scale: props.module.environment.items[i].scale, rotation: props.module.environment.items[i].rotation, conditions: props.module.environment.items[i].conditions, cover: props.module.environment.items[i].cover, link: props.module.environment.items[i].link};
+                temp[['id' + i]] = {id: 'id'+i, top: props.module.environment.items[i].pTop, left: props.module.environment.items[i].pLeft, object: temp1, scale: props.module.environment.items[i].scale, rotation: props.module.environment.items[i].rotation, conditions: props.module.environment.items[i].conditions, cover: props.module.environment.items[i].cover, link: props.module.environment.items[i].link, player: props.module.environment.items[i].player};
               }
           } else {
                 temp = {};  
@@ -71,7 +72,7 @@ const Container = (props) => {
       if(Object.keys(props.module.environment.items).length > 0){
           for(let i = 0; i < Object.keys(props.module.environment.items).length; i++){
             let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.module.environment.items[i].item) : [];
-            temp[['id' + i]] = {id: 'id'+i, top: props.module.environment.items[i].pTop, left: props.module.environment.items[i].pLeft, object: temp1, scale: props.module.environment.items[i].scale, rotation: props.module.environment.items[i].rotation, conditions: props.module.environment.items[i].conditions, cover: props.module.environment.items[i].cover, link: props.module.environment.items[i].link};
+            temp[['id' + i]] = {id: 'id'+i, top: props.module.environment.items[i].pTop, left: props.module.environment.items[i].pLeft, object: temp1, scale: props.module.environment.items[i].scale, rotation: props.module.environment.items[i].rotation, conditions: props.module.environment.items[i].conditions, cover: props.module.environment.items[i].cover, link: props.module.environment.items[i].link, player: props.module.environment.items[i].player};
           }
         } else {
             temp = {};  

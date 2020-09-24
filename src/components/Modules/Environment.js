@@ -113,7 +113,7 @@ class Environment extends Component {
 				<DragLayer snapToGridWhileDragging={true}/>
             </div>
 			{(!this.state.showModule) ? 
-				<CustomPanel changeState={this.changeState}/>
+				<CustomPanel/>
 			: <></>}
 			</div>
 		)

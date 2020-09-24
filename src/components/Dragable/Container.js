@@ -12,7 +12,8 @@ const styles = {
   width: '1890px',
   border: '1px solid black',
   position: 'relative',
-  margin: '5px'
+  margin: '5px',
+  overflow: 'hidden'
 }
 function renderBox(item, key, updateBoxes) {
   return <DraggableBox key={key} id={key} updateBoxes={updateBoxes} {...item} />

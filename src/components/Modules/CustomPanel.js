@@ -14,6 +14,7 @@ import {AiFillCloseCircle} from 'react-icons/ai';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import {useMediaQuery} from 'react-responsive';
+import Chat from './Chat';
 import Map from './Map';
 import {MdDelete} from 'react-icons/md';
 
@@ -46,6 +47,7 @@ class CustomPanel extends Component {
 						showEnvChange: false,
 						showDelete: false,
 						showPlayers: false,
+						showChat: false,
 						tempShare: '',
 						tempBackground: '',
 						showEdit: false,
@@ -62,6 +64,7 @@ class CustomPanel extends Component {
 						tempAddMap: '',
 						tempMaptoEnv: '',
 						tempMapScale: 30,
+						tempMovePlayerEnv: '',
 						}
 		this.addToken = this.addToken.bind(this)
 		this.objectItems = this.objectItems.bind(this);
@@ -84,6 +87,8 @@ class CustomPanel extends Component {
 		this.newMap = this.newMap.bind(this);
 		this.addEnvtoMap = this.addEnvtoMap.bind(this);
 		this.deleteEnvtoMap = this.deleteEnvtoMap.bind(this);
+		this.copyToClipboard = this.copyToClipboard.bind(this);
+		this.moveOnePlayerToken = this.moveOnePlayerToken.bind(this);
 	}
 
 	componentDidMount(){
@@ -134,6 +139,23 @@ class CustomPanel extends Component {
 			}
 			this.props.handleUpdateModuleCurrent(this.props.module.key, this.props.module.envKey, tempSame);
 			this.props.handleUpdateModuleOther(this.props.module.key, this.state.tempMoveEnv, tempNew);
+		}
+	}
+
+	moveOnePlayerToken(id){
+		if(this.state.tempMovePlayerEnv!== '' & this.state.tempMovePlayerEnv !== 'Select One'){
+			let tempCurrent = (this.props.module.environment.items) ? this.props.module.environment.items : [];
+			let tempNew = [];
+			let tempSame = [];
+			for(let i = 0; i < tempCurrent.length; i++){
+				if(i === id){
+					tempNew.push(tempCurrent[i]);
+				} else {
+					tempSame.push(tempCurrent[i]);
+				}
+			}
+			this.props.handleUpdateModuleCurrent(this.props.module.key, this.props.module.envKey, tempSame);
+			this.props.handleUpdateModuleOther(this.props.module.key, this.state.tempMovePlayerEnv, tempNew);
 		}
 	}
 
@@ -391,7 +413,7 @@ class CustomPanel extends Component {
 
 
 				<Card.Title  style={{fontSize: '16px', marginTop: '10px'}}>Maps</Card.Title>
-				<Card.Subtitle className="mb-2 text-muted">Choose a map to see the environments it contains. Your players will also be able to see and edit this map.</Card.Subtitle>
+				<Card.Subtitle className="mb-2 text-muted">Choose a map to see the environments it contains. Your players will also be able to see and place player markers on the map.</Card.Subtitle>
 				<Form style={{margin: '5px'}}>
 					<Form.Control value={this.state.tempMap} as="select" style={{float: 'left', width: '200px'}} onChange={(text) => {this.setState({...this.state, tempMap: text.target.value}); this.props.handleSetCurrentModuleMap(this.props.module.key, text.target.value)}}>
 						<option value='Select One'>Select One</option>
@@ -646,6 +668,15 @@ class CustomPanel extends Component {
 					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Notes`] = this.state.tempOther; this.props.handleUpdateModuleCurrent(this.props.module.key, this.props.module.envKey, temp)}}>Save Notes</Button>
 					</InputGroup.Append>
 				  </InputGroup>
+				{(this.props.box.player) ? 
+				<Form style={{margin: '5px'}}>
+					<Form.Control value={this.state.tempMovePlayerEnv} as="select" style={{float: 'left', width: '200px'}} onChange={(text) => {this.setState({...this.state, tempMovePlayerEnv: text.target.value})}}>
+						<option value='Select One'>Select One</option>
+						{this.envOptions()}
+					</Form.Control>
+					<Button variant="outline-primary" style={{ float: 'left', marginLeft: '20px'}} onClick={() => {this.moveOnePlayerToken(this.props.box.id)}}>Change Environment</Button>
+				</Form>
+				: <></>}
 			</Card>
 		</div>)
 		} else {
@@ -657,6 +688,19 @@ class CustomPanel extends Component {
 				</div>
 			)
 		}
+	}
+
+	copyToClipboard(){
+		const el = document.createElement('textarea');
+		el.value = 'http://www.dndonestop.com/viewmodules/' + this.props.module.key;
+		el.setAttribute('readonly', '');
+		el.style.position = 'absolute';
+		el.style.left = '-9999px';
+		document.body.appendChild(el);
+		el.select();
+		document.execCommand('copy');
+		document.body.removeChild(el);
+		alert('Copied: http://www.dndonestop.com/viewmodules/' + this.props.module.key);
 	}
 
 	render(){
@@ -688,15 +732,17 @@ class CustomPanel extends Component {
 				{(!this.props.module.envKey.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showEnvVar: !this.state.showEnvVar})}}>Environment Variables</Button> : <></>}
 				{(!this.props.module.envKey.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showPlaceTok: !this.state.showPlaceTok})}}>Place Tokens</Button> : <></>}
 				{(this.props.module.environment.items) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.props.editTokens(!this.props.editEnv.tokens); this.setState({...this.state, showEdit: !this.state.showEdit})}}>Edit Tokens</Button> : <></>}
+				{(!this.props.module.envKey.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showChat: !this.state.showChat})}}>Chat</Button> : <></>}
 				{(!this.props.module.envKey.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showPlayers: !this.state.showPlayers})}}>Players</Button> : <></>}
 				{(!this.props.module.envKey.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.setState({...this.state, showMaps: !this.state.showMaps})}}>Maps</Button> : <></>}
-				{(!this.props.module.envKey.length < 1) ? <p style={{color: 'white', float: 'right'}}>{'Share to players using this link: http://www.dndonestop.com/viewmodules/' + this.props.module.key} </p>: <></>}
+				{(!this.props.module.envKey.length < 1) ? <Button variant="secondary" style={{marginLeft: '15px', border: '1px solid', borderColor: 'white'}} onClick={() => {this.copyToClipboard()}}>Copy Player's Link</Button>: <></>}
 			</ShowAll>
 		</div>
-			{(this.state.showEnvChange || this.state.showEnvVar || this.state.showPlaceTok || this.state.showPlayers || this.state.showMaps || this.props.module.envKey.length < 1) ?
+			{(this.state.showEnvChange || this.state.showEnvVar || this.state.showPlaceTok || this.state.showPlayers || this.state.showMaps || this.state.showChat || this.props.module.envKey.length < 1) ?
 			<>
 				<ShowAll>
-			{(this.state.showPlayers || this.state.showMaps) ? <div style={{width: '450px', position: 'absolute', right: '10px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', minHeight: '80%', opacity: '.9'}}>
+			{(this.state.showPlayers || this.state.showMaps || this.state.showChat) ? <div style={{width: '450px', position: 'absolute', right: '10px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', minHeight: '80%', opacity: '.9'}}>
+				{(this.state.showChat) ? <Chat /> : <></>}
 				{(this.state.showPlayers) ? this.playerPanel() : <></>}
 				{(this.state.showMaps) ? this.maps() : <></>}
 			</div> : <></>}
