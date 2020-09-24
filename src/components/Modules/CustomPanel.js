@@ -741,14 +741,14 @@ class CustomPanel extends Component {
 			{(this.state.showEnvChange || this.state.showEnvVar || this.state.showPlaceTok || this.state.showPlayers || this.state.showMaps || this.state.showChat || this.props.module.envKey.length < 1) ?
 			<>
 				<ShowAll>
-			{(this.state.showPlayers || this.state.showMaps || this.state.showChat) ? <div style={{width: '450px', position: 'absolute', right: '10px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', minHeight: '80%', opacity: '.9'}}>
+			{(this.state.showPlayers || this.state.showMaps || this.state.showChat) ? <div style={{width: '450px', position: 'absolute', right: '10px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', opacity: '.9'}}>
 				{(this.state.showChat) ? <Chat /> : <></>}
 				{(this.state.showPlayers) ? this.playerPanel() : <></>}
 				{(this.state.showMaps) ? this.maps() : <></>}
 			</div> : <></>}
 			</ShowAll>
 			<ShowAll>
-			{(this.state.showEnvChange || this.state.showEnvVar || this.state.showPlaceTok || this.props.module.envKey.length < 1) ? <div style={{width: '450px', position: 'absolute', right: '475px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', minHeight: '80%', opacity: '.9'}}>
+			{(this.state.showEnvChange || this.state.showEnvVar || this.state.showPlaceTok || this.props.module.envKey.length < 1) ? <div style={{width: '450px', position: 'absolute', right: '475px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', opacity: '.9'}}>
 				{(this.state.showEnvChange || this.props.module.envKey.length < 1) ? this.envChange() : <></>}
 				{(this.state.showEnvVar) ? this.envVariables() : <></>}
 				{(this.state.showPlaceTok) ? this.placeToken() : <></>}

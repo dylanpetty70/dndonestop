@@ -271,7 +271,7 @@ class CustomPanel extends Component {
 			{(this.state.showPlaceTok || this.state.showChat || this.props.module.envKey.length < 1) ?
 			<>
 				<ShowAll>
-			{(this.state.showPlaceTok || this.state.showMaps || this.state.showChat) ? <div style={{width: '450px', position: 'absolute', right: '10px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', minHeight: '80%', opacity: '.9'}}>
+			{(this.state.showPlaceTok || this.state.showMaps || this.state.showChat) ? <div style={{width: '450px', position: 'absolute', right: '10px', top: '155px', zIndex: '20000', maxHeight: '80%', overflowY: 'auto', opacity: '.9'}}>
 				{(this.state.showChat) ? <Chat /> : <></>}
 				{(this.state.showPlaceTok) ? this.placeToken() : <></>}
 			</div> : <></>}

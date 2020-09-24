@@ -1,25 +1,65 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {handleGrabModuleChat, handleNewMessage, handleDeleteMessage} from '../../actions/modules';
+import {handleGrabModuleChat, handleNewMessage, handleDeleteMessage, handleGrabCallURL, handleNewCallURL, handleDeleteCallURL} from '../../actions/modules';
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import {BiSend} from 'react-icons/bi';
 import {MdDelete} from 'react-icons/md';
 var firebase = require("firebase/app");
 require('firebase/auth');
 
+let callFrame = '';
+
 class Chat extends Component {
 
 	constructor(props){
 		super(props);
 		this.state = { newMessage: '',
+						callActive: false,
 						}
+		this.createFrame = this.createFrame.bind(this);
+		this.endFrame = this.endFrame.bind(this);
+		this.joinCall = this.joinCall.bind(this);
 	}
 
 	componentDidMount(){
 		document.getElementById('scroll').scrollTop = document.getElementById('scroll').scrollHeight;
 		this.props.handleGrabModuleChat(this.props.module.key)
+		this.props.handleGrabCallURL(this.props.module.key);
+		
+		callFrame = window.DailyIframe.createFrame({
+			iframeStyle: {
+			position: 'fixed',
+			border: '1px solid black',
+			width: '375px',
+			height: '450px',
+			right: '100px',
+			bottom: '15px',
+			visibility: "hidden"
+			},
+			showFullscreenButton: true
+		});
     }
+
+	createFrame(){
+		this.props.handleNewCallURL(this.props.module.key);
+	}
+
+	endFrame(){
+		callFrame.iframe().style.visibility = "hidden";
+		if(this.state.callActive){
+			callFrame.leave();
+		}
+		this.props.handleDeleteCallURL(this.props.module.key, this.props.module.callURL);
+		this.setState({...this.state, callActive: false});
+	}
+
+	joinCall(){
+		callFrame.iframe().style.visibility = 'visible';
+		callFrame.join({ url: this.props.module.callURL });
+		this.setState({...this.state, callActive: true});
+	}
 
 	render(){
 		const userId = firebase.auth().currentUser.uid;	
@@ -27,7 +67,13 @@ class Chat extends Component {
 		return(
 		<Card style={{marginTop: '5px', marginBottom: '5px', marginLeft: '2px', marginRight: '2px'}}>
 			<Card.Header>
-				Chat
+				Chat 
+				{(this.props.module.callURL.length < 1) ?
+				<div style={{float: 'right'}}><Button onClick={() => {this.createFrame();}}>Create Call</Button></div> : 
+				(!this.state.callActive) ? 
+				<div style={{float: 'right'}}><Button style={{marginRight: '10px'}} onClick={() =>{this.joinCall();}}>Join Call</Button><Button onClick={() => {this.endFrame();}}>Delete Call</Button></div> :
+				<div style={{float: 'right'}}><Button onClick={() => {this.endFrame();}}>Leave Call</Button></div>
+				}
 			</Card.Header>
 			<Card.Body>
 			<div id="scroll" className="chatWindow" style={{overflowY: 'scroll', maxHeight: '500px'}}>
@@ -67,5 +113,5 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps, 
-	{handleNewMessage, handleDeleteMessage, handleGrabModuleChat}
+	{handleNewMessage, handleDeleteMessage, handleGrabModuleChat, handleGrabCallURL, handleNewCallURL, handleDeleteCallURL}
 	)(Chat);

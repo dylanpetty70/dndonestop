@@ -1,4 +1,5 @@
 import {dndRef} from '../firebaseAPI';
+import api from '../APIFactory';
 export const GRAB_MODULE_ENV = 'GRAB_MODULE_ENV';
 export const GRAB_MODULE_OPTIONS = 'GRAB_MODULE_OPTIONS';
 export const GRAB_MODULE_ENV_OPTIONS = 'GRAB_MODULE_ENV_OPTIONS';
@@ -7,6 +8,7 @@ export const SET_MODULE = 'SET_MODULE';
 export const GRAB_MAPS = 'GRAB_MAPS';
 export const GRAB_MAP_CURRENT = 'GRAB_MAP_CURRENT';
 export const GRAB_MODULE_CHAT = 'GRAB_MODULE_CHAT';
+export const GRAB_CALL_URL = 'GRAB_CALL_URL';
 var firebase = require("firebase/app");
 require('firebase/auth');
 
@@ -142,6 +144,41 @@ export const handleNewMessage = (id, text) => async dispatch => {
 
 export const handleDeleteMessage = (mod, id) => async dispatch => {
 	dndRef.child("modules/"+mod+"/chat/"+id).remove();
+}
+
+export const handleNewCallURL = (module) => async dispatch => {
+	let result = await api.post('https://api.daily.co/v1/rooms',{}, {
+		headers: {
+			"authorization": "Bearer d9bea36199efcbc41a426ffbe3d608bda460e79ed707ca464db6cc41589e3805",
+			"content-type": "application/json",
+		}}
+	)
+	dndRef.child("modules/" + module + "/callURL").set(result.data.url);
+}
+
+export const handleDeleteCallURL = (module, name) => async dispatch => {
+	await api.delete('https://api.daily.co/v1/rooms/'+ name.replace('https://dndonestop.daily.co/',''),{
+		headers: {
+			'authorization': 'Bearer d9bea36199efcbc41a426ffbe3d608bda460e79ed707ca464db6cc41589e3805'
+		}}
+	)
+	dndRef.child("modules/" + module + "/callURL").set('');
+}
+
+export const handleGrabCallURL = (module) => async dispatch => {
+	await dndRef.child('modules/' + module + '/callURL').on('value', async snapshot => {
+		if(snapshot.val()){
+		dispatch({
+			type: GRAB_CALL_URL,
+			data: snapshot.val()
+		})
+		} else {
+			dispatch({
+				type: GRAB_CALL_URL,
+				data: ''
+			})
+		}
+	})
 }
 
 export const handleGrabMaps = (module) => async dispatch => {
