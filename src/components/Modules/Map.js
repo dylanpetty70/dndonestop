@@ -7,7 +7,7 @@ const styleMap = {
   border: '1px solid black',
   position: 'absolute',
   marginLeft: '800px',
-  backgroundColor: 'lightGrey',
+  backgroundColor: 'white',
   top: '321px'
 }
 
@@ -18,7 +18,7 @@ const styleClicks = {
   position: 'absolute',
   margin: '5px',
   marginLeft: '800px',
-  backgroundColor: 'lightGrey',
+  backgroundColor: 'white',
   top: '171px',
   padding: '10px'
 }

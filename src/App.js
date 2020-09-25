@@ -6,6 +6,7 @@ import Header from './Header/Header';
 import { connect } from 'react-redux';
 import {useMediaQuery} from 'react-responsive';
 import Image from 'react-bootstrap/Image';
+var logo = "/images/title/logo.png";
 
 const Desktop = ({ children }) => {
   const isDesktop = useMediaQuery({ minWidth: 768 })
@@ -35,7 +36,7 @@ class App extends React.Component {
             </Desktop>
             <Mobile>
                 <div>
-                    <Image style={{width: '100%'}} src="images/title/logo.png" fluid/>
+                    <Image style={{width: '100%'}} src={logo} fluid/>
                     <h1 style={{fontFamily: 'Segoe Print', padding: '10px'}}>Currently, small windows and mobile are not supported. The DnDOneStop app is pending App Store Approval.</h1>
                 </div>
             </Mobile>
