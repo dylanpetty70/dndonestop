@@ -7,6 +7,8 @@ import Card from 'react-bootstrap/Card';
 import {BiSend} from 'react-icons/bi';
 import {MdDelete} from 'react-icons/md';
 import {withRouter} from 'react-router-dom';
+import ReactModal from 'react-modal-resizable-draggable';
+import {AiFillCloseCircle} from 'react-icons/ai';
 var firebase = require("firebase/app");
 require('firebase/auth');
 
@@ -29,36 +31,34 @@ class Chat extends Component {
 		this.props.handleGrabModuleChat(this.props.match.params.key)
 		this.props.handleGrabCallURL(this.props.match.params.key);
 
-		callFrame = window.DailyIframe.createFrame({
-			iframeStyle: {
-			position: 'fixed',
-			border: '1px solid black',
-			width: '440px',
-			height: '500px',
-			right: '10px',
-			bottom: '100px',
-			visibility: "hidden"
-			},
-			showFullscreenButton: true
-		});
     }
 
 	endFrame(){
 		callFrame.leave();
-		callFrame.iframe().style.visibility = "hidden";
 		this.setState({...this.state, callActive: false});
 	}
 
 	joinCall(){
-		callFrame.iframe().style.visibility = 'visible';
-		callFrame.join({ url: this.props.module.callURL });
 		this.setState({...this.state, callActive: true});
+		setTimeout(() => {callFrame = window.DailyIframe.wrap(document.getElementById('call'),
+				{showFullscreenButton: true}
+			);
+			callFrame.join({ url: this.props.module.callURL });
+		}, 750);
 	}
 
 	render(){
 		const userId = firebase.auth().currentUser.uid;	
 
 		return(
+		<div>
+		
+		<ReactModal 
+			isOpen={this.state.callActive}>
+			<h3 style={{position: 'absolute', zIndex: 5, top: '-6px', right: '2px', cursor: 'pointer'}}><AiFillCloseCircle onClick={() => {this.endFrame()}}/></h3>
+			<iframe id='call' allow="camera; microphone; autoplay" style={{height: '100%', width: '100%'}}></iframe>
+		</ReactModal>
+
 		<Card style={{marginTop: '5px', marginBottom: '5px', marginLeft: '2px', marginRight: '2px'}}>
 			<Card.Header>
 				Chat 
@@ -95,6 +95,7 @@ class Chat extends Component {
 				</Form>
 			</Card.Body>
 		</Card>
+		</div>
 		)
 	}
 }

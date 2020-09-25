@@ -38,7 +38,7 @@
 }
 
 .flexible-modal {
-  position: absolute;
+  position: fixed;
   z-index: 50000;
   opacity: .9;
 }
