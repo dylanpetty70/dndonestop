@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {handleGrabModuleEnv, handleChangeMapScale, handleSetCurrentModuleMap, handleGrabModuleEnvOptions, handleGrabMaps, handleUpdateMaps, handleNewMap, handleUpdateModuleOther, handleSetCurrentModuleEnv, handleUpdateModuleCurrent, handleNewModuleEnvironment, handleChangeModuleEnvScale, handleDeleteModuleEnvironment, handleDeleteModule, handleGrabModulePlayers} from '../../actions/modules';
+import {handleModuleDeleteItem, handleModuleUpdateItem, handleModuleAddNewItem, handleGrabModuleEnv, handleChangeMapScale, handleSetCurrentModuleMap, handleGrabModuleEnvOptions, handleGrabMaps, handleUpdateMaps, handleNewMap, handleUpdateModuleOther, handleSetCurrentModuleEnv, handleNewModuleEnvironment, handleChangeModuleEnvScale, handleDeleteModuleEnvironment, handleDeleteModule, handleGrabModulePlayers} from '../../actions/modules';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -38,7 +38,7 @@ class CustomPanel extends Component {
 						scaleError: false,
 						tempToken: {creature: '', scene: '', background: '', players: ''},
 						tempTokenScale: {creature: 1, scene: 1, background: 1, players: 1},
-						tempEnv: this.props.draggable.environment.name,
+						tempEnv: this.props.module.environment.name,
 						tempNewEnv: '',
 						tempPlayerEnv: '',
 						tempMoveEnv: '',
@@ -97,100 +97,72 @@ class CustomPanel extends Component {
 
 	addToken(tag){
 		if(this.state.tempToken[tag] !== '' & this.state.tempToken[tag] !== 'Select One' & this.state.tempToken[tag] !== undefined){
-			let current = (this.props.module.environment.items) ? this.props.module.environment.items : [];
-			current.push({item: this.state.tempToken[tag], pLeft: 80, pTop: 20, scale: this.state.tempTokenScale[tag], rotation: 0, player: false, link: '', cover: false});
-			this.props.handleUpdateModuleCurrent(this.props.module.key, this.props.module.envKey, current); 
+			this.props.handleModuleAddNewItem(this.props.module.key, this.props.module.envKey, {item: this.state.tempToken[tag], pLeft: 80, pTop: 20, scale: this.state.tempTokenScale[tag], rotation: 0, player: false, link: '', cover: false})
 		}
 	}
 
 	addPlayerToken(tag){
 		if(this.state.tempToken[tag] !== '' & this.state.tempToken[tag] !== 'Select One' & this.state.tempToken[tag] !== undefined){
-			let current = (this.props.module.environment.items) ? this.props.module.environment.items : [];
-			current.push({item: this.state.tempToken[tag], pLeft: 80, pTop: 20, scale: this.state.tempTokenScale[tag], rotation: 0, player: true, link: '', cover: false});
-			this.props.handleUpdateModuleCurrent(this.props.module.key, this.props.module.envKey, current); 
+			this.props.handleModuleAddNewItem(this.props.module.key, this.props.module.envKey, {item: this.state.tempToken[tag], pLeft: 80, pTop: 20, scale: this.state.tempTokenScale[tag], rotation: 0, player: true, link: '', cover: false})
 		}
 	}
 
 	addLinkToken(){
 		if(this.state.tempLinkEnv !== '' & this.state.tempLinkEnv !== 'Select One' & this.state.tempLinkEnv !== undefined){
-			let current = (this.props.module.environment.items) ? this.props.module.environment.items : [];
-			current.push({item: 'scroll', pLeft: 80, pTop: 20, scale: 2, rotation: 0, player: false, link: this.props.module.envOptions[this.state.tempLinkEnv], cover: false});
-			this.props.handleUpdateModuleCurrent(this.props.module.key, this.props.module.envKey, current); 
+			this.props.handleModuleAddNewItem(this.props.module.key, this.props.module.envKey, {item: 'scroll', pLeft: 80, pTop: 20, scale: 2, rotation: 0, player: false, link: this.props.module.envOptions[this.state.tempLinkEnv], cover: false})
 		}
 	}
 
 	addCoverToken(){
-		let current = (this.props.module.environment.items) ? this.props.module.environment.items : [];
-		current.push({item: 'bakcground black', pLeft: 80, pTop: 20, scale: this.state.tempCoverScale, rotation: 0, player: false, link: '', cover: true});
-		this.props.handleUpdateModuleCurrent(this.props.module.key, this.props.module.envKey, current); 
+			this.props.handleModuleAddNewItem(this.props.module.key, this.props.module.envKey, {item: 'bakcground black', pLeft: 80, pTop: 20, scale: this.state.tempCoverScale, rotation: 0, player: false, link: '', cover: true})
 	}
 
 	movePlayerTokens(){
 		if(this.state.tempMoveEnv!== '' & this.state.tempMoveEnv !== 'Select One'){
-			let tempCurrent = (this.props.module.environment.items) ? this.props.module.environment.items : [];
-			let tempNew = [];
-			let tempSame = [];
-			for(let i = 0; i < tempCurrent.length; i++){
-				if(tempCurrent[i].player){
-					tempNew.push(tempCurrent[i]);
-				} else {
-					tempSame.push(tempCurrent[i]);
+			let tempCurrent = (this.props.module.environment.items) ? this.props.module.environment.items : {};
+			for(var key in tempCurrent){
+				if(tempCurrent[key].player){
+					this.props.handleModuleDeleteItem(this.props.module.key, this.props.module.envKey, key)
+					this.props.handleModuleAddNewItem(this.props.module.key, this.state.tempMoveEnv, tempCurrent[key]);
 				}
 			}
-			this.props.handleUpdateModuleCurrent(this.props.module.key, this.props.module.envKey, tempSame);
-			this.props.handleUpdateModuleOther(this.props.module.key, this.state.tempMoveEnv, tempNew);
 		}
 	}
 
 	moveOnePlayerToken(id){
 		if(this.state.tempMovePlayerEnv!== '' & this.state.tempMovePlayerEnv !== 'Select One'){
-			let tempCurrent = (this.props.module.environment.items) ? this.props.module.environment.items : [];
-			let tempNew = [];
-			let tempSame = [];
-			for(let i = 0; i < tempCurrent.length; i++){
-				if(i === id){
-					tempNew.push(tempCurrent[i]);
-				} else {
-					tempSame.push(tempCurrent[i]);
-				}
-			}
-			this.props.handleUpdateModuleCurrent(this.props.module.key, this.props.module.envKey, tempSame);
-			this.props.handleUpdateModuleOther(this.props.module.key, this.state.tempMovePlayerEnv, tempNew);
+			let item = this.props.module.environment.items[id]
+			this.props.handleModuleDeleteItem(this.props.module.key, this.props.module.envKey, id);
+			this.props.handleModuleAddNewItem(this.props.module.key, this.state.tempMovePlayerEnv, item);
 		}
 	}
 
 	coverBack(){
 		if(this.state.tempToken['scene'] !== '' & this.state.tempToken['scene'] !== 'Select One' & this.state.tempToken['scene'] !== undefined){
 			let current = (this.props.module.environment.items) ? this.props.module.environment.items : [];
-			let temp = [];
-			for(let i = 0; i < current.length; i++){
-				if(!current[i].back){
-					temp.push(current[i]);
+			for(var key in current){
+				if(current[key].back){
+					this.props.handleModuleDeleteItem(this.props.module.key, this.props.module.envKey, key)
 				}
 			}
-			let temp1 = [];
 
 			let totalWidth = 780;
 			let totalHeight = 780;
 
 			for(let i = (Number(this.props.module.environment.scale) * this.state.tempTokenScale['scene']); i < totalWidth + (Number(this.props.module.environment.scale) * this.state.tempTokenScale['scene']); i += (Number(this.props.module.environment.scale) * this.state.tempTokenScale['scene'])){
 				for(let j = (Number(this.props.module.environment.scale) * this.state.tempTokenScale['scene']); j < totalHeight + (Number(this.props.module.environment.scale) * this.state.tempTokenScale['scene']); j += (Number(this.props.module.environment.scale) * this.state.tempTokenScale['scene'])){
-					temp1.push(
-						{item: this.state.tempToken['scene'], 
-						pLeft: i - (Number(this.props.module.environment.scale) * this.state.tempTokenScale['scene']), 
-						pTop: j - (Number(this.props.module.environment.scale) * this.state.tempTokenScale['scene']) - 2, 
-						scale: this.state.tempTokenScale['scene'], 
-						rotation: 0,
-						back: true, 
-						player: false, 
-						link: '', 
-						cover: false
-						}
-					)
+					this.props.handleModuleAddNewItem(this.props.module.key, this.props.module.envKey, {item: this.state.tempToken['scene'], 
+													pLeft: i - (Number(this.props.module.environment.scale) * this.state.tempTokenScale['scene']), 
+													pTop: j - (Number(this.props.module.environment.scale) * this.state.tempTokenScale['scene']) - 2, 
+													scale: this.state.tempTokenScale['scene'], 
+													rotation: 0,
+													back: true, 
+													player: false, 
+													link: '', 
+													cover: false
+													});
 				}
 			}
-			let temp3 = [...temp1, ...temp]
-			this.props.handleUpdateModuleCurrent(this.props.module.key, this.props.module.envKey, temp3); 
 		}
 	}
 
@@ -583,9 +555,9 @@ class CustomPanel extends Component {
 	}
 
 	checkConditions(id){
-		let temp = this.props.module.environment.items;
-		if(!temp[id].conditions){
-			temp[id].conditions = {};
+		let temp = this.props.module.environment.items[id];
+		if(!temp.conditions){
+			temp.conditions = {};
 		}
 		return temp;
 	}
@@ -613,7 +585,7 @@ class CustomPanel extends Component {
 					  onChange={(text) => {this.setState({...this.state, tempName: text.target.value})}}
 					/>
 					<InputGroup.Append>
-					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Player Name`] = this.state.tempName; this.props.handleUpdateModuleCurrent(this.props.module.key, this.props.module.envKey, temp)}}>Save Player Name</Button>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp.conditions[`Player Name`] = this.state.tempName; this.props.handleModuleUpdateItem(this.props.module.key, this.props.module.envKey, this.props.box.id, temp)}}>Save Player Name</Button>
 					</InputGroup.Append>
 				  </InputGroup>
 
@@ -626,7 +598,7 @@ class CustomPanel extends Component {
 					  onChange={(text) => {this.setState({...this.state, tempHP: text.target.value})}}
 					/>
 					<InputGroup.Append>
-					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`HP`] = this.state.tempHP; this.props.handleUpdateModuleCurrent(this.props.module.key, this.props.module.envKey, temp)}}>Save HP</Button>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp.conditions[`HP`] = this.state.tempHP; this.props.handleModuleUpdateItem(this.props.module.key, this.props.module.envKey, this.props.box.id, temp)}}>Save HP</Button>
 					</InputGroup.Append>
 				  </InputGroup>
 
@@ -639,7 +611,7 @@ class CustomPanel extends Component {
 					  onChange={(text) => {this.setState({...this.state, tempAC: text.target.value})}}
 					/>
 					<InputGroup.Append>
-					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Armor Class`] = this.state.tempAC; this.props.handleUpdateModuleCurrent(this.props.module.key, this.props.module.envKey, temp)}}>Save Armor Class</Button>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp.conditions[`Armor Class`] = this.state.tempAC; this.props.handleModuleUpdateItem(this.props.module.key, this.props.module.envKey, this.props.box.id, temp)}}>Save Armor Class</Button>
 					</InputGroup.Append>
 				  </InputGroup>
 
@@ -652,7 +624,7 @@ class CustomPanel extends Component {
 					  onChange={(text) => {this.setState({...this.state, tempConditions: text.target.value})}}
 					/>
 					<InputGroup.Append>
-					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Conditions`] = this.state.tempConditions; this.props.handleUpdateModuleCurrent(this.props.module.key, this.props.module.envKey, temp)}}>Save Conditions</Button>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp.conditions[`Conditions`] = this.state.tempConditions; this.props.handleModuleUpdateItem(this.props.module.key, this.props.module.envKey, this.props.box.id, temp)}}>Save Conditions</Button>
 					</InputGroup.Append>
 				  </InputGroup>
 
@@ -665,7 +637,7 @@ class CustomPanel extends Component {
 					  onChange={(text) => {this.setState({...this.state, tempOther: text.target.value})}}
 					/>
 					<InputGroup.Append>
-					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Notes`] = this.state.tempOther; this.props.handleUpdateModuleCurrent(this.props.module.key, this.props.module.envKey, temp)}}>Save Notes</Button>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp.conditions[`Notes`] = this.state.tempOther; this.props.handleModuleUpdateItem(this.props.module.key, this.props.module.envKey, this.props.box.id, temp)}}>Save Notes</Button>
 					</InputGroup.Append>
 				  </InputGroup>
 				{(this.props.box.player) ? 
@@ -777,6 +749,6 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps, 
-	{handleGrabMaps, handleUpdateMaps, editTokens, handleChangeGrid, handleNewMap, handleSetCurrentModuleMap, handleChangeMapScale,
-	handleGrabModuleEnv, handleGrabModuleEnvOptions, handleUpdateModuleOther, handleSetCurrentModuleEnv, handleUpdateModuleCurrent, handleNewModuleEnvironment, handleChangeModuleEnvScale, handleDeleteModuleEnvironment, handleDeleteModule, handleGrabModulePlayers}
+	{handleModuleDeleteItem, handleModuleUpdateItem, handleModuleAddNewItem, handleGrabMaps, handleUpdateMaps, editTokens, handleChangeGrid, handleNewMap, handleSetCurrentModuleMap, handleChangeMapScale,
+	handleGrabModuleEnv, handleGrabModuleEnvOptions, handleUpdateModuleOther, handleSetCurrentModuleEnv, handleNewModuleEnvironment, handleChangeModuleEnvScale, handleDeleteModuleEnvironment, handleDeleteModule, handleGrabModulePlayers}
 	)(CustomPanel);

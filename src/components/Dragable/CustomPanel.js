@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {handleChangeBackground, handleGrabDraggable, handleUpdateCurrent, handleNewEnvironment, handleGrabOptions, handleChangeGrid, handleChangeScale, handleDeleteEnvironment, handleShareEnvironment} from '../../actions/draggable';
+import {handleUpdateItem, handleAddNewItem, handleDeleteItem, handleChangeBackground, handleGrabDraggable, handleNewEnvironment, handleGrabOptions, handleChangeGrid, handleChangeScale, handleDeleteEnvironment, handleShareEnvironment} from '../../actions/draggable';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -70,42 +70,32 @@ class CustomPanel extends Component {
 
 	addToken(tag){
 		if(this.state.tempToken[tag] !== '' & this.state.tempToken[tag] !== 'Select One' & this.state.tempToken[tag] !== undefined){
-			let current = (this.props.draggable.environment.items) ? this.props.draggable.environment.items : [];
-			current.push({item: this.state.tempToken[tag], pLeft: 80, pTop: 20, scale: this.state.tempTokenScale[tag], rotation: 0});
-			this.props.handleUpdateCurrent(this.props.draggable.key, current); 
+			this.props.handleAddNewItem(this.props.draggable.key, {item: this.state.tempToken[tag], pLeft: 80, pTop: 20, scale: this.state.tempTokenScale[tag], rotation: 0})
 		}
 	}
 
 	coverBack(){
 		if(this.state.tempToken['scene'] !== '' & this.state.tempToken['scene'] !== 'Select One' & this.state.tempToken['scene'] !== undefined){
 			let current = (this.props.draggable.environment.items) ? this.props.draggable.environment.items : [];
-			let temp = [];
-			for(let i = 0; i < current.length; i++){
-				if(!current[i].back){
-					temp.push(current[i]);
+			for(var key in current){
+				if(current[key].back){
+					this.props.handleDeleteItem(this.props.draggable.key, key)
 				}
 			}
-			let temp1 = [];
 
 			let totalWidth = 1890;
 			let totalHeight = 780;
 
 			for(let i = (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']); i < totalWidth + (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']); i += (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene'])){
 				for(let j = (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']); j < totalHeight + (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']); j += (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene'])){
-					temp1.push(
-						{item: this.state.tempToken['scene'], 
-						pLeft: i - (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']), 
-						pTop: j - (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']) - 2, 
-						scale: this.state.tempTokenScale['scene'], 
-						rotation: 0,
-						back: true
-						}
-					)
+					this.props.handleAddNewItem(this.props.draggable.key, {item: this.state.tempToken['scene'], 
+																		pLeft: i - (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']), 
+																		pTop: j - (Number(this.props.draggable.environment.scale) * this.state.tempTokenScale['scene']) - 2, 
+																		scale: this.state.tempTokenScale['scene'], 
+																		rotation: 0,
+																		back: true})
 				}
 			}
-			let temp3 = [...temp1, ...temp]
-			console.log(temp3)
-			this.props.handleUpdateCurrent(this.props.draggable.key, temp3); 
 		}
 	}
 
@@ -340,9 +330,9 @@ class CustomPanel extends Component {
 	}
 
 	checkConditions(id){
-		let temp = this.props.draggable.environment.items;
-		if(!temp[id].conditions){
-			temp[id].conditions = {};
+		let temp = this.props.draggable.environment.items[id];
+		if(!temp.conditions){
+			temp.conditions = {};
 		}
 		return temp;
 	}
@@ -369,7 +359,7 @@ class CustomPanel extends Component {
 					  onChange={(text) => {this.setState({...this.state, tempName: text.target.value})}}
 					/>
 					<InputGroup.Append>
-					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Player Name`] = this.state.tempName; this.props.handleUpdateCurrent(this.props.draggable.key, temp)}}>Save Player Name</Button>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp.conditions[`Player Name`] = this.state.tempName; this.props.handleUpdateItem(this.props.draggable.key, this.props.box.id, temp)}}>Save Player Name</Button>
 					</InputGroup.Append>
 				  </InputGroup>
 
@@ -382,7 +372,7 @@ class CustomPanel extends Component {
 					  onChange={(text) => {this.setState({...this.state, tempHP: text.target.value})}}
 					/>
 					<InputGroup.Append>
-					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`HP`] = this.state.tempHP; this.props.handleUpdateCurrent(this.props.draggable.key, temp)}}>Save HP</Button>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp.conditions[`HP`] = this.state.tempHP; this.props.handleUpdateItem(this.props.draggable.key, this.props.box.id, temp)}}>Save HP</Button>
 					</InputGroup.Append>
 				  </InputGroup>
 
@@ -395,7 +385,7 @@ class CustomPanel extends Component {
 					  onChange={(text) => {this.setState({...this.state, tempAC: text.target.value})}}
 					/>
 					<InputGroup.Append>
-					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Armor Class`] = this.state.tempAC; this.props.handleUpdateCurrent(this.props.draggable.key, temp)}}>Save Armor Class</Button>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp.conditions[`Armor Class`] = this.state.tempAC; this.props.handleUpdateItem(this.props.draggable.key, this.props.box.id, temp)}}>Save Armor Class</Button>
 					</InputGroup.Append>
 				  </InputGroup>
 
@@ -408,7 +398,7 @@ class CustomPanel extends Component {
 					  onChange={(text) => {this.setState({...this.state, tempConditions: text.target.value})}}
 					/>
 					<InputGroup.Append>
-					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Conditions`] = this.state.tempConditions; this.props.handleUpdateCurrent(this.props.draggable.key, temp)}}>Save Conditions</Button>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp.conditions[`Conditions`] = this.state.tempConditions; this.props.handleUpdateItem(this.props.draggable.key, this.props.box.id, temp)}}>Save Conditions</Button>
 					</InputGroup.Append>
 				  </InputGroup>
 
@@ -421,7 +411,7 @@ class CustomPanel extends Component {
 					  onChange={(text) => {this.setState({...this.state, tempOther: text.target.value})}}
 					/>
 					<InputGroup.Append>
-					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Notes`] = this.state.tempOther; this.props.handleUpdateCurrent(this.props.draggable.key, temp)}}>Save Notes</Button>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp.conditions[`Notes`] = this.state.tempOther; this.props.handleUpdateItem(this.props.draggable.key, this.props.box.id, temp)}}>Save Notes</Button>
 					</InputGroup.Append>
 				  </InputGroup>
 			</Card>
@@ -498,7 +488,7 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps, 
-	{handleGrabDraggable, handleUpdateCurrent, handleNewEnvironment, handleGrabOptions, 
+	{handleGrabDraggable,handleNewEnvironment, handleGrabOptions, handleDeleteItem,
 	handleChangeGrid, handleChangeScale, handleDeleteEnvironment, handleShareEnvironment,
-	editTokens, handleChangeBackground}
+	editTokens, handleChangeBackground, handleAddNewItem, handleUpdateItem}
 	)(CustomPanel);

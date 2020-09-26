@@ -18,7 +18,7 @@ const styleClicks = {
   position: 'absolute',
   margin: '5px',
   marginLeft: '820px',
-  backgroundColor: 'white',
+  backgroundColor: 'lightGrey',
   top: '150px',
   padding: '10px'
 }

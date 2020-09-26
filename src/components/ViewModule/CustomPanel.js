@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {handleGrabModuleEnv, handleChangeMapScale, handleSetCurrentModuleMap, handleGrabModuleEnvOptions, handleGrabMaps, handleUpdateMaps, handleNewMap, handleUpdateModuleOther, handleSetCurrentModuleEnv, handleUpdateModuleCurrent, handleNewModuleEnvironment, handleChangeModuleEnvScale, handleDeleteModuleEnvironment, handleDeleteModule, handleGrabModulePlayers} from '../../actions/modules';
+import {handleModuleDeleteItem, handleModuleUpdateItem, handleModuleAddNewItem, handleGrabModuleEnv, handleChangeMapScale, handleSetCurrentModuleMap, handleGrabModuleEnvOptions, handleGrabMaps, handleUpdateMaps, handleNewMap, handleUpdateModuleOther, handleSetCurrentModuleEnv, handleUpdateModuleCurrent, handleNewModuleEnvironment, handleChangeModuleEnvScale, handleDeleteModuleEnvironment, handleDeleteModule, handleGrabModulePlayers} from '../../actions/modules';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -33,7 +33,7 @@ class CustomPanel extends Component {
 						scaleError: false,
 						tempToken: {creature: '', scene: '', background: '', players: ''},
 						tempTokenScale: {creature: 1, scene: 1, background: 1, players: 1},
-						tempEnv: this.props.draggable.environment.name,
+						tempEnv: '',
 						tempNewEnv: '',
 						tempPlayerEnv: '',
 						tempMoveEnv: '',
@@ -70,6 +70,7 @@ class CustomPanel extends Component {
 
 	componentDidMount(){
 		this.props.handleGrabMaps(this.props.match.params.key);
+		this.setState({...this.state, tempEnv: this.props.module.environment.name})
     }
 
 	objectItems(tag){
@@ -86,9 +87,7 @@ class CustomPanel extends Component {
 
 	addPlayerToken(tag){
 		if(this.state.tempToken[tag] !== '' & this.state.tempToken[tag] !== 'Select One' & this.state.tempToken[tag] !== undefined){
-			let current = (this.props.module.environment.items) ? this.props.module.environment.items : [];
-			current.push({item: this.state.tempToken[tag], pLeft: 80, pTop: 20, scale: this.state.tempTokenScale[tag], rotation: 0, player: true, link: '', cover: false});
-			this.props.handleUpdateModuleCurrent(this.props.match.params.key, this.props.module.envKey, current); 
+			this.props.handleModuleAddNewItem(this.props.match.params.key, this.props.module.envKey, {item: this.state.tempToken[tag], pLeft: 80, pTop: 20, scale: this.state.tempTokenScale[tag], rotation: 0, player: true, link: '', cover: false})
 		}
 	}
 
@@ -123,9 +122,9 @@ class CustomPanel extends Component {
 	}
 
 	checkConditions(id){
-		let temp = this.props.module.environment.items;
-		if(!temp[id].conditions){
-			temp[id].conditions = {};
+		let temp = this.props.module.environment.items[id];
+		if(!temp.conditions){
+			temp.conditions = {};
 		}
 		return temp;
 	}
@@ -135,7 +134,7 @@ class CustomPanel extends Component {
 		if(this.props.module.environment.items[this.props.box.id] && this.props.box.player){
 		return(<div style={{marginTop: '25px', paddingBottom: '25px', height: '100%', opacity: '.9'}}>
 			<Card style={{padding: '20px', height: '100%', overflowY: 'scroll'}}>
-				<Card.Title style={{textAlign: 'center'}}>Select Token to Edit Tooltip</Card.Title>
+				<Card.Title style={{textAlign: 'center'}}>Select Player Token to Edit Tooltip</Card.Title>
 				  <InputGroup size="sm" className="mb-3">
 					<InputGroup.Prepend>
 					  <InputGroup.Text id="inputGroup-sizing-sm">Object</InputGroup.Text>
@@ -152,7 +151,7 @@ class CustomPanel extends Component {
 					  onChange={(text) => {this.setState({...this.state, tempName: text.target.value})}}
 					/>
 					<InputGroup.Append>
-					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Player Name`] = this.state.tempName; this.props.handleUpdateModuleCurrent(this.props.match.params.key, this.props.module.envKey, temp)}}>Save Player Name</Button>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp.conditions[`Player Name`] = this.state.tempName; this.props.handleModuleUpdateItem(this.props.match.params.key, this.props.module.envKey, this.props.box.id, temp)}}>Save Player Name</Button>
 					</InputGroup.Append>
 				  </InputGroup>
 
@@ -165,7 +164,7 @@ class CustomPanel extends Component {
 					  onChange={(text) => {this.setState({...this.state, tempHP: text.target.value})}}
 					/>
 					<InputGroup.Append>
-					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`HP`] = this.state.tempHP; this.props.handleUpdateModuleCurrent(this.props.match.params.key, this.props.module.envKey, temp)}}>Save HP</Button>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp.conditions[`HP`] = this.state.tempHP; this.props.handleModuleUpdateItem(this.props.match.params.key, this.props.module.envKey, this.props.box.id, temp)}}>Save HP</Button>
 					</InputGroup.Append>
 				  </InputGroup>
 
@@ -178,7 +177,7 @@ class CustomPanel extends Component {
 					  onChange={(text) => {this.setState({...this.state, tempAC: text.target.value})}}
 					/>
 					<InputGroup.Append>
-					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Armor Class`] = this.state.tempAC; this.props.handleUpdateModuleCurrent(this.props.match.params.key, this.props.module.envKey, temp)}}>Save Armor Class</Button>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp.conditions[`Armor Class`] = this.state.tempAC; this.props.handleModuleUpdateItem(this.props.match.params.key, this.props.module.envKey, this.props.box.id, temp)}}>Save Armor Class</Button>
 					</InputGroup.Append>
 				  </InputGroup>
 
@@ -191,7 +190,7 @@ class CustomPanel extends Component {
 					  onChange={(text) => {this.setState({...this.state, tempConditions: text.target.value})}}
 					/>
 					<InputGroup.Append>
-					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Conditions`] = this.state.tempConditions; this.props.handleUpdateModuleCurrent(this.props.match.params.key, this.props.module.envKey, temp)}}>Save Conditions</Button>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp.conditions[`Conditions`] = this.state.tempConditions; this.props.handleModuleUpdateItem(this.props.match.params.key, this.props.module.envKey, this.props.box.id, temp)}}>Save Conditions</Button>
 					</InputGroup.Append>
 				  </InputGroup>
 
@@ -204,7 +203,7 @@ class CustomPanel extends Component {
 					  onChange={(text) => {this.setState({...this.state, tempOther: text.target.value})}}
 					/>
 					<InputGroup.Append>
-					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp[this.props.box.id].conditions[`Notes`] = this.state.tempOther; this.props.handleUpdateModuleCurrent(this.props.match.params.key, this.props.module.envKey, temp)}}>Save Notes</Button>
+					  <Button variant="outline-secondary" onClick={() => {let temp = this.checkConditions(this.props.box.id); temp.conditions[`Notes`] = this.state.tempOther; this.props.handleModuleUpdateItem(this.props.match.params.key, this.props.module.envKey, this.props.box.id, temp)}}>Save Notes</Button>
 					</InputGroup.Append>
 				  </InputGroup>
 			</Card>
@@ -247,7 +246,7 @@ class CustomPanel extends Component {
 				
 				<div style={{marginTop: '25px', width: '100%', height: '100%', paddingBottom: '25px'}}>
 					<Card style={{height: '100%',padding: '20px'}}>
-						<Card.Title style={{textAlign: 'center'}}>Select Token to Edit Tooltip</Card.Title>
+						<Card.Title style={{textAlign: 'center'}}>Select Player Token to Edit Tooltip</Card.Title>
 					</Card>
 				</div>
 				
@@ -299,6 +298,6 @@ const mapStateToProps = state => {
 }
 
 export default withRouter(connect(mapStateToProps, 
-	{handleGrabMaps, handleUpdateMaps, editTokens, handleChangeGrid, handleNewMap, handleSetCurrentModuleMap, handleChangeMapScale,
+	{handleModuleDeleteItem, handleModuleUpdateItem, handleModuleAddNewItem, handleGrabMaps, handleUpdateMaps, editTokens, handleChangeGrid, handleNewMap, handleSetCurrentModuleMap, handleChangeMapScale,
 	handleGrabModuleEnv, handleGrabModuleEnvOptions, handleUpdateModuleOther, handleSetCurrentModuleEnv, handleUpdateModuleCurrent, handleNewModuleEnvironment, handleChangeModuleEnvScale, handleDeleteModuleEnvironment, handleDeleteModule, handleGrabModulePlayers}
 	)(CustomPanel));

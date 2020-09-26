@@ -40,7 +40,7 @@ class Chat extends Component {
 
 	joinCall(){
 		this.setState({...this.state, callActive: true});
-		setTimeout(() => {callFrame = window.DailyIframe.wrap(document.getElementById('call'),
+		setTimeout(() => {callFrame = window.DailyIframe.wrap(document.getElementById('call1'),
 				{showFullscreenButton: true}
 			);
 			callFrame.join({ url: this.props.module.callURL });
@@ -56,7 +56,7 @@ class Chat extends Component {
 		<ReactModal 
 			isOpen={this.state.callActive}>
 			<h3 style={{position: 'absolute', zIndex: 5, top: '-6px', right: '2px', cursor: 'pointer'}}><AiFillCloseCircle onClick={() => {this.endFrame()}}/></h3>
-			<iframe id='call' allow="camera; microphone; autoplay" style={{height: '100%', width: '100%'}}></iframe>
+			<iframe id='call1' allow="camera; microphone; autoplay" style={{height: '100%', width: '100%'}} title="View Module Video Call"></iframe>
 		</ReactModal>
 
 		<Card style={{marginTop: '5px', marginBottom: '5px', marginLeft: '2px', marginRight: '2px'}}>

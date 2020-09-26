@@ -4,7 +4,7 @@ import { getEmptyImage } from 'react-dnd-html5-backend';
 import {MdDelete} from 'react-icons/md';
 import {GrRotateRight, GrRotateLeft} from 'react-icons/gr';
 import {connect} from 'react-redux';
-import {handleUpdateModuleCurrent} from '../../actions/modules';
+import {handleModuleUpdateItem, handleModuleDeleteItem} from '../../actions/modules';
 import {handleUpdateBox} from '../../actions/box';
 import {editTokens} from '../../actions/editEnv';
 import ReactHtmlParser from 'react-html-parser';
@@ -22,7 +22,6 @@ function getStyles(left, top) {
     // because IE will ignore our custom "empty image" drag preview.
   }
 }
-
 
 const DraggableBox = (props) => {
   const { id, left, top, object, scale, rotation, conditions, player} = props
@@ -44,14 +43,10 @@ const DraggableBox = (props) => {
 	}
   }
 
-  const rotateItem = (all, object, function1, amount) => {
-    for(let i = 0; i < all.length; i++){
-      if(i === Number(props.id.replace('id',''))){
-        all[i].rotation = Number(all[i].rotation) + amount;
-	  }
-	}
-
-    function1(props.match.params.key, props.module.envKey, all);
+  const rotateItem = (function1, amount) => {
+    let data = props.module.environment.items[props.id];
+    data.rotation = Number(data.rotation) + amount;
+    function1(props.match.params.key, props.module.envKey, props.id, data);
   }
 
 
@@ -83,20 +78,20 @@ const DraggableBox = (props) => {
                 </Tooltip>
             }
         >
-          <div key={props.id} style={style()} onClick={() => {props.handleUpdateBox({id: Number(props.id.replace('id', '')), rotation: props.rotation, object: props.object, scale: props.scale, player: props.player})}}>
+          <div key={props.id} style={style()} onClick={() => {props.handleUpdateBox({id: props.id, rotation: props.rotation, object: props.object, scale: props.scale, player: props.player})}}>
           {ReactHtmlParser(props.draggableItems[object].title.replace(/32/g, String(Number(props.module.environment.scale) * Number(props.scale))))}
           </div>
         </OverlayTrigger> 
         :
-          <div key={props.id} style={style()} onClick={() => {props.handleUpdateBox({id: Number(props.id.replace('id', '')), rotation: props.rotation, object: props.object, scale: props.scale, player: props.player})}}>
+          <div key={props.id} style={style()} onClick={() => {props.handleUpdateBox({id: props.id, rotation: props.rotation, object: props.object, scale: props.scale, player: props.player})}}>
           {ReactHtmlParser(props.draggableItems[object].title.replace(/32/g, String(Number(props.module.environment.scale) * Number(props.scale))))}
           </div>
           }
           {(props.editEnv.tokens && props.player) ? <>
           <div style={{width: {width}}}>
-          <MdDelete color={props.envOptions.color} style={{position: 'relative', top: '0'}} onClick={() => {props.handleUpdateModuleCurrent(props.match.params.key, props.module.envKey, props.module.environment.items.filter((x,i) => i !== Number(props.id.replace('id',''))))}}/>
-          <GrRotateRight color={props.envOptions.color} style={{position: 'relative', top: '0'}} onClick={() => {rotateItem(props.module.environment.items, object, props.handleUpdateModuleCurrent, 45)}}/>
-          <GrRotateLeft color={props.envOptions.color} style={{position: 'relative', top: '0px'}} onClick={() => {rotateItem(props.module.environment.items, object, props.handleUpdateModuleCurrent, -45)}}/>
+          <MdDelete color={props.envOptions.color} style={{position: 'relative', top: '0'}} onClick={() => {props.handleModuleDeleteItem(props.match.params.key, props.module.envKey, props.id)}}/>
+          <GrRotateRight color={props.envOptions.color} style={{position: 'relative', top: '0'}} onClick={() => {rotateItem(props.handleModuleUpdateItem, 45)}}/>
+          <GrRotateLeft color={props.envOptions.color} style={{position: 'relative', top: '0px'}} onClick={() => {rotateItem(props.handleModuleUpdateItem, -45)}}/>
           </div>
           </>:
           <></>}
@@ -120,4 +115,4 @@ const mapStateToProps = state => ({
     module: state.module
 });
 
-export default withRouter(connect(mapStateToProps,{handleUpdateModuleCurrent, editTokens, handleUpdateBox})(DraggableBox));
+export default withRouter(connect(mapStateToProps,{editTokens, handleUpdateBox, handleModuleDeleteItem, handleModuleUpdateItem})(DraggableBox));

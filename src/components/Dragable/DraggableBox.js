@@ -3,9 +3,8 @@ import { useDrag } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import {MdDelete} from 'react-icons/md';
 import {GrRotateRight, GrRotateLeft} from 'react-icons/gr';
-import {AiOutlineArrowUp, AiOutlineArrowDown} from 'react-icons/ai';
 import {connect} from 'react-redux';
-import {handleUpdateCurrent} from '../../actions/draggable';
+import {handleUpdateItem, handleDeleteItem} from '../../actions/draggable';
 import {handleUpdateBox} from '../../actions/box';
 import {editTokens} from '../../actions/editEnv';
 import ReactHtmlParser from 'react-html-parser';
@@ -47,42 +46,10 @@ const DraggableBox = (props) => {
 	}
   }
 
-  const rotateItem = (all, object, function1, amount) => {
-    for(let i = 0; i < all.length; i++){
-      if(i === Number(props.id.replace('id',''))){
-        all[i].rotation = Number(all[i].rotation) + amount;
-	  }
-	}
-
-    function1(props.draggable.key, all);
-  }
-
-  const zIndexItem = (all, object, function1, position) => {
-    let temp = [];
-    let index = 0;
-    for(let i = 0; i < all.length; i++){
-      if(i === Number(props.id.replace('id',''))){
-        index = i;
-	  }
-	}
-    if(index !== 0 && position === 'down'){
-        temp = all.slice(0,index -1);
-        temp = temp.concat(all.slice(index, index+1));
-        temp = temp.concat(all.slice(index-1, index));
-        temp = temp.concat(all.slice(index+1));
-	} else if (index !== all.length - 1 && position === 'up'){
-        if(index !== 0){
-            temp = all.slice(0,index);
-		} else {
-            temp = [];  
-		}
-        temp = temp.concat(all.slice(index +1, index +2));
-        temp = temp.concat(all.slice(index, index+1));
-        temp = temp.concat(all.slice(index + 2 ));
-	} else {
-        temp = all;
-	}
-    function1(props.draggable.key, temp);
+  const rotateItem = (function1, amount) => {
+    let data = props.draggable.environment.items[props.id];
+    data.rotation = Number(data.rotation) + amount;
+    function1(props.draggable.key, props.id, data);
   }
 
   const tooltip = () => {
@@ -113,22 +80,20 @@ const DraggableBox = (props) => {
                 </Tooltip>
             }
         >
-          <div style={style()} onClick={() => {props.handleUpdateBox({id: Number(props.id.replace('id', '')), rotation: props.rotation, object: props.object, scale: props.scale})}}>
+          <div style={style()} onClick={() => {props.handleUpdateBox({id: props.id, rotation: props.rotation, object: props.object, scale: props.scale})}}>
           {ReactHtmlParser(props.draggableItems[object].title.replace(/32/g, String(Number(props.draggable.environment.scale) * Number(props.scale))))}
           </div>
         </OverlayTrigger> 
         :
-          <div style={style()} onClick={() => {props.handleUpdateBox({id: Number(props.id.replace('id', '')), rotation: props.rotation, object: props.object, scale: props.scale})}}>
+          <div style={style()} onClick={() => {props.handleUpdateBox({id: props.id, rotation: props.rotation, object: props.object, scale: props.scale})}}>
           {ReactHtmlParser(props.draggableItems[object].title.replace(/32/g, String(Number(props.draggable.environment.scale) * Number(props.scale))))}
           </div>
           }
 	      {(props.editEnv.tokens) ? <>
           <div style={{width: {width}}}>
-          <MdDelete color={props.envOptions.color} style={{position: 'relative', top: '0'}} onClick={() => {props.handleUpdateCurrent(props.draggable.key, props.draggable.environment.items.filter((x,i) => i !== Number(props.id.replace('id',''))))}}/>
-          <GrRotateRight color={props.envOptions.color} style={{position: 'relative', top: '0'}} onClick={() => {rotateItem(props.draggable.environment.items, object, props.handleUpdateCurrent, 45)}}/>
-          <GrRotateLeft color={props.envOptions.color} style={{position: 'relative', top: '0px'}} onClick={() => {rotateItem(props.draggable.environment.items, object, props.handleUpdateCurrent, -45)}}/>
-          <AiOutlineArrowUp color={props.envOptions.color} style={{position: 'relative', top: '0px'}} onClick={() => {zIndexItem(props.draggable.environment.items, object, props.handleUpdateCurrent, 'up')}}/>
-          <AiOutlineArrowDown color={props.envOptions.color} style={{position: 'relative', top: '0px'}} onClick={() => {zIndexItem(props.draggable.environment.items, object, props.handleUpdateCurrent, 'down')}}/>
+          <MdDelete color={props.envOptions.color} style={{position: 'relative', top: '0'}} onClick={() => {props.handleDeleteItem(props.draggable.key, props.id)}}/>
+          <GrRotateRight color={props.envOptions.color} style={{position: 'relative', top: '0'}} onClick={() => {rotateItem(props.handleUpdateItem, 45)}}/>
+          <GrRotateLeft color={props.envOptions.color} style={{position: 'relative', top: '0px'}} onClick={() => {rotateItem(props.handleUpdateItem, -45)}}/>
           </div>
           </>:
           <></>}
@@ -151,4 +116,4 @@ const mapStateToProps = state => ({
     draggableItems: state.draggableItems
 });
 
-export default connect(mapStateToProps,{handleUpdateCurrent, editTokens, handleUpdateBox})(DraggableBox)
+export default connect(mapStateToProps,{editTokens, handleUpdateBox, handleUpdateItem, handleDeleteItem})(DraggableBox)

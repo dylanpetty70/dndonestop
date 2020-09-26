@@ -4,7 +4,7 @@ import DraggableBox from './DraggableBox'
 import {snapToGrid} from './snapToGrid'
 import update from 'immutability-helper'
 import { connect } from 'react-redux';
-import {handleGrabModuleEnv, handleUpdateModuleCurrent} from '../../actions/modules';
+import {handleGrabModuleEnv, handleUpdateModuleCurrent, handleModuleUpdateItem} from '../../actions/modules';
 
 
 const styles = {
@@ -21,18 +21,6 @@ function renderBox(item, key, updateBoxes) {
 }
 const Container = (props) => {
   let temp = {};
-  if(props.module.environment.items){
-      if(Object.keys(props.module.environment.items).length > 0){
-          for(let i = 0; i < Object.keys(props.module.environment.items).length; i++){
-            let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.module.environment.items[i].item) : [];
-            temp[['id' + i]] = {id: 'id'+i, top: props.module.environment.items[i].pTop, left: props.module.environment.items[i].pLeft, object: temp1, scale: props.module.environment.items[i].scale, rotation: props.module.environment.items[i].rotation, conditions: props.module.environment.items[i].conditions, cover: props.module.environment.items[i].cover, link: props.module.environment.items[i].link, player: props.module.environment.items[i].player};
-          }
-        } else {
-            temp = {};  
-		}
-    } else {
-        temp = {};
-	}
 
 
   const [boxes, setBoxes] = useState(temp)
@@ -53,34 +41,52 @@ const Container = (props) => {
       let temp = {};
       if(props.module.environment.items){
           if(Object.keys(props.module.environment.items).length > 0){
-              for(let i = 0; i < Object.keys(props.module.environment.items).length; i++){
-                let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.module.environment.items[i].item) : [];
-                temp[['id' + i]] = {id: 'id'+i, top: props.module.environment.items[i].pTop, left: props.module.environment.items[i].pLeft, object: temp1, scale: props.module.environment.items[i].scale, rotation: props.module.environment.items[i].rotation, conditions: props.module.environment.items[i].conditions, cover: props.module.environment.items[i].cover, link: props.module.environment.items[i].link, player: props.module.environment.items[i].player};
-              }
+            let tempHolder = {};
+            for(var key in props.module.environment.items){
+                if(props.module.environment.items[key].back){
+                    let item = props.module.environment.items[key].item
+                    let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === item) : [];
+                    temp[[key]] = {id: key, top: props.module.environment.items[key].pTop, left: props.module.environment.items[key].pLeft, object: temp1, scale: props.module.environment.items[key].scale, rotation: props.module.environment.items[key].rotation, conditions: props.module.environment.items[key].conditions, cover: props.module.environment.items[key].cover, link: props.module.environment.items[key].link, player: props.module.environment.items[key].player};
+                } else {
+                    let item = props.module.environment.items[key].item
+                    let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === item) : [];
+                    tempHolder[[key]] = {id: key, top: props.module.environment.items[key].pTop, left: props.module.environment.items[key].pLeft, object: temp1, scale: props.module.environment.items[key].scale, rotation: props.module.environment.items[key].rotation, conditions: props.module.environment.items[key].conditions, cover: props.module.environment.items[key].cover, link: props.module.environment.items[key].link, player: props.module.environment.items[key].player};
+                }
+            }
+            temp = {...temp, ...tempHolder};
           } else {
-                temp = {};  
-          }
+        temp = {};
+    }
       } else {
-            temp = {};
-      }
+        temp = {};
+    }
       setBoxes(temp);
   }, [props.module.environment.items, props.draggableItems]);
 
-    const updateBoxes1 = () => {
+  const updateBoxes1 = () => {
   let temp = {};
   if(props.module.environment.items){
-      if(Object.keys(props.module.environment.items).length > 0){
-          for(let i = 0; i < Object.keys(props.module.environment.items).length; i++){
-            let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.module.environment.items[i].item) : [];
-            temp[['id' + i]] = {id: 'id'+i, top: props.module.environment.items[i].pTop, left: props.module.environment.items[i].pLeft, object: temp1, scale: props.module.environment.items[i].scale, rotation: props.module.environment.items[i].rotation, conditions: props.module.environment.items[i].conditions, cover: props.module.environment.items[i].cover, link: props.module.environment.items[i].link, player: props.module.environment.items[i].player};
-          }
+        if(Object.keys(props.module.environment.items).length > 0){
+            let tempHolder = {};
+            for(var key in props.module.environment.items){
+                if(props.module.environment.items[key].back){
+                    let item = props.module.environment.items[key].item
+                    let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === item) : [];
+                    temp[[key]] = {id: key, top: props.module.environment.items[key].pTop, left: props.module.environment.items[key].pLeft, object: temp1, scale: props.module.environment.items[key].scale, rotation: props.module.environment.items[key].rotation, conditions: props.module.environment.items[key].conditions, cover: props.module.environment.items[key].cover, link: props.module.environment.items[key].link, player: props.module.environment.items[key].player};
+                } else {
+                    let item = props.module.environment.items[key].item
+                    let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === item) : [];
+                    tempHolder[[key]] = {id: key, top: props.module.environment.items[key].pTop, left: props.module.environment.items[key].pLeft, object: temp1, scale: props.module.environment.items[key].scale, rotation: props.module.environment.items[key].rotation, conditions: props.module.environment.items[key].conditions, cover: props.module.environment.items[key].cover, link: props.module.environment.items[key].link, player: props.module.environment.items[key].player};
+                }
+            }
+            temp = {...temp, ...tempHolder};
         } else {
-            temp = {};  
-		}
+        temp = {};
+    }
     } else {
         temp = {};
-	}
-    setBoxes(temp);
+    }
+        setBoxes(temp);
   };
 
   const [, drop] = useDrop({
@@ -92,11 +98,11 @@ const Container = (props) => {
         ;[left, top] = snapToGrid(left, top, Number(props.module.environment.scale))
       moveBox(item.id, left, top)
       let current = props.module.environment.items;
-      let index = Number(item.id.replace('id', ''));
+      let index = item.id;
       if(current[index]){
           current[index].pLeft = left;
           current[index].pTop = top;
-          props.handleUpdateModuleCurrent(props.module.key, props.module.envKey, current)
+          props.handleModuleUpdateItem(props.module.key, props.module.envKey, index, current[index])
 	  } else {
        updateBoxes1();
 	  }
@@ -121,4 +127,4 @@ const mapStateToProps = state => {
 	}
 }
 
-export default connect(mapStateToProps, {handleGrabModuleEnv, handleUpdateModuleCurrent})(Container);
+export default connect(mapStateToProps, {handleGrabModuleEnv, handleUpdateModuleCurrent, handleModuleUpdateItem})(Container);

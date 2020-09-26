@@ -56,6 +56,18 @@ export const handleUpdateCurrent = (id, data) => async dispatch => {
 	dndRef.child("environments/"+id+"/items").set(data);
 }
 
+export const handleAddNewItem = (id, item) => async dispatch => {
+	dndRef.child("environments/"+id+"/items").push(item);
+}
+
+export const handleDeleteItem = (id, item) => async dispatch => {
+	dndRef.child("environments/"+id+"/items/"+item).remove();
+}
+
+export const handleUpdateItem = (id, item, data) => async dispatch => {
+	dndRef.child("environments/"+id+"/items").update({[item]: data});
+}
+
 export const handleNewMessage = (id, text) => async dispatch => {
 	let userId = firebase.auth().currentUser.uid;	
 	let date = Date.now()

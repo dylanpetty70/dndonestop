@@ -7,6 +7,7 @@ import CustomPanel from './CustomPanel';
 import Map from './Map';
 import GridLayer from './GridLayer';
 import DragLayer from './CustomDragLayer';
+import PulseLoader from 'react-spinners/PulseLoader';
 
 
 
@@ -20,6 +21,8 @@ class Environment extends Component {
 
 	render(){
 		return(
+		<div>
+			{(this.props.module.envKey.length > 0) ? 
 			<div style={{width: '95vw', margin: '5px'}}>
             <div style={{position: 'flex', marginTop: '80px'}}>
 			<GridLayer />
@@ -28,6 +31,14 @@ class Environment extends Component {
 				{(Object.keys(this.props.module.maps).length > 0) ? <Map /> : <></>}
             </div>
 				<CustomPanel/>
+			</div>
+			:
+                    <PulseLoader
+                      css={{position: 'absolute', top: '40vh', left: '40vw'}}
+                      size={100}
+                      color={"#123abc"}
+                      loading={true}
+                    />}
 			</div>
 		)
 	}

@@ -98,6 +98,18 @@ export const handlePlayerGrabModuleEnv = (module) => async dispatch => {
 	})
 }
 
+export const handleModuleAddNewItem = (module, id, item) => async dispatch => {
+	dndRef.child("modules/" + module + "/environments/"+id+"/items").push(item);
+}
+
+export const handleModuleDeleteItem = (module, id, item) => async dispatch => {
+	dndRef.child("modules/" + module + "/environments/"+id+"/items/"+item).remove();
+}
+
+export const handleModuleUpdateItem = (module, id, item, data) => async dispatch => {
+	dndRef.child("modules/" + module + "/environments/"+id+"/items").update({[item]: data});
+}
+
 export const handleUpdateModuleCurrent = (module, id, data) => async dispatch => {
 	dndRef.child("modules/" + module + "/environments/"+id+"/items").set(data);
 }

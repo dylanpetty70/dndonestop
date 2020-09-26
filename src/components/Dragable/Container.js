@@ -4,7 +4,7 @@ import DraggableBox from './DraggableBox'
 import {snapToGrid} from './snapToGrid'
 import update from 'immutability-helper'
 import { connect } from 'react-redux';
-import {handleGrabDraggable, handleUpdateCurrent} from '../../actions/draggable';
+import {handleGrabDraggable,handleUpdateItem} from '../../actions/draggable';
 
 
 const styles = {
@@ -20,18 +20,6 @@ function renderBox(item, key, updateBoxes) {
 }
 const Container = (props) => {
   let temp = {};
-  if(props.draggable.environment.items){
-      if(Object.keys(props.draggable.environment.items).length > 0){
-          for(let i = 0; i < Object.keys(props.draggable.environment.items).length; i++){
-            let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.draggable.environment.items[i].item) : [];
-            temp[['id' + i]] = {id: 'id'+i, top: props.draggable.environment.items[i].pTop, left: props.draggable.environment.items[i].pLeft, object: temp1, scale: props.draggable.environment.items[i].scale, rotation: props.draggable.environment.items[i].rotation, conditions: props.draggable.environment.items[i].conditions};
-          }
-        } else {
-            temp = {};  
-		}
-    } else {
-        temp = {};
-	}
 
 
   const [boxes, setBoxes] = useState(temp)
@@ -52,33 +40,51 @@ const Container = (props) => {
       let temp = {};
       if(props.draggable.environment.items){
           if(Object.keys(props.draggable.environment.items).length > 0){
-              for(let i = 0; i < Object.keys(props.draggable.environment.items).length; i++){
-                let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.draggable.environment.items[i].item) : [];
-                temp[['id' + i]] = {id: 'id'+i, top: props.draggable.environment.items[i].pTop, left: props.draggable.environment.items[i].pLeft, object: temp1, scale: props.draggable.environment.items[i].scale, rotation: props.draggable.environment.items[i].rotation, conditions: props.draggable.environment.items[i].conditions};
+            let tempHolder = {};
+              for(var key in props.draggable.environment.items){
+                if(props.draggable.environment.items[key].back){
+                    let item = props.draggable.environment.items[key].item;
+                    let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find((key1) => key1 === item) : [];
+                    temp[[key]] = {id: key, top: props.draggable.environment.items[key].pTop, left: props.draggable.environment.items[key].pLeft, object: temp1, scale: props.draggable.environment.items[key].scale, rotation: props.draggable.environment.items[key].rotation, conditions: props.draggable.environment.items[key].conditions};
+                } else {
+                    let item = props.draggable.environment.items[key].item;
+                    let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find((key1) => key1 === item) : [];
+                    tempHolder[[key]] = {id: key, top: props.draggable.environment.items[key].pTop, left: props.draggable.environment.items[key].pLeft, object: temp1, scale: props.draggable.environment.items[key].scale, rotation: props.draggable.environment.items[key].rotation, conditions: props.draggable.environment.items[key].conditions};
+                }
               }
+              temp = {...temp, ...tempHolder};
           } else {
-                temp = {};  
-          }
+        temp = {};
+    }
       } else {
-            temp = {};
-      }
+        temp = {};
+    }
       setBoxes(temp);
   }, [props.draggable.environment.items, props.draggableItems]);
 
-    const updateBoxes1 = () => {
+  const updateBoxes1 = () => {
   let temp = {};
   if(props.draggable.environment.items){
       if(Object.keys(props.draggable.environment.items).length > 0){
-          for(let i = 0; i < Object.keys(props.draggable.environment.items).length; i++){
-            let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find(key => key === props.draggable.environment.items[i].item) : [];
-            temp[['id' + i]] = {id: 'id'+i, top: props.draggable.environment.items[i].pTop, left: props.draggable.environment.items[i].pLeft, object: temp1, scale: props.draggable.environment.items[i].scale, rotation: props.draggable.environment.items[i].rotation, conditions: props.draggable.environment.items[i].conditions};
-          }
+            let tempHolder = {};
+              for(var key in props.draggable.environment.items){
+                if(props.draggable.environment.items[key].back){
+                    let item = props.draggable.environment.items[key].item;
+                    let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find((key1) => key1 === item) : [];
+                    temp[[key]] = {id: key, top: props.draggable.environment.items[key].pTop, left: props.draggable.environment.items[key].pLeft, object: temp1, scale: props.draggable.environment.items[key].scale, rotation: props.draggable.environment.items[key].rotation, conditions: props.draggable.environment.items[key].conditions};
+                } else {
+                    let item = props.draggable.environment.items[key].item;
+                    let temp1 = (props.draggableItems) ? Object.keys(props.draggableItems).find((key1) => key1 === item) : [];
+                    tempHolder[[key]] = {id: key, top: props.draggable.environment.items[key].pTop, left: props.draggable.environment.items[key].pLeft, object: temp1, scale: props.draggable.environment.items[key].scale, rotation: props.draggable.environment.items[key].rotation, conditions: props.draggable.environment.items[key].conditions};
+                }
+              }
+              temp = {...temp, ...tempHolder};
         } else {
-            temp = {};  
-		}
+            temp = {};
+        }
     } else {
         temp = {};
-	}
+    }
     setBoxes(temp);
   };
 
@@ -91,11 +97,11 @@ const Container = (props) => {
         ;[left, top] = snapToGrid(left, top, Number(props.draggable.environment.scale))
       moveBox(item.id, left, top)
       let current = props.draggable.environment.items;
-      let index = Number(item.id.replace('id', ''));
+      let index = item.id;
       if(current[index]){
           current[index].pLeft = left;
           current[index].pTop = top;
-          props.handleUpdateCurrent(props.draggable.key, current)
+          props.handleUpdateItem(props.draggable.key, index, current[index])
 	  } else {
        updateBoxes1();
 	  }
@@ -120,4 +126,4 @@ const mapStateToProps = state => {
 	}
 }
 
-export default connect(mapStateToProps, {handleGrabDraggable, handleUpdateCurrent})(Container);
+export default connect(mapStateToProps, {handleGrabDraggable,handleUpdateItem})(Container);

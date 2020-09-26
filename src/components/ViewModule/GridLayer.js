@@ -22,7 +22,7 @@ class GridLayer extends Component {
 			</div>
 		)
 		for(let i = Number(this.props.module.environment.scale); i < totalWidth; i += Number(this.props.module.environment.scale)){
-			let variableLeft = String(i + 25 - Number(this.props.module.environment.scale)) + 'px';
+			let variableLeft = String(i + 15 - Number(this.props.module.environment.scale)) + 'px';
 			const styleBottom ={
 				position: 'absolute',
 				width: scale,
@@ -30,7 +30,7 @@ class GridLayer extends Component {
 				border: (this.props.envOptions.color === 'none') ? '0' : '1px solid',
 				borderColor: (this.props.envOptions.color) ? this.props.envOptions.color : 'black',
 				left: variableLeft,
-				top: '155px',
+				top: '156px',
 				opacity: .25,
 				zIndex: 1000,
 				pointerEvents: 'none'
@@ -44,14 +44,14 @@ class GridLayer extends Component {
 			)
 		}
 		for(let i = Number(this.props.module.environment.scale); i < totalHeight; i += Number(this.props.module.environment.scale)){
-			let variableTop = String(i + 155 - Number(this.props.module.environment.scale)) + 'px';
+			let variableTop = String(i + 156 - Number(this.props.module.environment.scale)) + 'px';
 			const styleTop ={
 				position: 'absolute',
 				width: '780px',
 				height: scale,
 				border: (this.props.envOptions.color === 'none') ? '0' : '1px solid',
 				borderColor: (this.props.envOptions.color) ? this.props.envOptions.color : 'black',
-				left: '25px',
+				left: '15px',
 				top: variableTop,
 				opacity: .25,
 				zIndex: 1000,
