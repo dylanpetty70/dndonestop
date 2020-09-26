@@ -387,7 +387,7 @@ class CustomPanel extends Component {
 				<Card.Title  style={{fontSize: '16px', marginTop: '10px'}}>Maps</Card.Title>
 				<Card.Subtitle className="mb-2 text-muted">Choose a map to see the environments it contains. Your players will also be able to see and place player markers on the map.</Card.Subtitle>
 				<Form style={{margin: '5px'}}>
-					<Form.Control value={this.state.tempMap} as="select" style={{float: 'left', width: '200px'}} onChange={(text) => {this.setState({...this.state, tempMap: text.target.value}); this.props.handleSetCurrentModuleMap(this.props.module.key, text.target.value)}}>
+					<Form.Control value={this.state.tempMap} as="select" style={{float: 'left', width: '200px'}} onChange={(text) => {if(text.target.value !== 'Select One'){this.setState({...this.state, tempMap: text.target.value}); this.props.handleSetCurrentModuleMap(this.props.module.key, text.target.value)}}}>
 						<option value='Select One'>Select One</option>
 						{Object.keys(this.props.module.maps).map((l) =>{
 							return(<option value={l} key={l}>{this.props.module.maps[l].name}</option>)

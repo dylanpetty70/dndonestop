@@ -170,7 +170,9 @@ class Map extends Component {
 			if(temp !== this.props.module.maps[this.props.module.currentMap].items){
 				let data = this.props.module.maps[this.props.module.currentMap];
 				data['items'] = temp;
-				this.props.handleUpdateMaps(this.props.module.key, this.props.module.currentMap, data)
+				if(this.props.module.currentMap){
+					this.props.handleUpdateMaps(this.props.module.key, this.props.module.currentMap, data)
+				}
 			}
 			//this is where the grid is rendered using temp
 			let tempRender = [];
@@ -257,7 +259,9 @@ class Map extends Component {
 			if(temp !== this.props.module.maps[this.props.module.currentMap].playerItems){
 				let data = this.props.module.maps[this.props.module.currentMap];
 				data['playerItems'] = temp;
-				this.props.handleUpdateMaps(this.props.match.params.key, this.props.module.currentMap, data)
+				if(this.props.module.currentMap){
+					this.props.handleUpdateMaps(this.props.module.key, this.props.module.currentMap, data)
+				}
 			}
 			//this is where the grid is rendered using temp
 			let tempRender = [];
