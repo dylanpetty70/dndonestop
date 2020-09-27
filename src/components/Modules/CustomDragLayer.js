@@ -82,8 +82,25 @@ const DragLayer = (props) => {
         initialOffset: monitor.getInitialSourceClientOffset(),
         currentOffset: monitor.getSourceClientOffset(),
         isDragging: monitor.isDragging(),
-      }))
-      return(<CustomDragLayer draggableItems={props.draggableItems} itemType={itemType} isDragging={isDragging} item={item} initialOffset={initialOffset} currentOffset={currentOffset} module={props.module}/>)
+      }))      
+      let offsetx = '0';
+      let offsety = '0';
+      if(currentOffset && item){
+         offsetx = (currentOffset.x > initialOffset.x) ? 20 : -20;
+         offsety = (currentOffset.y > initialOffset.y) ? 20 : -20;
+      }
+
+      return(
+        <div>
+            {(currentOffset && item) ? 
+           <div style={{position: 'absolute', left: '15px', top: '155px', height: '10px'}}>
+                <p> Distance: {Math.floor(Math.sqrt((Math.pow((currentOffset.x - initialOffset.x + offsetx),2)) + (Math.pow((currentOffset.y - initialOffset.y + offsety),2)))/(props.module.environment.scale))*5} feet </p>
+           </div>
+            : <></>}
+            <CustomDragLayer draggableItems={props.draggableItems} itemType={itemType} isDragging={isDragging} item={item} initialOffset={initialOffset} currentOffset={currentOffset} module={props.module}/>
+        
+        </div>
+        )
 }
 
 const mapStateToProps = state => {

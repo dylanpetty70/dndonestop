@@ -1,8 +1,5 @@
 import React, {Component} from 'react';
-import Form from 'react-bootstrap/Form';
 import { connect } from 'react-redux';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
 import {handleUpdateNewCharacter} from '../../actions/characters';
 import WIP from '../WIP';
 

@@ -70,7 +70,7 @@ const DraggableBox = (props) => {
   if(props.draggableItems){
         let width = String(Number(props.draggable.environment.scale) * Number(props.scale));
         return (
-        <div ref={drag} style={getStyles(left, top, isDragging)}>
+        <div id={props.id} ref={drag} style={getStyles(left, top, isDragging)}>
         {(props.conditions) ? <OverlayTrigger
             key={props.object+'overlay'}
             placement={'top'}

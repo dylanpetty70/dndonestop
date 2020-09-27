@@ -217,7 +217,7 @@ class CustomPanel extends Component {
 			<Card.Title style={{fontSize: '16px'}}>Grid Scale</Card.Title>
 				<Form inline='true' style={{marginLeft: '10px'}}>
 					<Form.Group>
-						<Form.Control placeholder={this.props.module.environment.scale} style={{width: '70px'}} onKeyPress={(event) => {if(event.charCode===13){event.preventDefault(); (this.state.tempScale !== '' & !isNaN(Number(this.state.tempScale))) ? this.props.handleChangeModuleEnvScale(this.props.module.key, this.props.module.envKey, this.state.tempScale) : this.setState({...this.state, scaleError: true})}}} onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempScale: text.target.value}) : this.setState({...this.state, tempScale: this.props.module.environment.scale})}} />
+						<Form.Control placeholder={780/this.props.module.environment.scale} style={{width: '70px'}} onKeyPress={(event) => {if(event.charCode===13){event.preventDefault(); (this.state.tempScale !== '' & !isNaN(Number(this.state.tempScale))) ? this.props.handleChangeModuleEnvScale(this.props.module.key, this.props.module.envKey, this.state.tempScale) : this.setState({...this.state, scaleError: true})}}} onChange={(text) => {(text.target.value !== '0' & text.target.value !== '' & (!isNaN(Number(text.target.value)))) ? this.setState({...this.state, tempScale: (780/text.target.value)}) : this.setState({...this.state, tempScale: this.props.module.environment.scale})}} />
 					</Form.Group>
 					<Button variant="outline-primary" style={{marginLeft: '30px'}} onClick={() => {(this.state.tempScale !== '' & !isNaN(Number(this.state.tempScale))) ? this.props.handleChangeModuleEnvScale(this.props.module.key, this.props.module.envKey, this.state.tempScale) : this.setState({...this.state, scaleError: true})}}>Change Scale</Button>
 				</Form>
@@ -370,7 +370,8 @@ class CustomPanel extends Component {
 
 	maps(){
 		return(<Card style={{marginTop: '5px', marginBottom: '5px', marginLeft: '2px', marginRight: '2px'}}>
-			<Card.Header>Map Organization</Card.Header>
+			<Card.Header>Map Organization<p></p>
+			<Card.Subtitle className="mb-2 text-muted">Playable grid functionality will be diminished while map is active</Card.Subtitle></Card.Header>
 			<Card.Body>
 			<Card.Title style={{fontSize: '16px'}}>Module Maps</Card.Title>
 			<Card.Subtitle className="mb-2 text-muted">Your players will see the current map visual, but adding the environments is simply for organization's sake.</Card.Subtitle>

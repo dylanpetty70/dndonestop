@@ -15,7 +15,7 @@ class Scanners extends Component {
 				  <Container>
 					<h1>Webpage Currently in Progress</h1>
 					<p>
-					  Check back for updates!
+					  This feature of the site is currently under development. Clicks on currently developing features are recorded, with the most clicked features being highest priority.
 					</p>
 				  </Container>
 				</Jumbotron>
