@@ -78,7 +78,10 @@ class CharacterInfo extends Component {
 					})}
                     </Form.Control>
                     <Button variant="outline-secondary" style={{marginLeft: '10px'}} onClick={() => {this.setState({...this.state, showNew: true})}}>
-                        New Character
+                        New Character Sheet
+                    </Button>
+                    <Button variant="outline-secondary" style={{marginLeft: '10px'}} onClick={(event) => {event.preventDefault(); window.location.replace("/charactergenerator");}}>
+                        Generate New Character
                     </Button>
                 </Form>
 				{(this.state.character !== '') ? <CharacterSheet name={this.state.character}/>

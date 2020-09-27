@@ -5,6 +5,7 @@ import Login from "./components/Login";
 import RedirectPage from "./components/404";
 import CampaignDetails from './components/HighLevel/campaignDetails';
 import CharacterInfo from './components/HighLevel/characterHigh';
+import CharacterGenerator from './components/HighLevel/characterGenerator';
 import CreateEnv from './components/HighLevel/createEnv';
 import CreateModules from './components/HighLevel/createModules';
 import ViewModules from './components/HighLevel/viewModules';
@@ -46,6 +47,7 @@ class Router extends Component {
                 <Route exact path="/"><GameInfo/></Route>
                 <Route exact path="/createenv"><CreateEnv/></Route>
                 <Route exact path="/characterInfo"><CharacterInfo/></Route>
+                <Route exact path="/charactergenerator"><CharacterGenerator/></Route>
                 <Route exact path="/campaigndetails"><CampaignDetails/></Route>
                 <Route exact path="/createmodules"><CreateModules/></Route>
                 <Route exact path="/viewmodules/:key"><ViewModules/></Route>

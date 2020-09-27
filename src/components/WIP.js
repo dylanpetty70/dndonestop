@@ -15,7 +15,7 @@ class Scanners extends Component {
 				  <Container>
 					<h1>Webpage Currently in Progress</h1>
 					<p>
-					  It may bug out. Check back for updates!
+					  Check back for updates!
 					</p>
 				  </Container>
 				</Jumbotron>

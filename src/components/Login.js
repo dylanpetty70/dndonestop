@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { handleFirebaseCreateUser} from '../actions/user';
 import {handleUserStatus} from '../actions/user';
+import Card from 'react-bootstrap/Card'
 var firebase = require('firebase/app');
 require('firebase/auth')
 
@@ -207,6 +208,14 @@ class Login extends Component {
                     Email Password Reset
                   </Button>
                 </Form>
+                <Card style={{width: '70%', marginTop: '50px', left: '15%'}}>
+                    <Card.Body>
+                        The D&D information on this site is only the material released through Wizards' <a href="https://media.wizards.com/2016/downloads/DND/SRD-OGL_V5.1.pdf">Open Gaming License</a>. 
+                        Additions of more D&D content would violate the terms and conditions. Therefore, there are no plans in the immediate or long-term future to incorporate any source books outside of the approved public content.
+                        I think you'll find this content to be worthwhile for anybody playing D&D (just keep your extra sourcebooks handy).
+                        In the incorporation of homebrew content, please do not include copyrighted or publicized material that you do not own. When found during scans of copyrighted Wizards content, you will be banned.
+                    </Card.Body>
+                </Card>
 			</div>
             </div>
 		)
